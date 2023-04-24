@@ -11,10 +11,19 @@ import AlertScreen from './Screens/AlertsScreen';
 import FavoritesScreen from './Screens/FavoritesScreen';
 import bgImage from './assets/Subtract.png';
 import { Image } from 'react-native';
+import { useFonts } from 'expo-font';
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [isLoaded] = useFonts({
+    Roboto: require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
+    SourceSansPro: require('./assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf'),
+  });
+  if (!isLoaded) {
+    //Splash Screen
+  }
+
   return (
     <NavigationContainer>
       <Tab.Navigator

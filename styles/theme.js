@@ -1,10 +1,3 @@
-import { useFonts } from 'expo-font';
-
-const [fontsLoaded] = useFonts({
-  Roboto: require('../assets/fonts/Roboto/Roboto-Regular.ttf'),
-  SourceSansPro: require('../assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf'),
-});
-
 export const theme = {
   colors: {
     primary: '#0A8BC2',
@@ -29,15 +22,16 @@ export const theme = {
   },
   textVariants: {
     header: {
+      fontFamily: 'Roboto',
       fontSize: 50,
       fontWeight: 'bold',
     },
     ui: {
-      fontFamily: Roboto,
+      fontFamily: 'PermanentMarker',
       fontSize: 16,
     },
     body: {
-      fontFamily: SourceSansPro,
+      fontFamily: 'SourceSansPro',
       fontSize: 16,
     },
   },
