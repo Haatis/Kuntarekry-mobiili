@@ -1,11 +1,16 @@
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import HomeScreen from './Screens/HomeScreen/HomeScreen';
 import SettingsScreen from './Screens/SettingsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import AlertScreen from './Screens/AlertsScreen';
 import FavoritesScreen from './Screens/FavoritesScreen';
+import bgImage from './assets/Subtract.png';
+import { Image } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,8 +47,48 @@ export default function App() {
           },
           tabBarActiveTintColor: 'blue',
           tabBarInactiveTintColor: 'gray',
+
           tabBarStyle: {
             display: 'flex',
+          },
+          headerTitleAlign: 'center',
+          headerTitle: (props) => (
+            <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center' }}>
+              <Text
+                style={{
+                  fontSize: 25,
+                  fontWeight: 'bold',
+                  color: 'white',
+                  textAlign: 'center',
+                  marginBottom: 5,
+                }}
+              >
+                Kuntarekry
+              </Text>
+            </View>
+          ),
+          headerBackground: () => {
+            return (
+              <View style={{ flex: 1 }}>
+                <LinearGradient
+                  colors={['rgba(12, 142, 194, 0.9)', 'rgba(51, 204, 128, 0.9)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={{ flex: 1 }}
+                />
+                <Image
+                  source={bgImage}
+                  style={{
+                    position: 'absolute',
+                    opacity: 0.6,
+                    zIndex: 0,
+                    top: 0,
+                    width: '100%',
+                    height: '100%',
+                  }}
+                />
+              </View>
+            );
           },
         })}
       >
