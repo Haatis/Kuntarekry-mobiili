@@ -15,6 +15,11 @@ export default function HomeScreen() {
           tabBarActiveTintColor: theme.colors.primary,
           tabBarInactiveTintColor: theme.colors.inactive,
           swipeEnabled: false,
+          tabBarIndicatorStyle: {
+            backgroundColor: 'white',
+            height: 100,
+          },
+          tabBarStyle: { backgroundColor: theme.colors.inactiveNav },
         }}
       >
         <Tab.Screen name="Kortit" component={CardScreen} />

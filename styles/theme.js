@@ -12,6 +12,7 @@ export const theme = {
     tag1: '#F1F5F8',
     tag2: '#FAD6D4',
     tag3: '#D4EFFA',
+    inactiveNav: '#F8F8F8',
   },
   spacing: {
     xs: 4,
