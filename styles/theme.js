@@ -27,8 +27,9 @@ export const theme = {
       fontWeight: 'bold',
     },
     ui: {
-      fontFamily: 'PermanentMarker',
-      fontSize: 16,
+      fontFamily: 'Roboto',
+      fontSize: 14,
+      fontWeight: 'bold',
     },
     body: {
       fontFamily: 'SourceSansPro',

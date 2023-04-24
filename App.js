@@ -12,6 +12,7 @@ import FavoritesScreen from './Screens/FavoritesScreen';
 import bgImage from './assets/Subtract.png';
 import { Image } from 'react-native';
 import { useFonts } from 'expo-font';
+import { theme } from './styles/theme';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,12 +29,12 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
+          tabBarIcon: ({ focused, color }) => {
             let iconName;
 
             switch (route.name) {
               case 'Etusivu':
-                iconName = focused ? 'home' : 'home-outline';
+                iconName = focused ? 'home-variant' : 'home-variant-outline';
                 break;
               case 'Suosikit':
                 iconName = focused ? 'heart' : 'heart-outline';
@@ -45,17 +46,18 @@ export default function App() {
                 iconName = focused ? 'bell' : 'bell-outline';
                 break;
               case 'Lisää':
-                iconName = focused ? 'plus' : 'plus-outline';
+                iconName = 'dots-vertical';
                 break;
               default:
                 iconName = 'help';
                 break;
             }
 
-            return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+            return <MaterialCommunityIcons name={iconName} size={24} color={color} />;
           },
-          tabBarActiveTintColor: 'blue',
-          tabBarInactiveTintColor: 'gray',
+          tabBarLabelStyle: theme.textVariants.ui,
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarInactiveTintColor: theme.colors.inactive,
 
           tabBarStyle: {
             display: 'flex',
