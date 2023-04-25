@@ -7,6 +7,7 @@ export default function SettingsScreen() {
       <Text style={theme.textVariants.ui}>Settings Screen</Text>
       <Text style={theme.textVariants.body}>Settings Screen</Text>
       <Text style={theme.textVariants.body}>Settings Screen</Text>
+      <Text style={theme.shadow}>TESTI</Text>
     </View>
   );
 }

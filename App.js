@@ -58,9 +58,12 @@ export default function App() {
           tabBarLabelStyle: theme.textVariants.ui,
           tabBarActiveTintColor: theme.colors.primary,
           tabBarInactiveTintColor: theme.colors.inactive,
-
           tabBarStyle: {
             display: 'flex',
+            height: 54,
+            paddingVertical: 8,
+            paddingBottom: 4,
+            backgroundColor: '#fff',
           },
           headerTitleAlign: 'center',
           headerTitle: (props) => (

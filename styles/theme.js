@@ -37,4 +37,13 @@ export const theme = {
       fontSize: 16,
     },
   },
+  shadow: {
+    backgroundColor: '#fff',
+    elevation: 3,
+    zIndex: 999,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 3,
+  },
 };
