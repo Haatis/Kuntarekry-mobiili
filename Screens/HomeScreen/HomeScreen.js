@@ -30,8 +30,7 @@ export default function HomeScreen() {
             tabBarIndicatorStyle: {
               height: '100%',
               width: '60%',
-
-              elevation: 2,
+              elevation: 4,
               backgroundColor: 'white',
             },
           }}
@@ -43,8 +42,8 @@ export default function HomeScreen() {
             tabBarIndicatorStyle: {
               width: '60%',
               height: '100%',
-              marginLeft: -20,
-              elevation: 2,
+              marginLeft: '-7%',
+              elevation: 4,
               backgroundColor: 'white',
             },
           }}
