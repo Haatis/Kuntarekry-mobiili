@@ -15,10 +15,10 @@ export default function HomeScreen() {
           tabBarActiveTintColor: theme.colors.primary,
           tabBarInactiveTintColor: theme.colors.inactive,
           swipeEnabled: false,
-
           tabBarStyle: {
             backgroundColor: theme.colors.inactiveNav,
             height: 50,
+            elevation: 0,
           },
           tabBarPressColor: 'transparent',
         })}
@@ -30,8 +30,7 @@ export default function HomeScreen() {
             tabBarIndicatorStyle: {
               height: '100%',
               width: '60%',
-
-              elevation: 2,
+              elevation: 5,
               backgroundColor: 'white',
             },
           }}
@@ -43,8 +42,6 @@ export default function HomeScreen() {
             tabBarIndicatorStyle: {
               width: '60%',
               height: '100%',
-              marginLeft: -20,
-              elevation: 2,
               backgroundColor: 'white',
             },
           }}

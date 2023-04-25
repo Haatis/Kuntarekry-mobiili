@@ -2,7 +2,7 @@ import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 
 export default function Card() {
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: 'yellow' }}>
       <Text>Kiinteistöhuoltomies</Text>
       <Text>Akaan kaupunki</Text>
       <Text>

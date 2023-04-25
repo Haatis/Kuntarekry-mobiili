@@ -46,10 +46,11 @@ export const theme = {
     shadowRadius: 3,
   },
   container: {
+    backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 16,
-    marginHorizontal: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
   },
 };
