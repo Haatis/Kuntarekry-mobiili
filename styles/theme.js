@@ -28,9 +28,8 @@ export const theme = {
       fontWeight: 'bold',
     },
     ui: {
-      fontFamily: 'Roboto',
+      fontFamily: 'RobotoMedium',
       fontSize: 14,
-      fontWeight: 'bold',
     },
     body: {
       fontFamily: 'SourceSansPro',
@@ -45,5 +44,12 @@ export const theme = {
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 1,
     shadowRadius: 3,
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 16,
+    marginHorizontal: 8,
   },
 };

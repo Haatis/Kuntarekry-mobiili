@@ -1,9 +1,11 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import Card from '../../components/card';
+import { theme } from '../../styles/theme';
 
 export default function CardScreen() {
   return (
-    <View>
-      <Text>Card Screen</Text>
+    <View style={theme.container}>
+      <Card />
     </View>
   );
 }
