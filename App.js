@@ -13,6 +13,7 @@ import bgImage from './assets/Subtract.png';
 import { Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import { theme } from './styles/theme';
+import KuntaRekrySVG from './assets/logo.png';
 
 const Tab = createBottomTabNavigator();
 
@@ -67,19 +68,14 @@ export default function App() {
             backgroundColor: '#fff',
           },
           headerTitleAlign: 'center',
+
           headerTitle: (props) => (
             <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center' }}>
-              <Text
-                style={{
-                  fontSize: 25,
-                  fontWeight: 'bold',
-                  color: 'white',
-                  textAlign: 'center',
-                  marginBottom: 5,
-                }}
-              >
-                Kuntarekry
-              </Text>
+              <Image
+                source={KuntaRekrySVG}
+                resizeMode="contain"
+                style={{ width: 215, height: 44 }}
+              />
             </View>
           ),
           headerBackground: () => {
@@ -98,8 +94,8 @@ export default function App() {
                     opacity: 0.6,
                     zIndex: 0,
                     top: 0,
-                    width: '100%',
-                    height: '100%',
+                    width: 400,
+                    resizeMode: 'contain',
                   }}
                 />
               </View>

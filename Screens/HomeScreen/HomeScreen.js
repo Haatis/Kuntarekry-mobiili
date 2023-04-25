@@ -29,9 +29,9 @@ export default function HomeScreen() {
           options={{
             tabBarIndicatorStyle: {
               height: '100%',
-              width: '60%',
-              elevation: 5,
               backgroundColor: 'white',
+              borderBottomWidth: 2,
+              borderColor: theme.colors.primary,
             },
           }}
         />
@@ -40,9 +40,10 @@ export default function HomeScreen() {
           component={SearchScreen}
           options={{
             tabBarIndicatorStyle: {
-              width: '60%',
               height: '100%',
               backgroundColor: 'white',
+              borderBottomWidth: 2,
+              borderColor: theme.colors.primary,
             },
           }}
         />

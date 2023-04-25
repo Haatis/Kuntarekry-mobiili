@@ -13,7 +13,6 @@ export const theme = {
     tag2: '#FAD6D4',
     tag3: '#D4EFFA',
     inactiveNav: '#F8F8F8',
-    defaultBg: '#FFFFFF',
   },
   spacing: {
     xs: 4,
@@ -30,7 +29,7 @@ export const theme = {
     },
     ui: {
       fontFamily: 'RobotoMedium',
-      fontSize: 14,
+      fontSize: 12,
     },
     body: {
       fontFamily: 'SourceSansPro',
