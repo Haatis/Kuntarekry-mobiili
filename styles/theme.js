@@ -22,18 +22,17 @@ export const theme = {
     xl: 40,
   },
   textVariants: {
-    header: {
-      fontFamily: 'Roboto',
-      fontSize: 50,
-      fontWeight: 'bold',
-    },
     ui: {
       fontFamily: 'RobotoMedium',
       fontSize: 14,
     },
-    body: {
+    textL: {
       fontFamily: 'SourceSansPro',
       fontSize: 16,
+    },
+    textM: {
+      fontFamily: 'SourceSansPro',
+      fontSize: 14,
     },
   },
   shadow: {
