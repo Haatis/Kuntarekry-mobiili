@@ -19,6 +19,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const [isLoaded] = useFonts({
     Roboto: require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
+    RobotoMedium: require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
     SourceSansPro: require('./assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf'),
   });
   if (!isLoaded) {
