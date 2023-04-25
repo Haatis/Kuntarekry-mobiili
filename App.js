@@ -68,7 +68,6 @@ export default function App() {
             backgroundColor: '#fff',
           },
           headerTitleAlign: 'center',
-
           headerTitle: (props) => (
             <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center' }}>
               <Image
@@ -94,8 +93,8 @@ export default function App() {
                     opacity: 0.6,
                     zIndex: 0,
                     top: 0,
-                    width: 400,
-                    resizeMode: 'contain',
+                    width: '100%',
+                    height: '100%',
                   }}
                 />
               </View>
