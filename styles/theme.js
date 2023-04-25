@@ -29,8 +29,8 @@ export const theme = {
     },
     ui: {
       fontFamily: 'Roboto',
-      fontSize: 14,
-      fontWeight: 'bold',
+      fontSize: 12,
+      fontWeight: 'normal',
     },
     body: {
       fontFamily: 'SourceSansPro',

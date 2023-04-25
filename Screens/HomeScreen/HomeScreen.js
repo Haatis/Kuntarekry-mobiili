@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SearchScreen from './SearchScreen';
 import CardScreen from './CardScreen';
@@ -10,20 +10,45 @@ export default function HomeScreen() {
   return (
     <>
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({ route }) => ({
           tabBarLabelStyle: [{ textTransform: 'none' }, theme.textVariants.ui],
           tabBarActiveTintColor: theme.colors.primary,
           tabBarInactiveTintColor: theme.colors.inactive,
           swipeEnabled: false,
-          tabBarIndicatorStyle: {
-            backgroundColor: 'white',
-            height: 100,
+
+          tabBarStyle: {
+            backgroundColor: theme.colors.inactiveNav,
+            height: 50,
           },
-          tabBarStyle: { backgroundColor: theme.colors.inactiveNav },
-        }}
+          tabBarPressColor: 'transparent',
+        })}
       >
-        <Tab.Screen name="Kortit" component={CardScreen} />
-        <Tab.Screen name="Haku" component={SearchScreen} />
+        <Tab.Screen
+          name="Kortit"
+          component={CardScreen}
+          options={{
+            tabBarIndicatorStyle: {
+              height: '100%',
+              width: '60%',
+
+              elevation: 2,
+              backgroundColor: 'white',
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Haku"
+          component={SearchScreen}
+          options={{
+            tabBarIndicatorStyle: {
+              width: '60%',
+              height: '100%',
+              marginLeft: -20,
+              elevation: 2,
+              backgroundColor: 'white',
+            },
+          }}
+        />
       </Tab.Navigator>
     </>
   );
