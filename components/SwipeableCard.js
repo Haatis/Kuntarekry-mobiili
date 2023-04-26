@@ -63,11 +63,11 @@ export default function SwipeableCard() {
           kunnossapitotyöntekijää
         </Text>
         <View style={styles.buttonRow}>
-          <View style={[styles.button, { borderColor: theme.colors.danger }]}>
-            <MaterialCommunityIcons name={'close-thick'} size={45} color={theme.colors.danger} />
+          <View>
+            <MaterialCommunityIcons name={'close-thick'} size={50} color={theme.colors.danger} />
           </View>
-          <View style={[styles.button, { borderColor: theme.colors.secondary }]}>
-            <MaterialCommunityIcons name={'heart'} size={40} color={theme.colors.secondary} />
+          <View style={styles.button}>
+            <MaterialCommunityIcons name={'heart'} size={50} color={theme.colors.secondary} />
           </View>
         </View>
       </View>
@@ -85,14 +85,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     flex: 1,
   },
-  button: {
-    alignItems: 'center',
-    borderRadius: 100,
-    borderWidth: 2,
-    height: 70,
-    justifyContent: 'center',
-    width: 70,
-  },
+  button: {},
   buttonRow: {
     flexDirection: 'row',
     gap: 32,
@@ -124,7 +117,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     height: '50%',
   },
-
   image: {
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
@@ -138,8 +130,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   textContainer: {
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
     flex: 1,
   },
 });
