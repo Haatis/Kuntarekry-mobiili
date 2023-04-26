@@ -19,6 +19,10 @@ export const theme = {
       fontFamily: 'RobotoMedium',
       fontSize: 12,
     },
+    uiMedium: {
+      fontFamily: 'RobotoMedium',
+      fontSize: 14,
+    },
     textL: {
       fontFamily: 'SourceSansPro',
       fontSize: 16,
@@ -28,13 +32,20 @@ export const theme = {
       fontSize: 14,
     },
   },
-  container: {
+  containerCenter: {
     backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
     paddingHorizontal: 8,
+  },
+  containerTop: {
+    backgroundColor: 'white',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    height: '100%',
   },
   dropShadow: {
     elevation: 3,

@@ -2,13 +2,13 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Image } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import HomeScreen from './Screens/HomeScreen/HomeScreen';
 import SettingsScreen from './Screens/SettingsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import AlertScreen from './Screens/AlertsScreen';
-import FavoritesScreen from './Screens/FavoritesScreen';
+import FavoritesScreen from './Screens/FavoritesScreen/FavoritesScreen';
 import bgImage from './assets/rajattu.png';
 import { useFonts } from 'expo-font';
 import { theme } from './styles/theme';
@@ -23,8 +23,13 @@ export default function App() {
     RobotoMedium: require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
     SourceSansPro: require('./assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf'),
   });
+
   if (!isLoaded) {
-    //Splash Screen
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
