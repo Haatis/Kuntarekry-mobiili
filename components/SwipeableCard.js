@@ -117,6 +117,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     height: '50%',
   },
+  gradient2: {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    height: '50%',
+  },
   image: {
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
@@ -130,9 +135,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   textContainer: {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
     flex: 1,
-  },
-  textHeader: {
-    color: 'white',
   },
 });
