@@ -11,10 +11,6 @@ export default function Tag({ tagColor, tagText }) {
 }
 
 const styles = StyleSheet.create({
-  tagRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
   tag: {
     paddingHorizontal: 8,
     paddingVertical: 4,
