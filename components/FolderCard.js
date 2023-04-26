@@ -9,10 +9,10 @@ export default function FolderCard() {
   return (
     <>
       <View style={styles.cardContainer}>
-        <View style={[theme.cardOutline, theme.cardShadow, styles.card]}>
+        <View style={[theme.outline, theme.cardShadow, styles.card]}>
           <View style={styles.cardRow}>
             <ImageBackground
-              imageStyle={styles.image}
+              imageStyle={[theme.outline, styles.image]}
               style={styles.imageContainer}
               source={image}
               resizeMode="stretch"
