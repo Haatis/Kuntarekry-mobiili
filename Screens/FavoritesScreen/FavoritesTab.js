@@ -32,6 +32,7 @@ export default function FavoritesTab() {
             color={'black'}
             style={{
               marginLeft: 'auto',
+              marginVertical: -2,
             }}
           />
         </View>
