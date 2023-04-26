@@ -53,12 +53,23 @@ export default function SwipeableCard() {
         </Text>
         <View style={styles.tagRow}>
           <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />
+          <Tag tagColor={theme.colors.tag1} tagText="Kokoaikatyö" />
+          <Tag tagColor={theme.colors.tag1} tagText="Suomi" />
+          <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
         </View>
         <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
           Akaan kaupunki hakee monipuolisiin ulko- ja viheralueiden kunnossapitotehtäviin
           ammattitaitoista, motivoitunutta, oppimishaluista ja yhteistyökykyistä
           kunnossapitotyöntekijää
         </Text>
+        <View style={styles.buttonRow}>
+          <View>
+            <MaterialCommunityIcons name={'close-thick'} size={50} color={theme.colors.danger} />
+          </View>
+          <View style={[styles.button]}>
+            <MaterialCommunityIcons name={'heart'} size={50} color={theme.colors.secondary} />
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -90,6 +101,12 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: 'center',
   },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 32,
+    padding: 8,
+  },
+  button: {},
   image: {
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
@@ -103,6 +120,10 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
+  },
+  tagRow: {
+    flexDirection: 'row',
+    gap: 8,
   },
   gradient: {
     flex: 1,
