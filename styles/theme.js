@@ -24,7 +24,7 @@ export const theme = {
   textVariants: {
     ui: {
       fontFamily: 'RobotoMedium',
-      fontSize: 14,
+      fontSize: 12,
     },
     textL: {
       fontFamily: 'SourceSansPro',

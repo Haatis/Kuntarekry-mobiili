@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import Card from '../../components/Card';
+import Card from '../../components/card';
 import { theme } from '../../styles/theme';
 
 export default function CardScreen() {
