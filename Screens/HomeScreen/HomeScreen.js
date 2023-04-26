@@ -1,7 +1,5 @@
-import React from 'react';
 import SearchScreen from './SearchScreen';
 import CardScreen from './CardScreen';
-
 import TopTabNavigator from '../../components/TopTabNav';
 
 const tabs = [

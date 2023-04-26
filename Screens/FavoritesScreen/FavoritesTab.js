@@ -1,12 +1,18 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../../styles/theme';
 import FolderCard from '../../components/FolderCard';
 
 export default function FavoritesTab() {
   return (
     <View style={theme.containerTop}>
-      <Text style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary }]}>
+      <View style={[theme.outline, styles.createButton]}>
+        <Text style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary }]}>
+          Luo uusi kansio
+        </Text>
+      </View>
+      <Text
+        style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary, marginTop: 16 }]}
+      >
         Työpaikat
       </Text>
       <FolderCard title="It-tukihenkilö" amount={8} type={1} />
@@ -21,3 +27,15 @@ export default function FavoritesTab() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  createButton: {
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    height: 40,
+    marginHorizontal: 8,
+    width: '100%',
+  },
+});

@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -76,7 +75,7 @@ export default function App() {
             },
 
             headerTitleAlign: 'center',
-            headerTitle: (props) => (
+            headerTitle: () => (
               <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center' }}>
                 <Image
                   source={KuntaRekrySVG}

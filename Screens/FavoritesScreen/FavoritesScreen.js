@@ -1,4 +1,3 @@
-import React from 'react';
 import AppliedTab from './AppliedTab';
 import HiddenTab from './HiddenTab';
 import FavoritesTab from './FavoritesTab';
@@ -18,7 +17,6 @@ const tabs = [
     component: AppliedTab,
   },
 ];
-const tabss = 'asd';
 
 export default function FavoritesScreen() {
   return <TopTabNavigator tabs={tabs} />;
