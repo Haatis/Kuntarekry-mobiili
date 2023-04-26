@@ -92,9 +92,10 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   card: {
+    width: '100%',
     backgroundColor: 'white',
     borderRadius: 8,
-    height: '85%',
+    height: '95%',
   },
   cardBottom: {
     alignItems: 'center',
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   imageContainer: {
-    height: '50%',
+    height: '45%',
   },
   tagRow: {
     flexDirection: 'row',
