@@ -1,7 +1,7 @@
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../styles/theme';
 
-export default function Card() {
+export default function SwipeableCard() {
   const image = {
     uri: 'https://cdn.pixabay.com/photo/2015/12/07/10/58/architect-1080592_960_720.jpg',
   };
