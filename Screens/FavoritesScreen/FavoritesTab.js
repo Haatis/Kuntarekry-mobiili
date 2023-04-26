@@ -6,36 +6,32 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function FavoritesTab() {
   return (
     <View style={theme.containerTop}>
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <View
-          style={[
-            theme.outline,
-            styles.createButton,
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-            },
-          ]}
-        >
-          <Text
-            style={[
-              theme.textVariants.uiMedium,
-              { color: theme.colors.textPrimary, paddingHorizontal: 16, paddingVertical: 8 },
-            ]}
-          >
-            Luo uusi kansio
-          </Text>
+      <View
+        style={[
+          theme.outline,
+          styles.createButton,
+          {
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          },
+        ]}
+      >
+        <Text style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary }]}>
+          Luo uusi kansio
+        </Text>
 
-          <MaterialCommunityIcons
-            name={'plus'}
-            size={40}
-            color={'black'}
-            style={{
-              marginLeft: 'auto',
-              marginVertical: -2,
-            }}
-          />
-        </View>
+        <MaterialCommunityIcons
+          name={'plus'}
+          size={40}
+          color={theme.colors.textPrimary}
+          style={{
+            marginHorizontal: -8,
+            marginVertical: -16,
+          }}
+        />
       </View>
       <Text
         style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary, marginTop: 16 }]}
