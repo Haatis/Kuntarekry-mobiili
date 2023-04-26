@@ -14,20 +14,25 @@ export default function FavoritesTab() {
             {
               flexDirection: 'row',
               alignItems: 'center',
-              paddingVertical: 8,
-              paddingHorizontal: 16,
             },
           ]}
         >
-          <Text style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary }]}>
+          <Text
+            style={[
+              theme.textVariants.uiMedium,
+              { color: theme.colors.textPrimary, paddingHorizontal: 16, paddingVertical: 8 },
+            ]}
+          >
             Luo uusi kansio
           </Text>
 
           <MaterialCommunityIcons
             name={'plus'}
-            size={24}
+            size={40}
             color={'black'}
-            style={{ marginLeft: 'auto' }}
+            style={{
+              marginLeft: 'auto',
+            }}
           />
         </View>
       </View>
