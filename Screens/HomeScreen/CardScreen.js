@@ -4,7 +4,7 @@ import { theme } from '../../styles/theme';
 
 export default function CardScreen() {
   return (
-    <View style={theme.container}>
+    <View style={theme.containerCenter}>
       <SwipeableCard />
     </View>
   );

@@ -5,8 +5,10 @@ import FolderCard from '../../components/FolderCard';
 
 export default function FavoritesTab() {
   return (
-    <View style={theme.container}>
-      <Text>Favorites Tab</Text>
+    <View style={theme.containerTop}>
+      <Text style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary }]}>
+        Työpaikat
+      </Text>
       <FolderCard />
     </View>
   );
