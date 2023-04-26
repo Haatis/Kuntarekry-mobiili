@@ -1,5 +1,3 @@
-import React from 'react';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SearchScreen from './SearchScreen';
 import CardScreen from './CardScreen';
 

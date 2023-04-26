@@ -1,4 +1,3 @@
-import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { theme } from '../styles/theme';
 
@@ -7,7 +6,7 @@ const Tab = createMaterialTopTabNavigator();
 export default function TopTabNav({ tabs }) {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={() => ({
         tabBarLabelStyle: [{ textTransform: 'none' }, theme.textVariants.ui],
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.inactive,

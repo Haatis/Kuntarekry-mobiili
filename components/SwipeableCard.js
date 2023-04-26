@@ -66,7 +66,7 @@ export default function SwipeableCard() {
           <View>
             <MaterialCommunityIcons name={'close-thick'} size={50} color={theme.colors.danger} />
           </View>
-          <View style={[styles.button]}>
+          <View style={styles.button}>
             <MaterialCommunityIcons name={'heart'} size={50} color={theme.colors.secondary} />
           </View>
         </View>
@@ -77,62 +77,59 @@ export default function SwipeableCard() {
 
 const styles = StyleSheet.create({
   avatar: {
-    width: 40,
-    height: 40,
     borderRadius: 30,
+    height: 40,
+    width: 40,
   },
   avatarImage: {
-    flex: 1,
     borderRadius: 30,
+    flex: 1,
+  },
+  button: {},
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 32,
+    padding: 8,
   },
   card: {
     backgroundColor: 'white',
     borderRadius: 8,
     height: '85%',
   },
-  cardTop: {
-    padding: 16,
-    gap: 16,
-    flexDirection: 'row',
-  },
   cardBottom: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    gap: 8,
     alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
-  buttonRow: {
+  cardTop: {
     flexDirection: 'row',
-    gap: 32,
-    padding: 8,
+    gap: 16,
+    padding: 16,
   },
-  button: {},
-  image: {
-    borderTopRightRadius: 8,
+  gradient: {
     borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    flex: 1,
+  },
+  gradient2: {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    height: '50%',
+  },
+  image: {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
     height: '100%',
   },
   imageContainer: {
     height: '50%',
   },
-  textHeader: {
-    color: 'white',
-  },
-  textContainer: {
-    flex: 1,
-  },
   tagRow: {
     flexDirection: 'row',
     gap: 8,
   },
-  gradient: {
+  textContainer: {
     flex: 1,
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
-  },
-  gradient2: {
-    height: '50%',
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
   },
 });

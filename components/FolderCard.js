@@ -1,5 +1,4 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { theme } from '../styles/theme';
 
 export default function FolderCard() {
@@ -34,27 +33,27 @@ const styles = StyleSheet.create({
     height: 68,
     width: '100%',
   },
+  cardContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 16,
+  },
+  cardRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    margin: 8,
+  },
   image: {
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
     height: '100%',
     width: '100%',
   },
   imageContainer: {
     height: 52,
     width: 52,
-  },
-  cardContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  cardRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: 8,
   },
   textCol: {
     flexDirection: 'column',

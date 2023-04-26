@@ -1,5 +1,3 @@
-import React from 'react';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import AppliedTab from './AppliedTab';
 import HiddenTab from './HiddenTab';
 import FavoritesTab from './FavoritesTab';

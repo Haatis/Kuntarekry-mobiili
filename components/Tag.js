@@ -1,7 +1,5 @@
 import { Pressable, Text, StyleSheet } from 'react-native';
 import { theme } from '../styles/theme';
-import React from 'react';
-
 export default function Tag({ tagColor, tagText }) {
   return (
     <Pressable style={[styles.tag, { backgroundColor: tagColor }]}>
@@ -12,8 +10,8 @@ export default function Tag({ tagColor, tagText }) {
 
 const styles = StyleSheet.create({
   tag: {
+    borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 4,
   },
 });
