@@ -99,9 +99,10 @@ export default function App() {
                         style={{
                           marginTop: 10,
                           flex: 1,
-                          height: '85%',
+                          height: '100%',
                           resizeMode: 'cover',
                           opacity: 0.7,
+                          transform: [{ rotateZ: '5deg' }],
                         }}
                       />
                       <Image
@@ -110,9 +111,10 @@ export default function App() {
                           marginTop: 10,
                           marginLeft: 20,
                           flex: 1,
-                          height: '85%',
+                          height: '100%',
                           resizeMode: 'cover',
                           opacity: 0.7,
+                          transform: [{ rotateZ: '15deg' }],
                         }}
                       />
                     </View>
