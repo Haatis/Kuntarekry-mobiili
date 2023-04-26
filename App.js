@@ -8,7 +8,7 @@ import HomeScreen from './Screens/HomeScreen/HomeScreen';
 import SettingsScreen from './Screens/SettingsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import AlertScreen from './Screens/AlertsScreen';
-import FavoritesScreen from './Screens/FavoritesScreen';
+import FavoritesScreen from './Screens/FavoritesScreen/FavoritesScreen';
 import bgImage from './assets/rajattu.png';
 import { Image } from 'react-native';
 import { useFonts } from 'expo-font';
@@ -24,8 +24,13 @@ export default function App() {
     RobotoMedium: require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
     SourceSansPro: require('./assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf'),
   });
+
   if (!isLoaded) {
-    //Splash Screen
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
