@@ -1,5 +1,4 @@
 import React from 'react';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import AppliedTab from './AppliedTab';
 import HiddenTab from './HiddenTab';
 import FavoritesTab from './FavoritesTab';
@@ -19,6 +18,7 @@ const tabs = [
     component: AppliedTab,
   },
 ];
+const tabss = 'asd';
 
 export default function FavoritesScreen() {
   return <TopTabNavigator tabs={tabs} />;

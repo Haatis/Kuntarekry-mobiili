@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { theme } from '../styles/theme';
+import { useState } from 'react';
 
-export default function FolderCard() {
+export default function FolderCard({ title, amount, type }) {
   const image = {
     uri: 'https://cdn.pixabay.com/photo/2015/12/07/10/58/architect-1080592_960_720.jpg',
   };
+
   return (
     <>
       <View style={styles.cardContainer}>
@@ -18,8 +20,10 @@ export default function FolderCard() {
               resizeMode="stretch"
             ></ImageBackground>
             <View style={styles.textCol}>
-              <Text style={{ fontWeight: 'bold', fontSize: 14 }}>It-tukihenkilö</Text>
-              <Text style={{ fontSize: 12, color: '#808080' }}>8 tallennettua työpaikkaa</Text>
+              <Text style={theme.textVariants.smallCardTitle}>{title}</Text>
+              <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
+                {amount} tallennettua {type === 1 ? 'työpaikkaa' : 'työnantajaa'}
+              </Text>
             </View>
           </View>
         </View>

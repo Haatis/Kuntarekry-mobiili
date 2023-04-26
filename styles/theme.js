@@ -31,6 +31,10 @@ export const theme = {
       fontFamily: 'SourceSansPro',
       fontSize: 14,
     },
+    smallCardTitle: {
+      fontFamily: 'SourceSansPro',
+      fontSize: 15,
+    },
   },
   containerCenter: {
     backgroundColor: 'white',
