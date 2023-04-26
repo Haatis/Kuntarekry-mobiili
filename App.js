@@ -9,7 +9,7 @@ import SettingsScreen from './Screens/SettingsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import AlertScreen from './Screens/AlertsScreen';
 import FavoritesScreen from './Screens/FavoritesScreen';
-import bgImage from './assets/Subtract.png';
+import bgImage from './assets/rajattu.png';
 import { Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import { theme } from './styles/theme';
@@ -83,23 +83,36 @@ export default function App() {
             ),
             headerBackground: () => {
               return (
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
                   <LinearGradient
                     colors={['rgba(12, 142, 194, 0.9)', 'rgba(51, 204, 128, 0.9)']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                     style={{ flex: 1 }}
                   >
-                    {/* <Image
-                      source={bgImage}
-                      style={{
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        resizeMode: 'cover',
-                      }}
-                    /> */}
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      <Image
+                        source={bgImage}
+                        style={{
+                          marginTop: 10,
+                          flex: 1,
+                          height: '85%',
+                          resizeMode: 'cover',
+                          opacity: 0.7,
+                        }}
+                      />
+                      <Image
+                        source={bgImage}
+                        style={{
+                          marginTop: 10,
+                          marginLeft: 20,
+                          flex: 1,
+                          height: '85%',
+                          resizeMode: 'cover',
+                          opacity: 0.7,
+                        }}
+                      />
+                    </View>
                   </LinearGradient>
                 </View>
               );
