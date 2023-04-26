@@ -35,15 +35,6 @@ export const theme = {
       fontSize: 14,
     },
   },
-  shadow: {
-    backgroundColor: '#fff',
-    elevation: 3,
-    zIndex: 999,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 3,
-  },
   container: {
     backgroundColor: 'white',
     flex: 1,
@@ -51,5 +42,17 @@ export const theme = {
     justifyContent: 'center',
     paddingVertical: 16,
     paddingHorizontal: 8,
+  },
+  cardShadow: {
+    elevation: 3,
+    backgroundColor: 'white',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  cardOutline: {
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
   },
 };

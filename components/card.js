@@ -7,8 +7,13 @@ export default function Card() {
   };
 
   return (
-    <View style={styles.card}>
-      <ImageBackground imageStyle={styles.image} source={image}>
+    <View style={[theme.cardOutline, theme.cardShadow, styles.card]}>
+      <ImageBackground
+        imageStyle={styles.image}
+        style={styles.imageContainer}
+        source={image}
+        resizeMode="stretch"
+      >
         <Text style={[theme.textVariants.textL, { color: 'white' }]}>Kiinteistöhuoltomies</Text>
         <Text style={[theme.textVariants.textM, { color: 'white' }]}>Akaan kaupunki</Text>
       </ImageBackground>
@@ -23,12 +28,16 @@ export default function Card() {
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
-    backgroundColor: 'red',
+    backgroundColor: 'white',
     borderRadius: 8,
+    height: '85%',
   },
   image: {
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
+    height: '100%',
+  },
+  imageContainer: {
+    height: '50%',
   },
 });
