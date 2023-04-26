@@ -14,13 +14,6 @@ export const theme = {
     tag3: '#D4EFFA',
     inactiveNav: '#F8F8F8',
   },
-  spacing: {
-    xs: 4,
-    s: 8,
-    m: 16,
-    l: 24,
-    xl: 40,
-  },
   textVariants: {
     ui: {
       fontFamily: 'RobotoMedium',
@@ -43,7 +36,7 @@ export const theme = {
     paddingVertical: 16,
     paddingHorizontal: 8,
   },
-  cardShadow: {
+  dropShadow: {
     elevation: 3,
     backgroundColor: 'white',
     shadowColor: '#000000',
@@ -51,8 +44,12 @@ export const theme = {
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
-  cardOutline: {
+  outline: {
     borderWidth: 1,
     borderColor: '#EEEEEE',
+  },
+  outlineDark: {
+    borderWidth: 1,
+    borderColor: '#DBDBDB',
   },
 };
