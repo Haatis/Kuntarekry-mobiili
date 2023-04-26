@@ -1,14 +1,35 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../../styles/theme';
 import FolderCard from '../../components/FolderCard';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function FavoritesTab() {
   return (
     <View style={theme.containerTop}>
-      <View style={[theme.outline, styles.createButton]}>
-        <Text style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary }]}>
-          Luo uusi kansio
-        </Text>
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View
+          style={[
+            theme.outline,
+            styles.createButton,
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingVertical: 8,
+              paddingHorizontal: 16,
+            },
+          ]}
+        >
+          <Text style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary }]}>
+            Luo uusi kansio
+          </Text>
+
+          <MaterialCommunityIcons
+            name={'plus'}
+            size={24}
+            color={'black'}
+            style={{ marginLeft: 'auto' }}
+          />
+        </View>
       </View>
       <Text
         style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary, marginTop: 16 }]}

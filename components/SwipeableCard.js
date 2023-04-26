@@ -117,11 +117,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     height: '50%',
   },
-  gradient2: {
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    height: '50%',
-  },
+
   image: {
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
