@@ -7,7 +7,7 @@ export default function TopTabNav({ tabs }) {
   return (
     <Tab.Navigator
       screenOptions={() => ({
-        tabBarLabelStyle: [{ textTransform: 'none' }, theme.textVariants.ui],
+        tabBarLabelStyle: [{ textTransform: 'none' }, theme.textVariants.uiS],
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.inactive,
         swipeEnabled: false,

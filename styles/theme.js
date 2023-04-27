@@ -15,25 +15,25 @@ export const theme = {
     inactiveNav: '#F8F8F8',
   },
   textVariants: {
-    ui: {
+    uiS: {
       fontFamily: 'RobotoMedium',
       fontSize: 12,
     },
-    uiMedium: {
+    uiM: {
       fontFamily: 'RobotoMedium',
       fontSize: 14,
-    },
-    textL: {
-      fontFamily: 'SourceSansPro',
-      fontSize: 16,
     },
     textM: {
       fontFamily: 'SourceSansPro',
       fontSize: 14,
     },
-    smallCardTitle: {
+    textL: {
       fontFamily: 'SourceSansPro',
       fontSize: 15,
+    },
+    textXL: {
+      fontFamily: 'SourceSansPro',
+      fontSize: 16,
     },
   },
   containerCenter: {
@@ -52,7 +52,7 @@ export const theme = {
     height: '100%',
   },
   dropShadow: {
-    elevation: 3,
+    elevation: 5,
     backgroundColor: 'white',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 0 },
