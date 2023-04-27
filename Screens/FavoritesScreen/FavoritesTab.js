@@ -9,6 +9,7 @@ export default function FavoritesTab() {
       <View
         style={[
           theme.outline,
+          theme.dropShadow,
           styles.createButton,
           {
             paddingHorizontal: 16,
@@ -33,15 +34,11 @@ export default function FavoritesTab() {
           }}
         />
       </View>
-      <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, marginTop: 16 }]}>
-        Työpaikat
-      </Text>
+      <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>Työpaikat</Text>
       <FolderCard title="It-tukihenkilö" amount={8} type={1} />
       <FolderCard title="Aikaisemmin katsotut" amount={50} type={1} />
       <FolderCard title="Kaikki suosikit" amount={16} type={1} />
-      <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, marginTop: 16 }]}>
-        Työnantajat
-      </Text>
+      <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>Työnantajat</Text>
       <FolderCard title="Kaikki suosikit" amount={16} type={2} />
     </View>
   );

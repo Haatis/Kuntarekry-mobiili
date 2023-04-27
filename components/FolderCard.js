@@ -9,7 +9,7 @@ export default function FolderCard({ title, amount, type }) {
   return (
     <>
       <View style={styles.cardContainer}>
-        <View style={[theme.outline, theme.cardShadow, styles.card]}>
+        <View style={[theme.outline, theme.dropShadow, styles.card]}>
           <View style={styles.cardRow}>
             <ImageBackground
               imageStyle={[theme.outline, styles.image]}
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: 16,
   },
   cardRow: {
     alignItems: 'center',

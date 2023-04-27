@@ -50,9 +50,10 @@ export const theme = {
     paddingVertical: 16,
     paddingHorizontal: 8,
     height: '100%',
+    gap: 16,
   },
   dropShadow: {
-    elevation: 5,
+    elevation: 3,
     backgroundColor: 'white',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 0 },
