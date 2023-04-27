@@ -5,7 +5,7 @@ import { View, Image, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import HomeScreen from './Screens/HomeScreen/HomeScreen';
 import SettingsScreen from './Screens/SettingsScreen';
-import ProfileScreen from './Screens/ProfileScreen';
+import ProfileScreen from './Screens/ProfileScreen/ProfileScreen';
 import AlertScreen from './Screens/AlertsScreen';
 import FavoritesScreen from './Screens/FavoritesScreen/FavoritesScreen';
 import bgImage from './assets/rajattu.png';
