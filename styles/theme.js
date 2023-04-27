@@ -52,6 +52,14 @@ export const theme = {
     height: '100%',
     gap: 16,
   },
+  containerList: {
+    backgroundColor: 'white',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    height: '100%',
+    gap: 8,
+  },
   dropShadow: {
     elevation: 3,
     backgroundColor: 'white',

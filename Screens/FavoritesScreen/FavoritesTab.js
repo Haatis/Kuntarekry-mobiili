@@ -10,12 +10,13 @@ export default function FavoritesTab() {
         <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
           Luo uusi kansio
         </Text>
-
         <MaterialCommunityIcons
           name={'plus'}
           size={40}
           color={theme.colors.textPrimary}
-          style={{}}
+          style={{
+            marginHorizontal: -8,
+          }}
         />
       </View>
       <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>Työpaikat</Text>
@@ -31,10 +32,7 @@ export default function FavoritesTab() {
 const styles = StyleSheet.create({
   createButton: {
     alignItems: 'center',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    borderRadius: 30,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
