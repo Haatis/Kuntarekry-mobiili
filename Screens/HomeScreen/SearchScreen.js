@@ -5,7 +5,7 @@ import TestData from '../../components/TestData';
 
 export default function SearchScreen() {
   return (
-    <View style={theme.containerTop}>
+    <View style={theme.containerList}>
       <SmallCard
         employerImage={TestData.image[0]}
         employer={TestData.employer[0]}

@@ -6,31 +6,16 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function FavoritesTab() {
   return (
     <View style={theme.containerTop}>
-      <View
-        style={[
-          theme.outline,
-          theme.dropShadow,
-          styles.createButton,
-          {
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          },
-        ]}
-      >
+      <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
         <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
           Luo uusi kansio
         </Text>
-
         <MaterialCommunityIcons
           name={'plus'}
           size={40}
           color={theme.colors.textPrimary}
           style={{
             marginHorizontal: -8,
-            marginVertical: -16,
           }}
         />
       </View>
@@ -46,12 +31,12 @@ export default function FavoritesTab() {
 
 const styles = StyleSheet.create({
   createButton: {
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    height: 40,
-    marginHorizontal: 8,
+    alignItems: 'center',
+    borderRadius: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 4,
     width: '100%',
   },
 });
