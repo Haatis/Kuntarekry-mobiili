@@ -12,12 +12,14 @@ export default function ProfileScreen() {
 
   return (
     <>
-      <View style={theme.containerTop}>
-        <Image
-          source={ProfileImage}
-          style={[theme.outline, styles.imageStyle]}
-          resizeMode="cover"
-        />
+      <View style={theme.containerCenter}>
+        <View style={[theme.dropShadow, { borderRadius: 50 }]}>
+          <Image
+            source={ProfileImage}
+            style={[theme.outline, styles.imageStyle]}
+            resizeMode="cover"
+          />
+        </View>
         <Text style={{ marginTop: 16, fontFamily: 'SourceSansPro', fontSize: 20 }}>
           Pekka Virtanen
         </Text>
@@ -35,7 +37,7 @@ export default function ProfileScreen() {
         <View style={styles.container}>
           <View style={styles.row}>
             <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square]}>
+              <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
                   name={'card-account-details'}
                   size={40}
@@ -45,7 +47,7 @@ export default function ProfileScreen() {
               </View>
             </View>
             <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square]}>
+              <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
                   name={'file-account'}
                   size={40}
@@ -55,7 +57,7 @@ export default function ProfileScreen() {
               </View>
             </View>
             <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square]}>
+              <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
                   name={'school'}
                   size={40}
@@ -67,7 +69,7 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.row}>
             <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square]}>
+              <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
                   name={'account-filter'}
                   size={40}
@@ -77,7 +79,7 @@ export default function ProfileScreen() {
               </View>
             </View>
             <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square]}>
+              <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
                   name={'file-image'}
                   size={40}
@@ -87,7 +89,7 @@ export default function ProfileScreen() {
               </View>
             </View>
             <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square]}>
+              <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
                   name={'dots-vertical'}
                   size={40}
