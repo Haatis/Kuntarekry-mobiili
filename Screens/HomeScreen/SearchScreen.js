@@ -3,12 +3,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import TestData from '../../components/TestData';
-
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import { CustomDrawerContent } from './CustomDrawerContent';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 const Drawer = createDrawerNavigator();
 
@@ -16,7 +12,7 @@ export default function SearchScreen() {
   return (
     <NavigationContainer independent={true}>
       <Drawer.Navigator
-        screenOptions={{ headerShown: false }} // hide the default drawer navigation bar
+        screenOptions={{ headerShown: false, drawerPosition: 'right' }} // hide the default drawer navigation bar
         drawerContent={(props) => <CustomDrawerContent {...props} />}
       >
         <Drawer.Screen name="Search" component={SearchContent} />
@@ -44,44 +40,6 @@ function SearchContent({ navigation }) {
       <SmallCard job={TestData.jobs[0]} />
       <SmallCard job={TestData.jobs[1]} />
     </View>
-  );
-}
-
-function CustomDrawerContent({ navigation }) {
-  return (
-    <DrawerContentScrollView style={{ backgroundColor: theme.colors.background }}>
-      <View style={[theme.outline, theme.dropShadow, styles.drawerHeader]}>
-        <MaterialCommunityIcons
-          name={'close'}
-          size={30}
-          color={theme.colors.textPrimary}
-          onPress={() => navigation.closeDrawer()} // close drawer when close icon is pressed
-        />
-      </View>
-      <View style={styles.drawerContent}>
-        <DrawerItem
-          label="Filter 1"
-          onPress={() => console.log('Filter 1 is selected')} // handle filter 1 selection
-          icon={() => (
-            <MaterialCommunityIcons name="filter-outline" size={24} color={theme.colors.primary} />
-          )}
-        />
-        <DrawerItem
-          label="Filter 2"
-          onPress={() => console.log('Filter 2 is selected')} // handle filter 2 selection
-          icon={() => (
-            <MaterialCommunityIcons name="filter-outline" size={24} color={theme.colors.primary} />
-          )}
-        />
-        <DrawerItem
-          label="Filter 3"
-          onPress={() => console.log('Filter 3 is selected')} // handle filter 3 selection
-          icon={() => (
-            <MaterialCommunityIcons name="filter-outline" size={24} color={theme.colors.primary} />
-          )}
-        />
-      </View>
-    </DrawerContentScrollView>
   );
 }
 
