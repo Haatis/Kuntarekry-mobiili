@@ -3,22 +3,38 @@ import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Tag from './Tag';
 
-export default function SmallCard({ employerImage, employer, description, endDate }) {
+export default function SmallCard({ job, cardType }) {
+  if (cardType == null) {
+    cardType = 'default';
+  }
+
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
         <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
-          <Image style={styles.avatarImage} source={employerImage} />
+          <Image style={styles.avatarImage} source={job.image} />
         </Pressable>
         <View style={styles.textContainer}>
-          <Text style={[theme.textVariants.textL, { color: 'black' }]}>Kiinteistöhuoltomies</Text>
+          <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.jobTitle}</Text>
           <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
-            {employer}
+            {job.employer}
           </Text>
         </View>
-        <View style={[styles.button, { borderColor: theme.colors.secondary }]}>
-          <MaterialCommunityIcons name={'heart-outline'} size={24} color={theme.colors.secondary} />
-        </View>
+        {
+          {
+            default: (
+              <View style={[styles.button, { borderColor: theme.colors.secondary }]}>
+                <MaterialCommunityIcons
+                  name={'heart-outline'}
+                  size={24}
+                  color={theme.colors.secondary}
+                />
+              </View>
+            ),
+            hidden: <MaterialCommunityIcons name={'close-thick'} size={16} color={'black'} />,
+            applied: null,
+          }[cardType]
+        }
       </View>
       <View style={styles.cardBottom}>
         <View style={styles.tagRow}>
@@ -27,12 +43,19 @@ export default function SmallCard({ employerImage, employer, description, endDat
           <Tag tagColor={theme.colors.tag1} tagText="Suomi" />
           <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
         </View>
-        <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
-          {description}
-        </Text>
-        <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
-          Haku päättyy: {endDate}
-        </Text>
+        <Text style={[theme.textVariants.textM, styles.description]}>{job.description}</Text>
+        {cardType === 'applied' ? (
+          <View style={styles.dateTextContainer}>
+            <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
+              Haku päättyy: {job.endDate}
+            </Text>
+            <Text style={[theme.textVariants.textS, { color: 'black' }]}>Haettu: 12.1.2020</Text>
+          </View>
+        ) : (
+          <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
+            Haku päättyy: {job.endDate}
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -64,13 +87,22 @@ const styles = StyleSheet.create({
   cardBottom: {
     alignItems: 'center',
     gap: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     paddingVertical: 8,
   },
   cardTop: {
     flexDirection: 'row',
     gap: 8,
     padding: 8,
+  },
+  dateTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  description: {
+    color: theme.colors.textSecondary,
+    width: '100%',
   },
   tagRow: {
     flexDirection: 'row',

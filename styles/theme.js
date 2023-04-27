@@ -23,6 +23,10 @@ export const theme = {
       fontFamily: 'RobotoMedium',
       fontSize: 14,
     },
+    textS: {
+      fontFamily: 'SourceSansPro',
+      fontSize: 13,
+    },
     textM: {
       fontFamily: 'SourceSansPro',
       fontSize: 14,

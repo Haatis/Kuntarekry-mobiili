@@ -6,18 +6,8 @@ import TestData from '../../components/TestData';
 export default function AppliedTab() {
   return (
     <View style={theme.containerList}>
-      <SmallCard
-        employerImage={TestData.image[0]}
-        employer={TestData.employer[0]}
-        endDate={TestData.endDate[0]}
-        description={TestData.description[0]}
-      />
-      <SmallCard
-        employerImage={TestData.image[1]}
-        employer={TestData.employer[1]}
-        endDate={TestData.endDate[1]}
-        description={TestData.description[1]}
-      />
+      <SmallCard cardType={'applied'} job={TestData.jobs[0]} />
+      <SmallCard cardType={'applied'} job={TestData.jobs[1]} />
     </View>
   );
 }
