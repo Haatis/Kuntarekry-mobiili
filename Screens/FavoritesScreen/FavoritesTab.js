@@ -19,7 +19,7 @@ export default function FavoritesTab() {
           },
         ]}
       >
-        <Text style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary }]}>
+        <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
           Luo uusi kansio
         </Text>
 
@@ -33,17 +33,13 @@ export default function FavoritesTab() {
           }}
         />
       </View>
-      <Text
-        style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary, marginTop: 16 }]}
-      >
+      <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, marginTop: 16 }]}>
         Työpaikat
       </Text>
       <FolderCard title="It-tukihenkilö" amount={8} type={1} />
       <FolderCard title="Aikaisemmin katsotut" amount={50} type={1} />
       <FolderCard title="Kaikki suosikit" amount={16} type={1} />
-      <Text
-        style={[theme.textVariants.uiMedium, { color: theme.colors.textPrimary, marginTop: 16 }]}
-      >
+      <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, marginTop: 16 }]}>
         Työnantajat
       </Text>
       <FolderCard title="Kaikki suosikit" amount={16} type={2} />

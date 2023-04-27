@@ -18,7 +18,7 @@ export default function FolderCard({ title, amount, type }) {
               resizeMode="stretch"
             ></ImageBackground>
             <View style={styles.textCol}>
-              <Text style={theme.textVariants.smallCardTitle}>{title}</Text>
+              <Text style={theme.textVariants.textL}>{title}</Text>
               <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
                 {amount} tallennettua {type === 1 ? 'työpaikkaa' : 'työnantajaa'}
               </Text>

@@ -33,11 +33,11 @@ export default function SwipeableCard() {
             style={styles.gradient2}
           >
             <View style={styles.cardTop}>
-              <Pressable style={[theme.outline, styles.avatar]}>
+              <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
                 <Image style={styles.avatarImage} source={employerImage} />
               </Pressable>
               <View style={styles.textContainer}>
-                <Text style={[theme.textVariants.textL, { color: 'white' }]}>
+                <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
                   Kiinteistöhuoltomies
                 </Text>
                 <Text style={[theme.textVariants.textM, { color: 'white' }]}>Akaan kaupunki</Text>

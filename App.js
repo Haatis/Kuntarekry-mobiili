@@ -63,7 +63,7 @@ export default function App() {
 
               return <MaterialCommunityIcons name={iconName} size={24} color={color} />;
             },
-            tabBarLabelStyle: theme.textVariants.ui,
+            tabBarLabelStyle: theme.textVariants.uiS,
             tabBarActiveTintColor: theme.colors.primary,
             tabBarInactiveTintColor: theme.colors.inactive,
             tabBarStyle: {
