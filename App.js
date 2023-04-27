@@ -93,7 +93,7 @@ export default function App() {
                     end={{ x: 1, y: 0 }}
                     style={{ flex: 1 }}
                   >
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <View style={{ flex: 1, flexDirection: 'row', overflow: 'hidden' }}>
                       <Image
                         source={bgImage}
                         style={{

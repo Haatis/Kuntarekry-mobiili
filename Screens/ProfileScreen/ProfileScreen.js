@@ -12,7 +12,7 @@ export default function ProfileScreen() {
 
   return (
     <>
-      <View style={theme.containerTop}>
+      <View style={theme.containerCenter}>
         <Image
           source={ProfileImage}
           style={[theme.outline, styles.imageStyle]}
