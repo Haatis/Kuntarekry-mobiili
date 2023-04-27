@@ -3,23 +3,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import TestData from '../../components/TestData';
-import { CustomDrawerContent } from './CustomDrawerContent';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-const Drawer = createDrawerNavigator();
-
-export default function SearchScreen() {
-  return (
-    <NavigationContainer independent={true}>
-      <Drawer.Navigator
-        screenOptions={{ headerShown: false, drawerPosition: 'right' }} // hide the default drawer navigation bar
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
-      >
-        <Drawer.Screen name="Search" component={SearchContent} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
-}
 
 function SearchContent({ navigation }) {
   return (
@@ -57,3 +40,5 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+
+export default SearchContent;
