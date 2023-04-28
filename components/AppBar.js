@@ -1,10 +1,14 @@
 import { View, Image, ImageBackground, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import BackgroundImage from '../assets/substract.png';
 import Logo from '../assets/logo.png';
 import Constants from 'expo-constants';
 
-export default function AppBar() {
+export default function AppBar({ back }) {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -23,15 +27,32 @@ export default function AppBar() {
             transform: [{ rotateZ: '5deg' }, { scale: 1.5 }],
           }}
         >
-          <Image
-            source={Logo}
-            resizeMode="contain"
+          <View
             style={{
-              marginTop: Constants.statusBarHeight,
-              width: '100%',
-              height: 44,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 10,
             }}
-          />
+          >
+            {back ? (
+              <Ionicons
+                name="arrow-back"
+                size={24}
+                color="white"
+                onPress={() => navigation.goBack()}
+              />
+            ) : null}
+            <Image
+              source={Logo}
+              resizeMode="contain"
+              style={{
+                marginTop: Constants.statusBarHeight,
+                width: '100%',
+                height: 44,
+              }}
+            />
+          </View>
         </ImageBackground>
       </LinearGradient>
     </View>
