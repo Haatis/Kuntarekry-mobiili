@@ -1,9 +1,17 @@
+import React from 'react';
 import { View } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
+import { useDrawerStatus } from '@react-navigation/drawer';
 
-export function CustomDrawerContent({ navigation }) {
+export function CustomDrawerContent({ navigation, setIsDrawerOpen }) {
+  const drawerStatus = useDrawerStatus();
+
+  React.useEffect(() => {
+    setIsDrawerOpen(drawerStatus === 'open');
+  }, [drawerStatus, setIsDrawerOpen]);
+
   return (
     <DrawerContentScrollView>
       <View>
