@@ -16,6 +16,7 @@ import AppBar from './components/AppBar';
 import { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import JobScreen from './Screens/JobScreen';
+import FavoriteFolder from './Screens/FavoriteFolder';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -67,6 +68,13 @@ function StackNavigator() {
       <Stack.Screen
         name="JobScreen"
         component={JobScreen}
+        options={{
+          header: () => <AppBar back={true} />,
+        }}
+      />
+      <Stack.Screen
+        name="FavoriteFolder"
+        component={FavoriteFolder}
         options={{
           header: () => <AppBar back={true} />,
         }}

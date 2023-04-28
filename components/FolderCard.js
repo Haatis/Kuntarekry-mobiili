@@ -1,14 +1,17 @@
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Pressable } from 'react-native';
 import { theme } from '../styles/theme';
+
+import { useNavigation } from '@react-navigation/native';
 
 export default function FolderCard({ title, amount, type }) {
   const image = {
     uri: 'https://cdn.pixabay.com/photo/2015/12/07/10/58/architect-1080592_960_720.jpg',
   };
+  const navigation = useNavigation();
 
   return (
     <>
-      <View style={styles.cardContainer}>
+      <Pressable onPress={() => navigation.navigate('FavoriteFolder')} style={styles.cardContainer}>
         <View style={[theme.outline, theme.dropShadow, styles.card]}>
           <View style={styles.cardRow}>
             <ImageBackground
@@ -25,7 +28,7 @@ export default function FolderCard({ title, amount, type }) {
             </View>
           </View>
         </View>
-      </View>
+      </Pressable>
     </>
   );
 }

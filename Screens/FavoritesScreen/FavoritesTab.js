@@ -2,7 +2,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../../styles/theme';
 import FolderCard from '../../components/FolderCard';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 export default function FavoritesTab() {
   return (
     <View style={theme.containerTop}>
