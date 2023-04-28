@@ -42,8 +42,8 @@ export function CustomDrawerContent({ setIsDrawerOpen }) {
           <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
         </View>
         <View style={styles.tagRow}>
-          <Tag tagColor={theme.colors.tag1} tagText="kokoaikatyö" />
-          <Tag tagColor={theme.colors.tag1} tagText="Osa-aikatyö" />
+          <Tag tagColor={theme.colors.tag1} tagText="kokoaikatyö" tagClose={true} />
+          <Tag tagColor={theme.colors.tag1} tagText="Osa-aikatyö" tagClose={true} />
         </View>
       </View>
     </DrawerContentScrollView>
