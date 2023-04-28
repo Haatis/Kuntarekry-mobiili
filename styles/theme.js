@@ -19,6 +19,10 @@ export const theme = {
       fontFamily: 'RobotoMedium',
       fontSize: 12,
     },
+    uiAltS: {
+      fontFamily: 'Roboto',
+      fontSize: 13,
+    },
     uiM: {
       fontFamily: 'RobotoMedium',
       fontSize: 14,

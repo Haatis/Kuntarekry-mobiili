@@ -1,4 +1,4 @@
-import { View, Image, ImageBackground, StyleSheet, Pressable } from 'react-native';
+import { View, Image, ImageBackground, StyleSheet, Pressable, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -7,7 +7,7 @@ import Logo from '../assets/logo.png';
 import Constants from 'expo-constants';
 import { theme } from '../styles/theme';
 
-export default function AppBar({ back }) {
+export default function AppBar({ back, title }) {
   const navigation = useNavigation();
 
   return (
@@ -28,14 +28,12 @@ export default function AppBar({ back }) {
             transform: [{ rotateZ: '5deg' }, { scale: 1.5 }],
           }}
         >
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 10,
-            }}
-          >
+          {title ? (
+            <View style={styles.textContainer}>
+              <Text style={[theme.textVariants.uiM, { color: 'white' }]}>Testi työpaikka</Text>
+              <Text style={[theme.textVariants.uiAltS, { color: 'white' }]}>Testi kaupunki</Text>
+            </View>
+          ) : (
             <Image
               source={Logo}
               resizeMode="contain"
@@ -45,7 +43,7 @@ export default function AppBar({ back }) {
                 height: 44,
               }}
             />
-          </View>
+          )}
         </ImageBackground>
       </LinearGradient>
       {back ? (
@@ -84,5 +82,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  textContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: Constants.statusBarHeight,
+    width: '100%',
   },
 });
