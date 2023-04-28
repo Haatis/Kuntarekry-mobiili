@@ -1,10 +1,11 @@
-import { View, Image, ImageBackground, StyleSheet } from 'react-native';
+import { View, Image, ImageBackground, StyleSheet, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import BackgroundImage from '../assets/substract.png';
 import Logo from '../assets/logo.png';
 import Constants from 'expo-constants';
+import { theme } from '../styles/theme';
 
 export default function AppBar({ back }) {
   const navigation = useNavigation();
@@ -35,14 +36,6 @@ export default function AppBar({ back }) {
               paddingHorizontal: 10,
             }}
           >
-            {back ? (
-              <Ionicons
-                name="arrow-back"
-                size={24}
-                color="white"
-                onPress={() => navigation.goBack()}
-              />
-            ) : null}
             <Image
               source={Logo}
               resizeMode="contain"
@@ -55,11 +48,34 @@ export default function AppBar({ back }) {
           </View>
         </ImageBackground>
       </LinearGradient>
+      {back ? (
+        <Pressable
+          style={[styles.backButton, theme.outlineDark, theme.dropShadow]}
+          onPress={() => navigation.goBack()}
+        >
+          <MaterialCommunityIcons
+            name={'chevron-left'}
+            size={36}
+            color={theme.colors.textPrimary}
+          />
+        </Pressable>
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 30,
+    height: 45,
+    justifyContent: 'center',
+    left: 16,
+    position: 'absolute',
+    top: Constants.statusBarHeight,
+    width: 45,
+  },
   container: {
     height: Constants.statusBarHeight + 52,
     overflow: 'hidden',
