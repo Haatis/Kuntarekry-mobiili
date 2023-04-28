@@ -53,7 +53,7 @@ export default function App() {
           })}
           drawerContent={(props) => <DrawerContent {...props} setIsDrawerOpen={setIsDrawerOpen} />}
         >
-          <Drawer.Screen name="Search" component={TabNavigator} />
+          <Drawer.Screen name="Search" component={StackNavigator} />
         </Drawer.Navigator>
       </NavigationContainer>
     </>
@@ -63,7 +63,7 @@ export default function App() {
 function StackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ header: (props) => <AppBar {...props} /> }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Home" component={TabNavigator} />
       <Stack.Screen
         name="JobScreen"
         component={JobScreen}
@@ -115,10 +115,10 @@ function TabNavigator() {
           paddingBottom: 4,
           backgroundColor: '#fff',
         },
-        header: (props) => <AppBar {...props} />,
+        headerShown: false,
       })}
     >
-      <Tab.Screen name="Etusivu" component={StackNavigator} options={{ headerShown: false }} />
+      <Tab.Screen name="Etusivu" component={HomeScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Suosikit" component={FavoritesScreen} />
       <Tab.Screen name="Profiili" component={ProfileScreen} />
       <Tab.Screen name="Ilmoitukset" component={AlertScreen} />
