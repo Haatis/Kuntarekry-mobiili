@@ -1,9 +1,14 @@
 import { View, Image, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+
 import bgImage from '../assets/rajattu.png';
 import KuntaRekrySVG from '../assets/logo.png';
 
-export default function AppBar() {
+export default function AppBar({ back }) {
+  const navigation = useNavigation();
+
   return (
     <View style={{ height: 80, flexDirection: 'row', overflow: 'hidden' }}>
       <LinearGradient
@@ -23,7 +28,25 @@ export default function AppBar() {
             transform: [{ rotateZ: '15deg' }],
           }}
         >
-          <Image source={KuntaRekrySVG} resizeMode="contain" style={{ width: 215, height: 44 }} />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 10,
+            }}
+          >
+            {back ? (
+              <Ionicons
+                name="arrow-back"
+                size={24}
+                color="white"
+                onPress={() => navigation.goBack()}
+              />
+            ) : null}
+            <Image source={KuntaRekrySVG} resizeMode="contain" style={{ width: 215, height: 44 }} />
+            <View style={{ width: 24 }} />
+          </View>
         </ImageBackground>
       </LinearGradient>
     </View>

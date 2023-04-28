@@ -4,10 +4,10 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import { Text } from 'react-native';
-import { theme } from '../../styles/theme';
-import Tag from '../../components/Tag';
+import { theme } from '../styles/theme';
+import Tag from './Tag';
 
-export function CustomDrawerContent({ setIsDrawerOpen }) {
+export function DrawerContent({ setIsDrawerOpen }) {
   const drawerStatus = useDrawerStatus();
 
   React.useEffect(() => {

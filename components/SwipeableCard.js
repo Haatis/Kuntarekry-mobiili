@@ -3,8 +3,10 @@ import { theme } from '../styles/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Tag from './Tag';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SwipeableCard() {
+  const navigation = useNavigation();
   const jobImage = {
     uri: 'https://cdn.pixabay.com/photo/2019/02/06/16/32/architect-3979490_960_720.jpg',
   };
@@ -32,7 +34,7 @@ export default function SwipeableCard() {
             end={{ x: 0, y: 1 }}
             style={styles.gradient2}
           >
-            <View style={styles.cardTop}>
+            <Pressable onPress={() => navigation.navigate('JobScreen')} style={styles.cardTop}>
               <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
                 <Image style={styles.avatarImage} source={employerImage} />
               </Pressable>
@@ -43,7 +45,7 @@ export default function SwipeableCard() {
                 <Text style={[theme.textVariants.textM, { color: 'white' }]}>Akaan kaupunki</Text>
               </View>
               <MaterialCommunityIcons name={'chevron-right'} size={40} color={'white'} />
-            </View>
+            </Pressable>
           </LinearGradient>
         </LinearGradient>
       </ImageBackground>

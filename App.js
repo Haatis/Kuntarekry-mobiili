@@ -11,12 +11,15 @@ import { useFonts } from 'expo-font';
 import { theme } from './styles/theme';
 import { StatusBar } from 'expo-status-bar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { CustomDrawerContent } from './Screens/HomeScreen/CustomDrawerContent';
+import { DrawerContent } from './components/DrawerContent';
 import AppBar from './components/AppBar';
 import { useState } from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import JobScreen from './Screens/JobScreen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -48,14 +51,27 @@ export default function App() {
             gestureEnabled: false,
             swipeEnabled: isDrawerOpen, // enable swipe only when drawer is open
           })}
-          drawerContent={(props) => (
-            <CustomDrawerContent {...props} setIsDrawerOpen={setIsDrawerOpen} />
-          )}
+          drawerContent={(props) => <DrawerContent {...props} setIsDrawerOpen={setIsDrawerOpen} />}
         >
           <Drawer.Screen name="Search" component={TabNavigator} />
         </Drawer.Navigator>
       </NavigationContainer>
     </>
+  );
+}
+
+function StackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ header: (props) => <AppBar {...props} /> }}>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="JobScreen"
+        component={JobScreen}
+        options={{
+          header: () => <AppBar back={true} />,
+        }}
+      />
+    </Stack.Navigator>
   );
 }
 
@@ -99,10 +115,10 @@ function TabNavigator() {
           paddingBottom: 4,
           backgroundColor: '#fff',
         },
-        header: () => <AppBar />,
+        header: (props) => <AppBar {...props} />,
       })}
     >
-      <Tab.Screen name="Etusivu" component={HomeScreen} />
+      <Tab.Screen name="Etusivu" component={StackNavigator} options={{ headerShown: false }} />
       <Tab.Screen name="Suosikit" component={FavoritesScreen} />
       <Tab.Screen name="Profiili" component={ProfileScreen} />
       <Tab.Screen name="Ilmoitukset" component={AlertScreen} />
