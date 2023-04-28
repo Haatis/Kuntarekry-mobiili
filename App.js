@@ -13,11 +13,14 @@ import { StatusBar } from 'expo-status-bar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CustomDrawerContent } from './Screens/HomeScreen/CustomDrawerContent';
 import AppBar from './components/AppBar';
+import { useState } from 'react';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const [isLoaded] = useFonts({
     Roboto: require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
     RobotoMedium: require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
@@ -36,8 +39,18 @@ export default function App() {
       <StatusBar style="inverted" />
       <NavigationContainer>
         <Drawer.Navigator
-          screenOptions={{ headerShown: false, drawerPosition: 'right' }}
-          drawerContent={(props) => <CustomDrawerContent {...props} />}
+          screenOptions={() => ({
+            drawerStyle: {
+              backgroundColor: theme.colors.primary,
+            },
+            headerShown: false,
+            drawerPosition: 'right',
+            gestureEnabled: false,
+            swipeEnabled: isDrawerOpen, // enable swipe only when drawer is open
+          })}
+          drawerContent={(props) => (
+            <CustomDrawerContent {...props} setIsDrawerOpen={setIsDrawerOpen} />
+          )}
         >
           <Drawer.Screen name="Search" component={TabNavigator} />
         </Drawer.Navigator>
