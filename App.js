@@ -86,14 +86,14 @@ function StackNavigator() {
         name="JobScreen"
         component={JobScreen}
         options={{
-          header: () => <AppBar back={true} />,
+          header: () => <AppBar back={true} title={true} />,
         }}
       />
       <Stack.Screen
         name="FavoriteFolder"
         component={FavoriteFolder}
         options={{
-          header: () => <AppBar back={true} />,
+          header: () => <AppBar back={true} title={true} />,
         }}
       />
     </Stack.Navigator>
