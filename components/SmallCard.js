@@ -12,7 +12,7 @@ export default function SmallCard({ job, cardType }) {
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
         <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
-          <Image style={styles.avatarImage} source={job.image} />
+          <Image style={styles.avatarImage} source={job.employerImage} />
         </Pressable>
         <View style={styles.textContainer}>
           <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.jobTitle}</Text>

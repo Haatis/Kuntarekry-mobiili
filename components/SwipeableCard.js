@@ -5,21 +5,15 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Tag from './Tag';
 import { useNavigation } from '@react-navigation/native';
 
-export default function SwipeableCard() {
+export default function SwipeableCard({ job }) {
   const navigation = useNavigation();
-  const jobImage = {
-    uri: 'https://cdn.pixabay.com/photo/2019/02/06/16/32/architect-3979490_960_720.jpg',
-  };
-  const employerImage = {
-    uri: 'https://cdn.pixabay.com/photo/2017/07/10/22/40/daisy-2491831_960_720.jpg',
-  };
 
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <ImageBackground
         imageStyle={styles.image}
         style={styles.imageContainer}
-        source={jobImage}
+        source={job.jobImage}
         resizeMode="cover"
       >
         <LinearGradient
@@ -36,13 +30,11 @@ export default function SwipeableCard() {
           >
             <Pressable onPress={() => navigation.navigate('JobScreen')} style={styles.cardTop}>
               <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
-                <Image style={styles.avatarImage} source={employerImage} />
+                <Image style={styles.avatarImage} source={job.employerImage} />
               </Pressable>
               <View style={styles.textContainer}>
-                <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                  Kiinteistöhuoltomies
-                </Text>
-                <Text style={[theme.textVariants.textM, { color: 'white' }]}>Akaan kaupunki</Text>
+                <Text style={[theme.textVariants.textXL, { color: 'white' }]}>{job.jobTitle}</Text>
+                <Text style={[theme.textVariants.textM, { color: 'white' }]}>{job.employer}</Text>
               </View>
               <MaterialCommunityIcons name={'chevron-right'} size={40} color={'white'} />
             </Pressable>
@@ -51,7 +43,7 @@ export default function SwipeableCard() {
       </ImageBackground>
       <View style={styles.cardBottom}>
         <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
-          Haku päättyy: 11.11.2023
+          Haku päättyy: {job.endDate}
         </Text>
         <View style={styles.tagRow}>
           <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />
@@ -60,9 +52,7 @@ export default function SwipeableCard() {
           <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
         </View>
         <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
-          Akaan kaupunki hakee monipuolisiin ulko- ja viheralueiden kunnossapitotehtäviin
-          ammattitaitoista, motivoitunutta, oppimishaluista ja yhteistyökykyistä
-          kunnossapitotyöntekijää
+          {job.description}
         </Text>
         <View style={styles.buttonRow}>
           <View style={[styles.button, { borderColor: theme.colors.danger }]}>
