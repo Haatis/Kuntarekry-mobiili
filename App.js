@@ -1,13 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text } from 'react-native';
+
 import HomeScreen from './Screens/HomeScreen/HomeScreen';
 import SettingsScreen from './Screens/SettingsScreen/SettingsScreen';
 import ProfileScreen from './Screens/ProfileScreen/ProfileScreen';
 import AlertScreen from './Screens/AlertsScreen/AlertsScreen';
 import FavoritesScreen from './Screens/FavoritesScreen/FavoritesScreen';
-import { useFonts } from 'expo-font';
+import { useEffect } from 'react';
+import * as Font from 'expo-font';
 import { theme } from './styles/theme';
 import { StatusBar } from 'expo-status-bar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -17,26 +18,42 @@ import { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import JobScreen from './Screens/JobScreen';
 import FavoriteFolder from './Screens/FavoriteFolder';
+import * as SplashScreen from 'expo-splash-screen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
+SplashScreen.preventAutoHideAsync().catch(console.warn);
+
 export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const [isLoaded] = useFonts({
-    Roboto: require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
-    RobotoMedium: require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
-    SourceSansPro: require('./assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf'),
-  });
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadResourcesAndDataAsync() {
+      try {
+        // Load fonts
+        await Font.loadAsync({
+          Roboto: require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
+          RobotoMedium: require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
+          SourceSansPro: require('./assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf'),
+        });
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setIsLoaded(true);
+        // Hide the splash screen
+        await SplashScreen.hideAsync();
+      }
+    }
+
+    loadResourcesAndDataAsync();
+  }, []);
 
   if (!isLoaded) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return null;
   }
   return (
     <>
