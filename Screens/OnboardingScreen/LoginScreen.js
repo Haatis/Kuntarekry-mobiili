@@ -1,10 +1,9 @@
-import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, Image, StyleSheet, ImageBackground, TextInput } from 'react-native';
 import { useOnboarding } from '../../hooks/useonboarding';
 import { theme } from '../../styles/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import Logo from '../../assets/logo.png';
 import BackgroundImage from '../../assets/substract.png';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
 
 export default function LoginScreen() {
@@ -44,17 +43,22 @@ export default function LoginScreen() {
                   <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
                     Käyttäjätunnus
                   </Text>
-                  <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
-                    PekkaVi80
-                  </Text>
+                  <TextInput
+                    style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}
+                    placeholder="PekkaVi80"
+                    onChangeText={(text) => console.log(text)} // Replace console.log with your own function to handle text changes
+                  />
                 </View>
                 <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
                   <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
                     Salasana
                   </Text>
-                  <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
-                    ********
-                  </Text>
+                  <TextInput
+                    style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}
+                    secureTextEntry={true}
+                    placeholder=""
+                    onChangeText={(text) => console.log(text)} // Replace console.log with your own function to handle text changes
+                  />
                 </View>
                 <View style={{ marginVertical: 8 }}>
                   <Text
@@ -66,17 +70,41 @@ export default function LoginScreen() {
                     Unohditko salasanasi?
                   </Text>
                 </View>
-                <Pressable onPress={() => finishOnboarding()} style={styles.button}>
-                  <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
-                    FINISH ONBOARDING
+                <View style={styles.buttonContainer}>
+                  <Pressable style={styles.button}>
+                    <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
+                      Kirjaudu sisään
+                    </Text>
+                  </Pressable>
+                  <View style={styles.horizontalLine} />
+                  <Text
+                    style={
+                      (theme.textVariants.textM,
+                      { color: theme.colors.textPrimary, marginBottom: 8 })
+                    }
+                  >
+                    Jos olet uusi kuntarekryssä luo käyttäjä
                   </Text>
-                  <MaterialCommunityIcons
-                    name={'chevron-right'}
-                    size={22}
-                    color={'white'}
-                    style={{ marginTop: 3 }}
-                  />
-                </Pressable>
+                  <Pressable onPress={() => finishOnboarding()} style={styles.buttonSM}>
+                    <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
+                      Luo uusi käyttäjä
+                    </Text>
+                  </Pressable>
+                  <View style={styles.horizontalLine} />
+                  <Text
+                    style={
+                      (theme.textVariants.textM,
+                      { color: theme.colors.textPrimary, marginBottom: 8 })
+                    }
+                  >
+                    Tai jatka ilman kirjautumista
+                  </Text>
+                  <Pressable onPress={() => finishOnboarding()} style={styles.buttonSM}>
+                    <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
+                      Jatka eteenpäin
+                    </Text>
+                  </Pressable>
+                </View>
               </View>
             </View>
           </ImageBackground>
@@ -93,8 +121,22 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 8,
     paddingVertical: 16,
+    width: '100%',
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  buttonSM: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.button,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    width: '100%',
   },
   containerOnboarding: {
     alignItems: 'center',
@@ -117,17 +159,24 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     width: '100%',
   },
+  horizontalLine: {
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+    marginBottom: 16,
+    marginTop: 16,
+    width: '100%',
+  },
   imageContainer: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
     width: '100%',
   },
-
   logoContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   textContainer: {
     backgroundColor: 'white',
     borderRadius: 4,
