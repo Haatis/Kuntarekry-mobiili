@@ -19,6 +19,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import JobScreen from './Screens/JobScreen';
 import FavoriteFolder from './Screens/FavoriteFolder';
 import * as SplashScreen from 'expo-splash-screen';
+import WelcomeScreen from './Screens/OnboardingScreen/WelcomeScreen';
+import { OnboardingProvider, useOnboarding } from './hooks/useonboarding';
+import LoginScreen from './Screens/OnboardingScreen/LoginScreen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -27,9 +30,19 @@ const Stack = createStackNavigator();
 SplashScreen.preventAutoHideAsync().catch(console.warn);
 
 export default function App() {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  return (
+    <>
+      <OnboardingProvider>
+        <AppWrapper />
+      </OnboardingProvider>
+    </>
+  );
+}
 
+function AppWrapper() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { onboardingDone } = useOnboarding();
 
   useEffect(() => {
     async function loadResourcesAndDataAsync() {
@@ -43,59 +56,67 @@ export default function App() {
       } catch (e) {
         console.warn(e);
       } finally {
-        setIsLoaded(true);
-        // Hide the splash screen
-        await SplashScreen.hideAsync();
+        if (onboardingDone !== undefined) {
+          setIsLoaded(true);
+          SplashScreen.hideAsync();
+        }
       }
     }
 
     loadResourcesAndDataAsync();
-  }, []);
+  }, [onboardingDone]);
 
   if (!isLoaded) {
     return null;
   }
   return (
-    <>
+    <NavigationContainer>
       <StatusBar style="inverted" />
-      <NavigationContainer>
-        <Drawer.Navigator
-          screenOptions={() => ({
-            drawerStyle: {
-              backgroundColor: theme.colors.primary,
-            },
-            headerShown: false,
-            drawerPosition: 'right',
-            gestureEnabled: false,
-            swipeEnabled: isDrawerOpen, // enable swipe only when drawer is open
-          })}
-          drawerContent={(props) => <DrawerContent {...props} setIsDrawerOpen={setIsDrawerOpen} />}
-        >
+      <Drawer.Navigator
+        screenOptions={() => ({
+          drawerStyle: {
+            backgroundColor: theme.colors.primary,
+          },
+          headerShown: false,
+          drawerPosition: 'right',
+          gestureEnabled: false,
+          swipeEnabled: isDrawerOpen, // enable swipe only when drawer is open
+        })}
+        drawerContent={(props) => <DrawerContent {...props} setIsDrawerOpen={setIsDrawerOpen} />}
+      >
+        {onboardingDone ? (
           <Drawer.Screen name="Search" component={StackNavigator} />
-        </Drawer.Navigator>
-      </NavigationContainer>
-    </>
+        ) : (
+          <>
+            <Drawer.Screen name="Welcome" component={WelcomeScreen} />
+            <Drawer.Screen name="LoginScreen" component={LoginScreen} />
+          </>
+        )}
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
 
 function StackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ header: (props) => <AppBar {...props} /> }}>
-      <Stack.Screen name="Home" component={TabNavigator} />
-      <Stack.Screen
-        name="JobScreen"
-        component={JobScreen}
-        options={{
-          header: () => <AppBar back={true} title={true} />,
-        }}
-      />
-      <Stack.Screen
-        name="FavoriteFolder"
-        component={FavoriteFolder}
-        options={{
-          header: () => <AppBar back={true} title={true} />,
-        }}
-      />
+      <>
+        <Stack.Screen name="Home" component={TabNavigator} />
+        <Stack.Screen
+          name="JobScreen"
+          component={JobScreen}
+          options={{
+            header: () => <AppBar back={true} title={true} />,
+          }}
+        />
+        <Stack.Screen
+          name="FavoriteFolder"
+          component={FavoriteFolder}
+          options={{
+            header: () => <AppBar back={true} title={true} />,
+          }}
+        />
+      </>
     </Stack.Navigator>
   );
 }
