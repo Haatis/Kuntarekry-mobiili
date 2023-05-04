@@ -21,6 +21,7 @@ import FavoriteFolder from './Screens/FavoriteFolder';
 import * as SplashScreen from 'expo-splash-screen';
 import WelcomeScreen from './Screens/OnboardingScreen/WelcomeScreen';
 import { OnboardingProvider, useOnboarding } from './hooks/useonboarding';
+import LoginScreen from './Screens/OnboardingScreen/LoginScreen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -86,7 +87,10 @@ function AppWrapper() {
         {onboardingDone ? (
           <Drawer.Screen name="Search" component={StackNavigator} />
         ) : (
-          <Drawer.Screen name="Welcome" component={WelcomeScreen} />
+          <>
+            <Drawer.Screen name="Welcome" component={WelcomeScreen} />
+            <Drawer.Screen name="LoginScreen" component={LoginScreen} />
+          </>
         )}
       </Drawer.Navigator>
     </NavigationContainer>
