@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     width: 45,
   },
   container: {
-    height: Constants.statusBarHeight + 52,
+    height: Constants.statusBarHeight + 60,
     overflow: 'hidden',
   },
   imageContainer: {

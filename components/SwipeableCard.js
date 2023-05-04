@@ -88,16 +88,17 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     gap: 32,
+    marginTop: 'auto',
     padding: 8,
   },
   card: {
     backgroundColor: 'white',
     borderRadius: 8,
-    height: '95%',
-    width: '100%',
+    flex: 1,
   },
   cardBottom: {
     alignItems: 'center',
+    flex: 1,
     gap: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
