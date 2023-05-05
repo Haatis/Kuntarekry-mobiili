@@ -1,13 +1,14 @@
 import { View, Text, Image, StyleSheet, ImageBackground, TextInput } from 'react-native';
-import { useOnboarding } from '../../hooks/useonboarding';
 import { theme } from '../../styles/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import Logo from '../../assets/logo.png';
 import BackgroundImage from '../../assets/substract.png';
 import { Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function LoginScreen() {
-  const { finishOnboarding } = useOnboarding();
+  const navigation = useNavigation();
+
   return (
     <>
       <LinearGradient
@@ -91,7 +92,7 @@ export default function LoginScreen() {
                   >
                     Jos olet uusi kuntarekryssä luo käyttäjä
                   </Text>
-                  <Pressable onPress={() => finishOnboarding()} style={styles.buttonSM}>
+                  <Pressable style={styles.buttonSM}>
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
                       Luo uusi käyttäjä
                     </Text>
@@ -127,7 +128,10 @@ export default function LoginScreen() {
                   >
                     Voit myös jatkaa kirjautumatta
                   </Text>
-                  <Pressable onPress={() => finishOnboarding()} style={styles.buttonSM}>
+                  <Pressable
+                    onPress={() => navigation.navigate('PersonalizationScreen')}
+                    style={styles.buttonSM}
+                  >
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
                       Jatka eteenpäin
                     </Text>

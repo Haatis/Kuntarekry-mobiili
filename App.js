@@ -22,6 +22,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import WelcomeScreen from './Screens/OnboardingScreen/WelcomeScreen';
 import { OnboardingProvider, useOnboarding } from './hooks/useonboarding';
 import LoginScreen from './Screens/OnboardingScreen/LoginScreen';
+import PersonalizationScreen from './Screens/OnboardingScreen/PersonalizationScreen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -77,7 +78,7 @@ function AppWrapper() {
           drawerStyle: {
             backgroundColor: theme.colors.primary,
           },
-          headerShown: false,
+
           drawerPosition: 'right',
           gestureEnabled: false,
           swipeEnabled: isDrawerOpen, // enable swipe only when drawer is open
@@ -85,11 +86,30 @@ function AppWrapper() {
         drawerContent={(props) => <DrawerContent {...props} setIsDrawerOpen={setIsDrawerOpen} />}
       >
         {onboardingDone ? (
-          <Drawer.Screen name="Search" component={StackNavigator} />
+          <Drawer.Screen
+            name="Search"
+            component={StackNavigator}
+            options={{ headerShown: false }}
+          />
         ) : (
           <>
-            <Drawer.Screen name="Welcome" component={WelcomeScreen} />
-            <Drawer.Screen name="LoginScreen" component={LoginScreen} />
+            <Drawer.Screen
+              name="Welcome"
+              component={WelcomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Drawer.Screen
+              name="LoginScreen"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Drawer.Screen
+              name="PersonalizationScreen"
+              component={PersonalizationScreen}
+              options={{
+                header: () => <AppBar back={true} title={true} />,
+              }}
+            />
           </>
         )}
       </Drawer.Navigator>
