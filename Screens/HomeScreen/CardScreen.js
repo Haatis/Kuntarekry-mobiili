@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { View, StyleSheet, Animated, PanResponder, Dimensions } from 'react-native';
 import SwipeableCard from '../../components/SwipeableCard';
 import TestData from '../../components/TestData';
+import { theme } from '../../styles/theme';
 
 export default function CardScreen() {
   const [topCardIndex] = useState(0);
@@ -16,6 +17,12 @@ export default function CardScreen() {
     extrapolate: 'clamp',
   });
 
+  const cardColor = pan.x.interpolate({
+    inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+    outputRange: [theme.colors.danger, 'rgba(0, 0, 0, 0)', theme.colors.secondary],
+    extrapolate: 'clamp',
+  });
+
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
@@ -25,7 +32,7 @@ export default function CardScreen() {
       onPanResponderRelease: () => {
         Animated.spring(pan, {
           toValue: { x: 0, y: 0 },
-          useNativeDriver: true,
+          useNativeDriver: false,
         }).start();
       },
     })
@@ -49,6 +56,15 @@ export default function CardScreen() {
                 {...panResponder.panHandlers}
               >
                 <SwipeableCard job={item} />
+                <Animated.View
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    borderRadius: 8,
+                    backgroundColor: cardColor,
+                  }}
+                ></Animated.View>
               </Animated.View>
             );
           } else {
