@@ -39,26 +39,60 @@ export default function LoginScreen() {
                 />
               </View>
               <View style={styles.textContainer}>
-                <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
-                  <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
-                    Käyttäjätunnus
-                  </Text>
+                <View
+                  style={[
+                    { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                    styles.createButton,
+                  ]}
+                >
                   <TextInput
                     style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}
-                    placeholder="PekkaVi80"
+                    defaultValue="PekkaVi80"
                     onChangeText={(text) => console.log(text)} // Replace console.log with your own function to handle text changes
                   />
-                </View>
-                <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
-                  <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
-                    Salasana
+                  <Text
+                    style={[
+                      theme.textVariants.uiS,
+                      {
+                        color: theme.colors.textSecondary,
+                        position: 'absolute',
+                        top: -8,
+                        left: 8,
+                        backgroundColor: 'white',
+                        paddingHorizontal: 8,
+                      },
+                    ]}
+                  >
+                    Käyttäjätunnus
                   </Text>
+                </View>
+                <View
+                  style={[
+                    { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                    styles.createButton,
+                  ]}
+                >
                   <TextInput
                     style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}
                     secureTextEntry={true}
-                    placeholder=""
+                    defaultValue="12345678"
                     onChangeText={(text) => console.log(text)} // Replace console.log with your own function to handle text changes
                   />
+                  <Text
+                    style={[
+                      theme.textVariants.uiS,
+                      {
+                        color: theme.colors.textSecondary,
+                        position: 'absolute',
+                        top: -8,
+                        left: 8,
+                        backgroundColor: 'white',
+                        paddingHorizontal: 8,
+                      },
+                    ]}
+                  >
+                    Salasana
+                  </Text>
                 </View>
                 <View style={{ marginVertical: 8 }}>
                   <Text
