@@ -4,6 +4,7 @@ import { theme } from '../../styles/theme';
 import { useOnboarding } from '../../hooks/useonboarding';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
+import Tag from '../../components/Tag';
 export default function PersonalizationScreen() {
   const { finishOnboarding } = useOnboarding();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -19,6 +20,10 @@ export default function PersonalizationScreen() {
     } else {
       setSelectedJobs([...selectedJobs, job]);
     }
+  };
+  const handleTagClose = (job) => {
+    const updatedJobs = selectedJobs.filter((selectedJob) => selectedJob !== job);
+    setSelectedJobs(updatedJobs);
   };
 
   const jobCategories = [
@@ -95,13 +100,18 @@ export default function PersonalizationScreen() {
           </View>
         ))}
 
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8 }}>
+          {selectedJobs.map((job) => (
+            <Pressable key={job} onPress={() => handleTagClose(job)}>
+              <Tag tagColor={theme.colors.tag1} tagText={job} tagClose={true} />
+            </Pressable>
+          ))}
+        </View>
         <Pressable onPress={() => finishOnboarding()} style={styles.buttonSM}>
           <Text style={[theme.textVariants.uiM, { color: 'white' }]}>Jatka eteenpäin</Text>
         </Pressable>
-        <Text style={[theme.textVariants.uiM, { color: theme.colors.textSecondary }]}>
-          {selectedJobs.map((job) => job).join(', ')}
-        </Text>
       </View>
+
       <TouchableOpacity style={[styles.button, { position: 'absolute', bottom: 0 }]}>
         <Text style={styles.buttonText}>Tallenna ja jatka</Text>
       </TouchableOpacity>
