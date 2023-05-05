@@ -10,6 +10,7 @@ export default function CardScreen() {
   const pan = useRef(new Animated.ValueXY()).current;
 
   const SCREEN_WIDTH = Dimensions.get('screen').width;
+  const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
   const rotate = pan.x.interpolate({
     inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
@@ -17,9 +18,27 @@ export default function CardScreen() {
     extrapolate: 'clamp',
   });
 
+  const translateX = pan.y.interpolate({
+    inputRange: [-SCREEN_HEIGHT / 8, 0, SCREEN_HEIGHT / 8],
+    outputRange: [-SCREEN_HEIGHT / 8, 0, SCREEN_HEIGHT / 8],
+    extrapolate: 'clamp',
+  });
+
   const cardColor = pan.x.interpolate({
     inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
     outputRange: [theme.colors.danger, 'rgba(0, 0, 0, 0)', theme.colors.secondary],
+    extrapolate: 'clamp',
+  });
+
+  const nextCardOpacity = pan.x.interpolate({
+    inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+    outputRange: [1, 0.5, 1],
+    extrapolate: 'clamp',
+  });
+
+  const nextCardScale = pan.x.interpolate({
+    inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+    outputRange: [1, 0.8, 1],
     extrapolate: 'clamp',
   });
 
@@ -51,7 +70,11 @@ export default function CardScreen() {
                   position: 'absolute',
                   width: '100%',
                   height: '100%',
-                  transform: [{ translateX: pan.x }, { translateY: pan.y }, { rotate: rotate }],
+                  transform: [
+                    { translateX: pan.x },
+                    { translateY: translateX },
+                    { rotate: rotate },
+                  ],
                 }}
                 {...panResponder.panHandlers}
               >
@@ -63,6 +86,7 @@ export default function CardScreen() {
                     position: 'absolute',
                     borderRadius: 8,
                     backgroundColor: cardColor,
+                    pointerEvents: 'none',
                   }}
                 ></Animated.View>
               </Animated.View>
@@ -75,6 +99,8 @@ export default function CardScreen() {
                   position: 'absolute',
                   width: '100%',
                   height: '100%',
+                  opacity: nextCardOpacity,
+                  transform: [{ scale: nextCardScale }],
                 }}
                 {...panResponder.panHandlers}
               >
