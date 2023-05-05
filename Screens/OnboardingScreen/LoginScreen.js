@@ -46,9 +46,9 @@ export default function LoginScreen() {
                   ]}
                 >
                   <TextInput
-                    style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}
+                    style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
                     defaultValue="PekkaVi80"
-                    onChangeText={(text) => console.log(text)} // Replace console.log with your own function to handle text changes
+                    onChangeText={(text) => console.log(text)}
                   />
                   <Text
                     style={[
@@ -73,10 +73,10 @@ export default function LoginScreen() {
                   ]}
                 >
                   <TextInput
-                    style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}
+                    style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
                     secureTextEntry={true}
                     defaultValue="12345678"
-                    onChangeText={(text) => console.log(text)} // Replace console.log with your own function to handle text changes
+                    onChangeText={(text) => console.log(text)}
                   />
                   <Text
                     style={[
