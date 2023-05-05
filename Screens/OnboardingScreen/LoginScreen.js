@@ -50,21 +50,7 @@ export default function LoginScreen() {
                     defaultValue="PekkaVi80"
                     onChangeText={(text) => console.log(text)}
                   />
-                  <Text
-                    style={[
-                      theme.textVariants.uiS,
-                      {
-                        color: theme.colors.textSecondary,
-                        position: 'absolute',
-                        top: -8,
-                        left: 8,
-                        backgroundColor: 'white',
-                        paddingHorizontal: 8,
-                      },
-                    ]}
-                  >
-                    Käyttäjätunnus
-                  </Text>
+                  <Text style={[theme.textVariants.uiS, styles.labelText]}>Käyttäjätunnus</Text>
                 </View>
                 <View
                   style={[
@@ -78,21 +64,7 @@ export default function LoginScreen() {
                     defaultValue="12345678"
                     onChangeText={(text) => console.log(text)}
                   />
-                  <Text
-                    style={[
-                      theme.textVariants.uiS,
-                      {
-                        color: theme.colors.textSecondary,
-                        position: 'absolute',
-                        top: -8,
-                        left: 8,
-                        backgroundColor: 'white',
-                        paddingHorizontal: 8,
-                      },
-                    ]}
-                  >
-                    Salasana
-                  </Text>
+                  <Text style={[theme.textVariants.uiS, styles.labelText]}>Salasana</Text>
                 </View>
                 <View style={{ marginVertical: 8 }}>
                   <Text
@@ -124,14 +96,36 @@ export default function LoginScreen() {
                       Luo uusi käyttäjä
                     </Text>
                   </Pressable>
-                  <View style={styles.horizontalLine} />
+                  <View
+                    style={[
+                      styles.horizontalLine,
+                      {
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        theme.textVariants.textM,
+                        {
+                          color: theme.colors.textSecondary,
+                          position: 'absolute',
+                          backgroundColor: 'white',
+                          paddingHorizontal: 4,
+                        },
+                      ]}
+                    >
+                      tai
+                    </Text>
+                  </View>
                   <Text
                     style={
                       (theme.textVariants.textM,
                       { color: theme.colors.textPrimary, marginBottom: 8 })
                     }
                   >
-                    Tai jatka ilman kirjautumista
+                    Voit myös jatkaa kirjautumatta
                   </Text>
                   <Pressable onPress={() => finishOnboarding()} style={styles.buttonSM}>
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
@@ -206,11 +200,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
   },
+  labelText: {
+    backgroundColor: 'white',
+    color: theme.colors.textSecondary,
+    left: 12,
+    paddingHorizontal: 4,
+    position: 'absolute',
+    top: -8,
+  },
+
   logoContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   textContainer: {
     backgroundColor: 'white',
     borderRadius: 4,
