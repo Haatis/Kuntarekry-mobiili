@@ -2,17 +2,12 @@ import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-nativ
 
 import { theme } from '../../styles/theme';
 import { useOnboarding } from '../../hooks/useonboarding';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import TagLarge from '../../components/TagLarge';
+import DropDown from '../../components/DropDown';
 export default function PersonalizationScreen() {
   const { finishOnboarding } = useOnboarding();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedJobs, setSelectedJobs] = useState([]);
-
-  const toggleDropdown = (categoryName) => {
-    setIsDropdownOpen((prevState) => (prevState === categoryName ? !prevState : categoryName));
-  };
 
   const handleJobSelection = (job) => {
     if (selectedJobs.includes(job)) {
@@ -41,66 +36,16 @@ export default function PersonalizationScreen() {
     <>
       <View style={styles.containerTop}>
         {jobCategories.map((category) => (
-          <View style={{ width: '100%' }} key={category.name}>
-            <TouchableOpacity
-              onPress={() => toggleDropdown(category.name)}
-              style={[
-                theme.outline,
-                theme.dropShadow,
-                styles.createButton,
-                isDropdownOpen === category.name && { backgroundColor: theme.colors.primary },
-              ]}
-            >
-              <View style={{ flex: 1 }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <Text
-                    style={[
-                      theme.textVariants.textM,
-                      {
-                        color:
-                          isDropdownOpen === category.name ? 'white' : theme.colors.textPrimary,
-                        marginTop: 4,
-                      },
-                    ]}
-                  >
-                    {category.name}
-                  </Text>
-                  <MaterialCommunityIcons
-                    name={isDropdownOpen === category.name ? 'chevron-up' : 'chevron-down'}
-                    size={24}
-                    color={isDropdownOpen === category.name ? 'white' : theme.colors.textPrimary}
-                  />
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            {isDropdownOpen === category.name && (
-              <View style={[theme.outline, theme.dropShadow, styles.dropdownContainer]}>
-                {category.jobs.map((job) => (
-                  <TouchableOpacity key={job.name} onPress={() => handleJobSelection(job.name)}>
-                    <View style={selectedJobs.includes(job.name) && styles.selectedJobContainer}>
-                      <Text
-                        style={[
-                          styles.dropdownOption,
-                          theme.textVariants.textM,
-                          selectedJobs.includes(job.name) && styles.selectedJob,
-                        ]}
-                      >
-                        {job.name}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-          </View>
+          <>
+            <DropDown
+              key={category.name}
+              category={category.name}
+              options={category.jobs}
+              selectedOptions={selectedJobs}
+              handleOptionSelection={handleJobSelection}
+            />
+          </>
         ))}
-
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8 }}>
           {selectedJobs.map((job) => (
             <TagLarge
@@ -155,29 +100,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 16,
     width: '100%',
-  },
-  createButton: {
-    alignItems: 'center',
-    borderRadius: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    width: '100%',
-  },
-  dropdownContainer: {
-    borderRadius: 8,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    width: '100%',
-  },
-  dropdownOption: {
-    color: theme.colors.textPrimary,
-    paddingVertical: 8,
-  },
-
-  selectedJob: {
-    color: theme.colors.primary,
   },
 });
