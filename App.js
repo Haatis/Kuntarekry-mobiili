@@ -92,28 +92,30 @@ function AppWrapper() {
             options={{ headerShown: false }}
           />
         ) : (
-          <>
-            <Drawer.Screen
-              name="Welcome"
-              component={WelcomeScreen}
-              options={{ headerShown: false }}
-            />
-            <Drawer.Screen
-              name="LoginScreen"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />
-            <Drawer.Screen
-              name="PersonalizationScreen"
-              component={PersonalizationScreen}
-              options={{
-                header: () => <AppBar back={true} title={true} />,
-              }}
-            />
-          </>
+          <Drawer.Screen
+            name="Onboarding"
+            component={OnBoardingStackNavigator}
+            options={{ headerShown: false }}
+          />
         )}
       </Drawer.Navigator>
     </NavigationContainer>
+  );
+}
+
+function OnBoardingStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ header: (props) => <AppBar {...props} /> }}>
+      <>
+        <Stack.Screen
+          name="WelcomeScreen"
+          component={WelcomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="PersonalizationScreen" component={PersonalizationScreen} />
+      </>
+    </Stack.Navigator>
   );
 }
 
