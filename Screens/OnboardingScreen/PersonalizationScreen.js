@@ -1,13 +1,12 @@
-import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
-
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { theme } from '../../styles/theme';
-import { useOnboarding } from '../../hooks/useonboarding';
 import { useState } from 'react';
 import TagLarge from '../../components/TagLarge';
 import DropDown from '../../components/DropDown';
+import { useNavigation } from '@react-navigation/native';
 export default function PersonalizationScreen() {
-  const { finishOnboarding } = useOnboarding();
   const [selectedJobs, setSelectedJobs] = useState([]);
+  const navigation = useNavigation();
 
   const handleJobSelection = (job) => {
     if (selectedJobs.includes(job)) {
@@ -19,6 +18,10 @@ export default function PersonalizationScreen() {
   const handleTagClose = (job) => {
     const updatedJobs = selectedJobs.filter((selectedJob) => selectedJob !== job);
     setSelectedJobs(updatedJobs);
+  };
+
+  const saveAndContinue = () => {
+    navigation.navigate('PersonalizationScreen2');
   };
 
   const jobCategories = [
@@ -35,6 +38,10 @@ export default function PersonalizationScreen() {
   return (
     <>
       <View style={styles.containerTop}>
+        <Text style={theme.textVariants.uiM}>Valitse tehtäväalue</Text>
+        <Text style={[theme.textVariants.uiS, { marginBottom: 8 }]}>
+          Valitse vähintään yksi, voit valita useampia
+        </Text>
         {jobCategories.map((category) => (
           <View key={category.name} style={{ width: '100%' }}>
             <DropDown
@@ -56,14 +63,16 @@ export default function PersonalizationScreen() {
             />
           ))}
         </View>
-        <Pressable onPress={() => finishOnboarding()} style={styles.buttonSM}>
-          <Text style={[theme.textVariants.uiM, { color: 'white' }]}>Jatka eteenpäin</Text>
-        </Pressable>
       </View>
 
-      <TouchableOpacity style={[styles.button, { position: 'absolute', bottom: 0 }]}>
-        <Text style={styles.buttonText}>Tallenna ja jatka</Text>
-      </TouchableOpacity>
+      {selectedJobs.length > 0 && (
+        <TouchableOpacity
+          onPress={() => saveAndContinue()}
+          style={[styles.button, { position: 'absolute', bottom: 0 }]}
+        >
+          <Text style={styles.buttonText}>Tallenna ja jatka</Text>
+        </TouchableOpacity>
+      )}
     </>
   );
 }
@@ -76,15 +85,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     justifyContent: 'center',
     paddingVertical: 16,
-    width: '100%',
-  },
-  buttonSM: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.button,
-    borderRadius: 8,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingVertical: 8,
     width: '100%',
   },
   buttonText: {

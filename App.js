@@ -23,6 +23,7 @@ import WelcomeScreen from './Screens/OnboardingScreen/WelcomeScreen';
 import { OnboardingProvider, useOnboarding } from './hooks/useonboarding';
 import LoginScreen from './Screens/OnboardingScreen/LoginScreen';
 import PersonalizationScreen from './Screens/OnboardingScreen/PersonalizationScreen';
+import PersonalizationScreen2 from './Screens/OnboardingScreen/PersonalizationScreen2';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -114,6 +115,7 @@ function OnBoardingStackNavigator() {
         />
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="PersonalizationScreen" component={PersonalizationScreen} />
+        <Stack.Screen name="PersonalizationScreen2" component={PersonalizationScreen2} />
       </>
     </Stack.Navigator>
   );

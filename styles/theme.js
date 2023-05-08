@@ -17,7 +17,7 @@ export const theme = {
   textVariants: {
     uiS: {
       fontFamily: 'RobotoMedium',
-      fontSize: 12,
+      fontSize: 13,
     },
     uiAltS: {
       fontFamily: 'Roboto',
