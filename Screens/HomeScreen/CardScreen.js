@@ -5,7 +5,7 @@ import TestData from '../../components/TestData';
 import { theme } from '../../styles/theme';
 
 export default function CardScreen() {
-  const [topCardIndex] = useState(0);
+  const [topCardIndex, setTopCardIndex] = useState(0);
 
   const pan = useRef(new Animated.ValueXY()).current;
 
@@ -48,11 +48,29 @@ export default function CardScreen() {
       onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], {
         useNativeDriver: false,
       }),
-      onPanResponderRelease: () => {
-        Animated.spring(pan, {
-          toValue: { x: 0, y: 0 },
-          useNativeDriver: false,
-        }).start();
+      onPanResponderRelease: (e, gestureState) => {
+        if (gestureState.dx > 120) {
+          Animated.spring(pan, {
+            toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
+            useNativeDriver: false,
+          }).start(() => {
+            setTopCardIndex(topCardIndex + 1);
+            pan.setValue({ x: 0, y: 0 });
+          });
+        } else if (gestureState.dx < -120) {
+          Animated.spring(pan, {
+            toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
+            useNativeDriver: false,
+          }).start(() => {
+            setTopCardIndex(topCardIndex + 1);
+            pan.setValue({ x: 0, y: 0 });
+          });
+        } else {
+          Animated.spring(pan, {
+            toValue: { x: 0, y: 0 },
+            useNativeDriver: false,
+          }).start();
+        }
       },
     })
   ).current;
