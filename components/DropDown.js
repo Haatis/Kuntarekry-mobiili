@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   dropdownOption: {
     color: theme.colors.textPrimary,
-    paddingVertical: 8,
+    paddingVertical: 4,
   },
 
   selectedJob: {
