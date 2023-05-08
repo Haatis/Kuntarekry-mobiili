@@ -36,15 +36,14 @@ export default function PersonalizationScreen() {
     <>
       <View style={styles.containerTop}>
         {jobCategories.map((category) => (
-          <>
+          <View key={category.name} style={{ width: '100%' }}>
             <DropDown
-              key={category.name}
               category={category.name}
               options={category.jobs}
               selectedOptions={selectedJobs}
               handleOptionSelection={handleJobSelection}
             />
-          </>
+          </View>
         ))}
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8 }}>
           {selectedJobs.map((job) => (
