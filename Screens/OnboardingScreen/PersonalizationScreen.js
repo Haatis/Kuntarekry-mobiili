@@ -73,7 +73,7 @@ export default function PersonalizationScreen() {
                   <MaterialCommunityIcons
                     name={isDropdownOpen === category.name ? 'chevron-up' : 'chevron-down'}
                     size={24}
-                    color={theme.colors.textPrimary}
+                    color={isDropdownOpen === category.name ? 'white' : theme.colors.textPrimary}
                   />
                 </View>
               </View>
