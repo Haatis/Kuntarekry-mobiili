@@ -15,9 +15,9 @@ export default function SmallCard({ job, cardType }) {
           <Image style={styles.avatarImage} source={job.employerImage} />
         </Pressable>
         <View style={styles.textContainer}>
-          <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.jobTitle}</Text>
+          <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
           <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
-            {job.employer}
+            {job.organization}
           </Text>
         </View>
         {
@@ -38,22 +38,22 @@ export default function SmallCard({ job, cardType }) {
       </View>
       <View style={styles.cardBottom}>
         <View style={styles.tagRow}>
-          <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />
-          <Tag tagColor={theme.colors.tag1} tagText="Kokoaikatyö" />
-          <Tag tagColor={theme.colors.tag1} tagText="Suomi" />
+          <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
+          <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
+          <Tag tagColor={theme.colors.tag1} tagText={job.location} />
           <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
         </View>
-        <Text style={[theme.textVariants.textM, styles.description]}>{job.description}</Text>
+        <Text style={[theme.textVariants.textM, styles.description]}>{job.jobDesc}</Text>
         {cardType === 'applied' ? (
           <View style={styles.dateTextContainer}>
             <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
-              Haku päättyy: {job.endDate}
+              Haku päättyy: {job.publicationEnds}
             </Text>
             <Text style={[theme.textVariants.textS, { color: 'black' }]}>Haettu: 12.1.2020</Text>
           </View>
         ) : (
           <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
-            Haku päättyy: {job.endDate}
+            Haku päättyy: {job.publicationEnds}
           </Text>
         )}
       </View>

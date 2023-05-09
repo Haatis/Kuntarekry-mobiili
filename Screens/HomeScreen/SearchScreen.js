@@ -2,14 +2,18 @@ import { View, StyleSheet, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
-import TestData from '../../components/TestData';
+import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 
 function SearchContent({ navigation }) {
+  const { jobs } = useJobAdvertisements();
+  console.log(jobs[0].jobAdvertisement);
+  const jobsLength = jobs.length;
+
   return (
     <View style={theme.containerTop}>
       <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
         <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
-          Haku: Kaikki ilmoitukset (2400)
+          Haku: Kaikki ilmoitukset ({jobsLength})
         </Text>
 
         <MaterialCommunityIcons name={'magnify'} size={30} color={theme.colors.textPrimary} />
@@ -20,8 +24,8 @@ function SearchContent({ navigation }) {
           onPress={() => navigation.openDrawer()} // open drawer when filter icon is pressed
         />
       </View>
-      <SmallCard job={TestData.jobs[0]} />
-      <SmallCard job={TestData.jobs[1]} />
+      <SmallCard job={jobs[0].jobAdvertisement} />
+      <SmallCard job={jobs[3].jobAdvertisement} />
     </View>
   );
 }
