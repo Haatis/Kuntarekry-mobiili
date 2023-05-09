@@ -4,6 +4,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Tag from './Tag';
 
 export default function SmallCard({ job, cardType }) {
+  const randomNum = Math.floor(Math.random() * 200) + 1;
+
+  const imageURL = {
+    uri: `https://picsum.photos/200/300?random=${randomNum}`,
+  };
+
   if (cardType == null) {
     cardType = 'default';
   }
@@ -12,7 +18,7 @@ export default function SmallCard({ job, cardType }) {
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
         <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
-          <Image style={styles.avatarImage} source={job.employerImage} />
+          <Image style={styles.avatarImage} source={imageURL} />
         </Pressable>
         <View style={styles.textContainer}>
           <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
