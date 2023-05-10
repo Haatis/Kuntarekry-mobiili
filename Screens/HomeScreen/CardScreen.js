@@ -6,8 +6,11 @@ import { theme } from '../../styles/theme';
 import { Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDown from '../../components/DropDown';
+import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 
 export default function CardScreen() {
+  const { jobs } = useJobAdvertisements();
+
   const [topCardIndex, setTopCardIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
@@ -65,7 +68,7 @@ export default function CardScreen() {
         if (gestureState.dx > 120) {
           Animated.spring(pan, {
             toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
-            useNativeDriver: true,
+            useNativeDriver: false,
           }).start(() => {
             setTopCardIndex(topCardIndex + 1);
             pan.setValue({ x: 0, y: 0 });
@@ -75,7 +78,7 @@ export default function CardScreen() {
         } else if (gestureState.dx < -120) {
           Animated.spring(pan, {
             toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
-            useNativeDriver: true,
+            useNativeDriver: false,
           }).start(() => {
             setTopCardIndex(topCardIndex + 1);
             pan.setValue({ x: 0, y: 0 });
@@ -83,7 +86,7 @@ export default function CardScreen() {
         } else {
           Animated.spring(pan, {
             toValue: { x: 0, y: 0 },
-            useNativeDriver: true,
+            useNativeDriver: false,
           }).start();
         }
       },
@@ -92,8 +95,9 @@ export default function CardScreen() {
   return (
     <>
       <View style={styles.container}>
-        {TestData.jobs
-          .map((item, i) => {
+        {jobs
+          .slice(topCardIndex, topCardIndex + 3)
+          .map((job, i) => {
             if (i < topCardIndex) {
               return null;
             } else if (i == topCardIndex) {
@@ -112,7 +116,7 @@ export default function CardScreen() {
                   }}
                   {...panResponder.panHandlers}
                 >
-                  <SwipeableCard job={item} />
+                  <SwipeableCard job={job.jobAdvertisement} />
                   <Animated.View
                     style={{
                       width: '100%',
@@ -138,7 +142,7 @@ export default function CardScreen() {
                   }}
                   {...panResponder.panHandlers}
                 >
-                  <SwipeableCard job={item} />
+                  <SwipeableCard job={job.jobAdvertisement} />
                 </Animated.View>
               );
             }

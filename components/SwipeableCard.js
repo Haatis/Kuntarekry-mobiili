@@ -8,12 +8,20 @@ import { useNavigation } from '@react-navigation/native';
 export default function SwipeableCard({ job }) {
   const navigation = useNavigation();
 
+  const randomEmployerImage = {
+    uri: `https://source.unsplash.com/random/?finland`,
+  };
+
+  const randomJobImage = {
+    uri: `https://source.unsplash.com/random/?job,worker`,
+  };
+
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <ImageBackground
         imageStyle={styles.image}
         style={styles.imageContainer}
-        source={job.jobImage}
+        source={randomJobImage}
         resizeMode="cover"
       >
         <LinearGradient
@@ -30,11 +38,13 @@ export default function SwipeableCard({ job }) {
           >
             <Pressable onPress={() => navigation.navigate('JobScreen')} style={styles.cardTop}>
               <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
-                <Image style={styles.avatarImage} source={job.employerImage} />
+                <Image style={styles.avatarImage} source={randomEmployerImage} />
               </Pressable>
               <View style={styles.textContainer}>
-                <Text style={[theme.textVariants.textXL, { color: 'white' }]}>{job.jobTitle}</Text>
-                <Text style={[theme.textVariants.textM, { color: 'white' }]}>{job.employer}</Text>
+                <Text style={[theme.textVariants.textXL, { color: 'white' }]}>{job.title}</Text>
+                <Text style={[theme.textVariants.textM, { color: 'white' }]}>
+                  {job.organization}
+                </Text>
               </View>
               <MaterialCommunityIcons name={'chevron-right'} size={40} color={'white'} />
             </Pressable>
@@ -43,7 +53,7 @@ export default function SwipeableCard({ job }) {
       </ImageBackground>
       <View style={styles.cardBottom}>
         <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
-          Haku päättyy: {job.endDate}
+          Haku päättyy: {job.publicationEnds}
         </Text>
         <View style={styles.tagRow}>
           <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />
@@ -51,8 +61,11 @@ export default function SwipeableCard({ job }) {
           <Tag tagColor={theme.colors.tag1} tagText="Suomi" />
           <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
         </View>
-        <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
-          {job.description}
+        <Text
+          numberOfLines={7}
+          style={[theme.textVariants.textM, { flex: 1, color: theme.colors.textPrimary }]}
+        >
+          {job.jobDesc}
         </Text>
         <View style={styles.buttonRow}>
           <View style={[styles.button, { borderColor: theme.colors.danger }]}>

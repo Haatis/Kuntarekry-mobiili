@@ -33,10 +33,19 @@ function SearchContent({ navigation }) {
     <>
       <ScrollView
         ref={scrollViewRef}
-        style={{ width: '100%', height: '100%', paddingHorizontal: 8 }}
+        style={{ width: '100%', height: '100%', paddingHorizontal: 8, backgroundColor: 'white' }}
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
+        <View style={{ height: 70 }} />
+        {jobs.slice(0, jobsVisible).map((job, index) => (
+          <SmallCard key={index} job={job.jobAdvertisement} />
+        ))}
+        {loading && (
+          <ActivityIndicator style={{ marginTop: 20 }} color={theme.colors.textPrimary} />
+        )}
+      </ScrollView>
+      <View style={{ position: 'absolute', width: '100%', paddingHorizontal: 8 }}>
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
           <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
             Haku: Kaikki ilmoitukset ({jobsLength})
@@ -47,17 +56,11 @@ function SearchContent({ navigation }) {
               name={'filter-outline'}
               size={30}
               color={theme.colors.textPrimary}
-              onPress={() => navigation.openDrawer()} // open drawer when filter icon is pressed
+              onPress={() => navigation.openDrawer()}
             />
           </View>
         </View>
-        {jobs.slice(0, jobsVisible).map((job, index) => (
-          <SmallCard key={index} job={job.jobAdvertisement} />
-        ))}
-        {loading && (
-          <ActivityIndicator style={{ marginTop: 20 }} color={theme.colors.textPrimary} />
-        )}
-      </ScrollView>
+      </View>
     </>
   );
 }
@@ -70,9 +73,12 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     flexDirection: 'row',
+    height: 50,
     justifyContent: 'space-between',
+    marginTop: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
+
     width: '100%',
   },
 });
