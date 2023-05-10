@@ -4,6 +4,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Tag from './Tag';
 
 export default function Notification({ job, cardType }) {
+  const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
+  const publicationStarts = new Date(job.publicationStarts)?.toLocaleDateString('fi-FI');
+
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
@@ -20,9 +23,9 @@ export default function Notification({ job, cardType }) {
               Uusi ilmoitus sinulle:
             </Text>
           )}
-          <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.jobTitle}</Text>
+          <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
           <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
-            {job.employer}
+            {job.organization}
           </Text>
         </View>
         {
@@ -50,9 +53,11 @@ export default function Notification({ job, cardType }) {
         </View>
         <View style={styles.dateTextContainer}>
           <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
-            Haku päättyy: {job.endDate}
+            Haku päättyy: {publicationEnds}
           </Text>
-          <Text style={[theme.textVariants.textS, { color: 'black' }]}>Ilmoitettu: 12.1.2020</Text>
+          <Text style={[theme.textVariants.textS, { color: 'black' }]}>
+            Ilmoitettu: {publicationStarts}
+          </Text>
         </View>
       </View>
     </View>

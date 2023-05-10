@@ -6,6 +6,8 @@ import Tag from './Tag';
 import { useNavigation } from '@react-navigation/native';
 
 export default function SwipeableCard({ job }) {
+  const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
+
   const navigation = useNavigation();
 
   const randomEmployerImage = {
@@ -53,7 +55,7 @@ export default function SwipeableCard({ job }) {
       </ImageBackground>
       <View style={styles.cardBottom}>
         <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
-          Haku päättyy: {job.publicationEnds}
+          Haku päättyy: {publicationEnds}
         </Text>
         <View style={styles.tagRow}>
           <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />

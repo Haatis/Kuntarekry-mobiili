@@ -1,13 +1,15 @@
 import { View } from 'react-native';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
-import TestData from '../../components/TestData';
+import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 
 export default function HiddenTab() {
+  const { jobs } = useJobAdvertisements();
+
   return (
     <View style={theme.containerList}>
-      <SmallCard cardType={'hidden'} job={TestData.jobs[0]} />
-      <SmallCard cardType={'hidden'} job={TestData.jobs[1]} />
+      <SmallCard cardType={'hidden'} job={jobs[0].jobAdvertisement} />
+      <SmallCard cardType={'hidden'} job={jobs[1].jobAdvertisement} />
     </View>
   );
 }
