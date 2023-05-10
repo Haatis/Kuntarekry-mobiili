@@ -13,13 +13,8 @@ export default function SmallCard({ job, cardType }) {
   if (cardType == null) {
     cardType = 'default';
   }
-
-  const maxLength = 210;
-  const truncatedDescription =
-    job?.jobDesc?.length > maxLength
-      ? job.jobDesc.slice(0, maxLength).replace(/[,.\s]*$/, '') + '...'
-      : job?.jobDesc;
-  const trimmedDescription = truncatedDescription?.trim().replace(/\s+/g, ' ');
+  const trimmedDesc = job.jobDesc?.trim().replace(/\s+/g, ' ');
+  const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
 
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
@@ -29,7 +24,10 @@ export default function SmallCard({ job, cardType }) {
         </Pressable>
         <View style={styles.textContainer}>
           <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
-          <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
+          <Text
+            numberOfLines={2}
+            style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}
+          >
             {job.organization}
           </Text>
         </View>
@@ -56,17 +54,19 @@ export default function SmallCard({ job, cardType }) {
           <Tag tagColor={theme.colors.tag1} tagText={job.location} />
           <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
         </View>
-        <Text style={[theme.textVariants.textM, styles.description]}>{trimmedDescription}</Text>
+        <Text numberOfLines={4} style={[theme.textVariants.textM, styles.description]}>
+          {trimmedDesc}
+        </Text>
         {cardType === 'applied' ? (
           <View style={styles.dateTextContainer}>
             <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
-              Haku päättyy: {job.publicationEnds}
+              Haku päättyy: {publicationEnds}
             </Text>
             <Text style={[theme.textVariants.textS, { color: 'black' }]}>Haettu: 12.1.2020</Text>
           </View>
         ) : (
           <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
-            Haku päättyy: {job.publicationEnds}
+            Haku päättyy: {publicationEnds}
           </Text>
         )}
       </View>
