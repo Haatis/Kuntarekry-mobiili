@@ -14,6 +14,13 @@ export default function SmallCard({ job, cardType }) {
     cardType = 'default';
   }
 
+  const maxLength = 210;
+  const truncatedDescription =
+    job?.jobDesc?.length > maxLength
+      ? job.jobDesc.slice(0, maxLength).replace(/[,.\s]*$/, '') + '...'
+      : job?.jobDesc;
+  const trimmedDescription = truncatedDescription?.trim().replace(/\s+/g, ' ');
+
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
@@ -49,7 +56,7 @@ export default function SmallCard({ job, cardType }) {
           <Tag tagColor={theme.colors.tag1} tagText={job.location} />
           <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
         </View>
-        <Text style={[theme.textVariants.textM, styles.description]}>{job.jobDesc}</Text>
+        <Text style={[theme.textVariants.textM, styles.description]}>{trimmedDescription}</Text>
         {cardType === 'applied' ? (
           <View style={styles.dateTextContainer}>
             <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
@@ -88,6 +95,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     borderRadius: 8,
+    marginBottom: 8,
     width: '100%',
   },
   cardBottom: {
