@@ -31,6 +31,19 @@ function SearchContent({ navigation }) {
 
   return (
     <>
+      <ScrollView
+        ref={scrollViewRef}
+        style={{ width: '100%', height: '100%', paddingHorizontal: 8 }}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        {jobs.slice(0, jobsVisible).map((job, index) => (
+          <SmallCard key={index} job={job.jobAdvertisement} />
+        ))}
+        {loading && (
+          <ActivityIndicator style={{ marginTop: 20 }} color={theme.colors.textPrimary} />
+        )}
+      </ScrollView>
       <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
         <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
           Haku: Kaikki ilmoitukset ({jobsLength})
@@ -45,19 +58,6 @@ function SearchContent({ navigation }) {
           />
         </View>
       </View>
-      <ScrollView
-        ref={scrollViewRef}
-        style={{ width: '100%', height: '100%', paddingHorizontal: 8 }}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      >
-        {jobs.slice(0, jobsVisible).map((job, index) => (
-          <SmallCard key={index} job={job.jobAdvertisement} />
-        ))}
-        {loading && (
-          <ActivityIndicator style={{ marginTop: 20 }} color={theme.colors.textPrimary} />
-        )}
-      </ScrollView>
     </>
   );
 }
@@ -73,7 +73,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 8,
+    height: 80,
     width: '100%',
+    marginTop: 8,
+    position: 'absolute',
   },
 });
 
