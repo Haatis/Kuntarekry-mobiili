@@ -36,7 +36,10 @@ export default function SwipeableCard({ job }) {
             end={{ x: 0, y: 1 }}
             style={styles.gradient2}
           >
-            <Pressable onPress={() => navigation.navigate('JobScreen')} style={styles.cardTop}>
+            <Pressable
+              onPress={() => navigation.navigate('JobScreen', { job: job })}
+              style={styles.cardTop}
+            >
               <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
                 <Image style={styles.avatarImage} source={randomEmployerImage} />
               </Pressable>

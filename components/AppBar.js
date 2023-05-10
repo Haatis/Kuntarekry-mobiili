@@ -7,7 +7,7 @@ import Logo from '../assets/logo.png';
 import Constants from 'expo-constants';
 import { theme } from '../styles/theme';
 
-export default function AppBar({ back, title }) {
+export default function AppBar({ back, title, underTitle }) {
   const navigation = useNavigation();
 
   return (
@@ -30,8 +30,8 @@ export default function AppBar({ back, title }) {
         >
           {title ? (
             <View style={styles.textContainer}>
-              <Text style={[theme.textVariants.uiM, { color: 'white' }]}>Testi työpaikka</Text>
-              <Text style={[theme.textVariants.uiAltS, { color: 'white' }]}>Testi kaupunki</Text>
+              <Text style={[theme.textVariants.uiM, { color: 'white' }]}>{title}</Text>
+              <Text style={[theme.textVariants.uiAltS, { color: 'white' }]}>{underTitle}</Text>
             </View>
           ) : (
             <Image
