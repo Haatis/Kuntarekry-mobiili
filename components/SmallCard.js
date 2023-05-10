@@ -4,6 +4,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Tag from './Tag';
 
 export default function SmallCard({ job, cardType }) {
+  const randomNum = Math.floor(Math.random() * 200) + 1;
+
+  const imageURL = {
+    uri: `https://picsum.photos/200/300?random=${randomNum}`,
+  };
+
   if (cardType == null) {
     cardType = 'default';
   }
@@ -12,12 +18,12 @@ export default function SmallCard({ job, cardType }) {
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
         <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
-          <Image style={styles.avatarImage} source={job.employerImage} />
+          <Image style={styles.avatarImage} source={imageURL} />
         </Pressable>
         <View style={styles.textContainer}>
-          <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.jobTitle}</Text>
+          <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
           <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
-            {job.employer}
+            {job.organization}
           </Text>
         </View>
         {
@@ -38,22 +44,22 @@ export default function SmallCard({ job, cardType }) {
       </View>
       <View style={styles.cardBottom}>
         <View style={styles.tagRow}>
-          <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />
-          <Tag tagColor={theme.colors.tag1} tagText="Kokoaikatyö" />
-          <Tag tagColor={theme.colors.tag1} tagText="Suomi" />
+          <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
+          <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
+          <Tag tagColor={theme.colors.tag1} tagText={job.location} />
           <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
         </View>
-        <Text style={[theme.textVariants.textM, styles.description]}>{job.description}</Text>
+        <Text style={[theme.textVariants.textM, styles.description]}>{job.jobDesc}</Text>
         {cardType === 'applied' ? (
           <View style={styles.dateTextContainer}>
             <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
-              Haku päättyy: {job.endDate}
+              Haku päättyy: {job.publicationEnds}
             </Text>
             <Text style={[theme.textVariants.textS, { color: 'black' }]}>Haettu: 12.1.2020</Text>
           </View>
         ) : (
           <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
-            Haku päättyy: {job.endDate}
+            Haku päättyy: {job.publicationEnds}
           </Text>
         )}
       </View>
