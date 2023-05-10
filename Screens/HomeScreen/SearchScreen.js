@@ -30,22 +30,24 @@ function SearchContent({ navigation }) {
   };
 
   return (
-    <View style={theme.containerTop}>
+    <>
       <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
         <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
           Haku: Kaikki ilmoitukset ({jobsLength})
         </Text>
-        <MaterialCommunityIcons name={'magnify'} size={30} color={theme.colors.textPrimary} />
-        <MaterialCommunityIcons
-          name={'filter-outline'}
-          size={30}
-          color={theme.colors.textPrimary}
-          onPress={() => navigation.openDrawer()} // open drawer when filter icon is pressed
-        />
+        <View style={{ flexDirection: 'row' }}>
+          <MaterialCommunityIcons name={'magnify'} size={30} color={theme.colors.textPrimary} />
+          <MaterialCommunityIcons
+            name={'filter-outline'}
+            size={30}
+            color={theme.colors.textPrimary}
+            onPress={() => navigation.openDrawer()} // open drawer when filter icon is pressed
+          />
+        </View>
       </View>
       <ScrollView
         ref={scrollViewRef}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', paddingHorizontal: 8 }}
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
@@ -56,7 +58,7 @@ function SearchContent({ navigation }) {
           <ActivityIndicator style={{ marginTop: 20 }} color={theme.colors.textPrimary} />
         )}
       </ScrollView>
-    </View>
+    </>
   );
 }
 
