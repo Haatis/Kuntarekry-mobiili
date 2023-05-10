@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
 import { View, StyleSheet, Animated, PanResponder, Dimensions, Text } from 'react-native';
 import SwipeableCard from '../../components/SwipeableCard';
-import TestData from '../../components/TestData';
 import { theme } from '../../styles/theme';
 import { Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -174,13 +173,13 @@ export default function CardScreen() {
           >
             <View style={{ alignItems: 'center' }}>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {TestData.jobs[topCardIndex].jobTitle}
+                {jobs[topCardIndex].jobAdvertisement.title}
               </Text>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {TestData.jobs[topCardIndex].employer}
+                {jobs[topCardIndex].jobAdvertisement.organization}
               </Text>
               <Text style={{ padding: 16, color: 'white' }}>
-                {TestData.jobs[topCardIndex].description}
+                {jobs[topCardIndex].jobAdvertisement.jobDesc}
               </Text>
             </View>
             <DropDown category={'Lisätty kansioon: Kaikki Suosikit'} />
