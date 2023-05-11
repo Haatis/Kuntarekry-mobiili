@@ -7,11 +7,14 @@ export default function Notification({ job, cardType }) {
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
   const publicationStarts = new Date(job.publicationStarts)?.toLocaleDateString('fi-FI');
 
+  const imgNumber = job.organization.length;
+
+  const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
         <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
-          <Image style={styles.avatarImage} source={job.image} />
+          <Image style={styles.avatarImage} source={{ uri: randomEmployerImage }} />
         </Pressable>
         <View style={styles.textContainer}>
           {cardType === 'danger' ? (
@@ -25,7 +28,7 @@ export default function Notification({ job, cardType }) {
           )}
           <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
           <Text style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}>
-            {job.organization}
+            {job.profitCenter}
           </Text>
         </View>
         {

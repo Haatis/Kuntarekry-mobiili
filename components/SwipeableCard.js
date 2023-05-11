@@ -10,20 +10,18 @@ export default function SwipeableCard({ job }) {
 
   const navigation = useNavigation();
 
-  const randomEmployerImage = {
-    uri: `https://source.unsplash.com/random/?finland`,
-  };
+  const imgNumber = job.organization.length;
 
-  const randomJobImage = {
-    uri: `https://source.unsplash.com/random/?job,worker`,
-  };
+  const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
+
+  const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job,worker`;
 
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <ImageBackground
         imageStyle={styles.image}
         style={styles.imageContainer}
-        source={randomJobImage}
+        source={{ uri: randomJobImage }}
         resizeMode="cover"
       >
         <LinearGradient
@@ -40,12 +38,12 @@ export default function SwipeableCard({ job }) {
           >
             <Pressable onPress={() => navigation.navigate('JobScreen')} style={styles.cardTop}>
               <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
-                <Image style={styles.avatarImage} source={randomEmployerImage} />
+                <Image style={styles.avatarImage} source={{ uri: randomEmployerImage }} />
               </Pressable>
               <View style={styles.textContainer}>
                 <Text style={[theme.textVariants.textXL, { color: 'white' }]}>{job.title}</Text>
                 <Text style={[theme.textVariants.textM, { color: 'white' }]}>
-                  {job.organization}
+                  {job.profitCenter}
                 </Text>
               </View>
               <MaterialCommunityIcons name={'chevron-right'} size={40} color={'white'} />
