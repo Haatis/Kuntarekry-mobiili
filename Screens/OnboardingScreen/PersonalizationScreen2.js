@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useState } from 'react';
-
+import { useJobLocations } from '../../hooks/uselocations';
 import { theme } from '../../styles/theme';
 import { useOnboarding } from '../../hooks/useonboarding';
 import { TextInput } from 'react-native-gesture-handler';
@@ -12,6 +12,27 @@ export default function PersonalizationScreen2() {
   const { finishOnboarding } = useOnboarding();
   const [sliderValue, setSliderValue] = useState(0);
   const [radius, setRadius] = useState(0);
+  const { locations } = useJobLocations();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const handleLocationSelect = (location) => {
+    setSelectedLocation(location);
+    setSearchQuery(location.name);
+    setSearchResults([]);
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+
+    // Filter the locations based on the search query
+    const filteredResults = locations.filter((location) =>
+      location.name.toLowerCase().includes(query.toLowerCase())
+    );
+
+    setSearchResults(filteredResults);
+  };
 
   const saveAndContinue = () => {
     finishOnboarding();
@@ -32,14 +53,56 @@ export default function PersonalizationScreen2() {
   return (
     <>
       <View style={styles.containerTop}>
-        <Text style={theme.textVariants.uiM}>Valitse Sijainti</Text>
-        <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
-          <TextInput
-            placeholder="Sijainti"
-            style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, flex: 1 }]}
-          ></TextInput>
-
-          <MaterialCommunityIcons name={'map-marker'} size={30} color={theme.colors.textPrimary} />
+        <Text style={theme.textVariants.uiM}>Valitse sijainti </Text>
+        <View style={{ width: '100%' }}>
+          <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
+            {selectedLocation ? (
+              <TouchableOpacity
+                style={styles.selectedLocationTag}
+                onPress={() => {
+                  setSelectedLocation(null);
+                  setSearchQuery('');
+                }}
+              >
+                <Text style={theme.textVariants.uiM}>{selectedLocation.name}</Text>
+                <MaterialCommunityIcons name="close" size={16} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+            ) : (
+              <TextInput
+                placeholder="Sijainti"
+                style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, flex: 1 }]}
+                value={searchQuery}
+                onChangeText={handleSearch}
+              />
+            )}
+            <MaterialCommunityIcons
+              name={'map-marker'}
+              size={30}
+              color={theme.colors.textPrimary}
+            />
+          </View>
+          <View
+            style={[
+              { width: '100%' },
+              searchResults.length > 0 && { height: Math.min(searchResults.length * 50, 200) },
+            ]}
+          >
+            <FlatList
+              data={searchResults}
+              keyExtractor={(item) => item.id.toString()}
+              contentContainerStyle={{ flexGrow: 1 }}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => handleLocationSelect(item)}
+                  style={styles.suggestionItem}
+                >
+                  <Text style={[theme.textVariants.uiM, styles.suggestionItemText]}>
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
         </View>
         <View style={{ width: '100%' }}>
           <View
@@ -122,9 +185,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 8,
+    marginTop: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
     width: '100%',
+  },
+
+  selectedLocationTag: {
+    flexDirection: 'row',
+  },
+  suggestionItem: {
+    borderBottomWidth: 1,
+    borderColor: theme.colors.outlineDark,
+    paddingVertical: 8,
+    width: '100%',
+  },
+  suggestionItemText: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    textAlign: 'left',
   },
 });

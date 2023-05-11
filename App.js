@@ -25,6 +25,8 @@ import LoginScreen from './Screens/OnboardingScreen/LoginScreen';
 import PersonalizationScreen from './Screens/OnboardingScreen/PersonalizationScreen';
 import PersonalizationScreen2 from './Screens/OnboardingScreen/PersonalizationScreen2';
 import { JobAdvertisementProvider } from './hooks/usejobadvertisements';
+import { JobTaskProvider } from './hooks/usejobtasks';
+import { JobLocationProvider } from './hooks/uselocations';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -37,7 +39,11 @@ export default function App() {
     <>
       <OnboardingProvider>
         <JobAdvertisementProvider>
-          <AppWrapper />
+          <JobTaskProvider>
+            <JobLocationProvider>
+              <AppWrapper />
+            </JobLocationProvider>
+          </JobTaskProvider>
         </JobAdvertisementProvider>
       </OnboardingProvider>
     </>
