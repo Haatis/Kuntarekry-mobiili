@@ -48,7 +48,7 @@ export default function PersonalizationScreen() {
 
   return (
     <>
-      <ScrollView>
+      <ScrollView style={{ backgroundColor: 'white' }}>
         <View style={styles.containerTop}>
           <Text style={theme.textVariants.uiM}>Valitse tehtäväalue</Text>
           <Text style={[theme.textVariants.uiS, { marginBottom: 8 }]}>

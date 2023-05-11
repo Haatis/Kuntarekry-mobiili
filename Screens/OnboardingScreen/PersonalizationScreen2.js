@@ -7,6 +7,7 @@ import { useOnboarding } from '../../hooks/useonboarding';
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MapView, { Marker, Circle } from 'react-native-maps';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PersonalizationScreen2() {
   const { finishOnboarding } = useOnboarding();
@@ -34,8 +35,14 @@ export default function PersonalizationScreen2() {
     setSearchResults(filteredResults);
   };
 
-  const saveAndContinue = () => {
-    finishOnboarding();
+  const saveAndContinue = async () => {
+    try {
+      // Save the selectedLocation.id into AsyncStorage
+      await AsyncStorage.setItem('LOCATION_KEY', selectedLocation.id.toString());
+      finishOnboarding();
+    } catch (error) {
+      console.log('Error saving selected location ID:', error);
+    }
   };
 
   const onSliderValueChange = (value) => {
