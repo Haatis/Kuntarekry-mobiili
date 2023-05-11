@@ -132,9 +132,15 @@ function StackNavigator() {
         <Stack.Screen
           name="JobScreen"
           component={JobScreen}
-          options={{
-            header: () => <AppBar back={true} title={true} />,
-          }}
+          options={({ route }) => ({
+            header: () => (
+              <AppBar
+                back={true}
+                title={route.params.job.title}
+                underTitle={route.params.job.profitCenter}
+              />
+            ),
+          })}
         />
         <Stack.Screen
           name="FavoriteFolder"

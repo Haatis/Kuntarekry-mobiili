@@ -2,9 +2,11 @@ import { Pressable, Image, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Tag from './Tag';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SmallCard({ job, cardType }) {
   const imgNumber = job.organization.length;
+  const navigation = useNavigation();
 
   const imageURL = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
 
@@ -15,7 +17,10 @@ export default function SmallCard({ job, cardType }) {
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
 
   return (
-    <View style={[theme.outline, theme.dropShadow, styles.card]}>
+    <Pressable
+      onPress={() => navigation.navigate('JobScreen', { job: job })}
+      style={[theme.outline, theme.dropShadow, styles.card]}
+    >
       <View style={styles.cardTop}>
         <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
           <Image style={styles.avatarImage} source={{ uri: imageURL }} />
@@ -68,7 +73,7 @@ export default function SmallCard({ job, cardType }) {
           </Text>
         )}
       </View>
-    </View>
+    </Pressable>
   );
 }
 
