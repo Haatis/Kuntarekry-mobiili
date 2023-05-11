@@ -50,11 +50,21 @@ export default function CardScreen() {
 
   const modalY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
 
-  const animateModal = () => {
+  const openModal = () => {
+    setShowModal(true);
     Animated.spring(modalY, {
       toValue: 0,
       useNativeDriver: true,
     }).start();
+  };
+
+  const closeModal = () => {
+    Animated.spring(modalY, {
+      toValue: SCREEN_HEIGHT,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowModal(false);
+    });
   };
 
   const panResponder = useRef(
@@ -71,8 +81,7 @@ export default function CardScreen() {
           }).start(() => {
             setTopCardIndex(topCardIndex + 1);
             pan.setValue({ x: 0, y: 0 });
-            setShowModal(true);
-            animateModal();
+            openModal();
           });
         } else if (gestureState.dx < -120) {
           Animated.spring(pan, {
@@ -141,7 +150,7 @@ export default function CardScreen() {
                   }}
                   {...panResponder.panHandlers}
                 >
-                  <SwipeableCard job={job.jobAdvertisement} />
+                  <SwipeableCard index={i} job={job.jobAdvertisement} />
                 </Animated.View>
               );
             }
@@ -154,33 +163,29 @@ export default function CardScreen() {
             alignContent: 'center',
             justifyContent: 'center',
             position: 'absolute',
-            flex: 1,
             height: '100%',
+            width: '100%',
             backgroundColor: theme.colors.darkBackground,
             transform: [{ translateY: modalY }],
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              marginHorizontal: 16,
-              marginVertical: 32,
-              backgroundColor: theme.colors.secondary,
-              borderRadius: 8,
-              paddingHorizontal: 8,
-              gap: 16,
-            }}
-          >
+          <View style={styles.likedCard}>
             <View style={{ alignItems: 'center' }}>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
                 {jobs[topCardIndex].jobAdvertisement.title}
               </Text>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {jobs[topCardIndex].jobAdvertisement.organization}
+                {jobs[topCardIndex].jobAdvertisement.profitCenter}
               </Text>
-              <Text style={{ padding: 16, color: 'white' }}>
+              <Text numberOfLines={8} style={{ padding: 16, color: 'white' }}>
                 {jobs[topCardIndex].jobAdvertisement.jobDesc}
               </Text>
+              <MaterialCommunityIcons
+                name={'heart'}
+                size={40}
+                color={theme.colors.secondary}
+                style={{ padding: 16, backgroundColor: 'white', borderRadius: 999 }}
+              />
             </View>
             <DropDown category={'Lisätty kansioon: Kaikki Suosikit'} />
             <Pressable style={styles.button}>
@@ -194,7 +199,12 @@ export default function CardScreen() {
                 style={{ marginTop: 3 }}
               />
             </Pressable>
-            <Pressable onPress={() => setShowModal(false)} style={styles.button}>
+            <Pressable
+              onPress={() => {
+                closeModal();
+              }}
+              style={styles.button}
+            >
               <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
                 Jatka etsimistä
               </Text>
@@ -222,5 +232,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 16,
     paddingVertical: 32,
+  },
+  likedCard: {
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 8,
+    flex: 1,
+    gap: 16,
+    marginHorizontal: 16,
+    marginVertical: 32,
+    paddingHorizontal: 8,
   },
 });

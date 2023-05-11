@@ -5,12 +5,10 @@ import Tag from './Tag';
 import { useNavigation } from '@react-navigation/native';
 
 export default function SmallCard({ job, cardType }) {
+  const imgNumber = job.organization.length;
   const navigation = useNavigation();
-  const randomNum = Math.floor(Math.random() * 200) + 1;
 
-  const imageURL = {
-    uri: `https://picsum.photos/200/300?random=${randomNum}`,
-  };
+  const imageURL = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
 
   if (cardType == null) {
     cardType = 'default';
@@ -25,7 +23,7 @@ export default function SmallCard({ job, cardType }) {
     >
       <View style={styles.cardTop}>
         <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
-          <Image style={styles.avatarImage} source={imageURL} />
+          <Image style={styles.avatarImage} source={{ uri: imageURL }} />
         </Pressable>
         <View style={styles.textContainer}>
           <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
