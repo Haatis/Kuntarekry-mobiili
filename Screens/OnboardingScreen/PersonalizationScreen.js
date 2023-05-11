@@ -5,6 +5,7 @@ import TagLarge from '../../components/TagLarge';
 import DropDown from '../../components/DropDown';
 import { useNavigation } from '@react-navigation/native';
 import { useJobTasks } from '../../hooks/usejobtasks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function PersonalizationScreen() {
   const [selectedJobs, setSelectedJobs] = useState([]);
   const navigation = useNavigation();
@@ -22,16 +23,26 @@ export default function PersonalizationScreen() {
     setSelectedJobs(updatedJobs);
   };
 
-  const saveAndContinue = () => {
-    navigation.navigate('PersonalizationScreen2');
+  const saveAndContinue = async () => {
+    const jobIds = selectedJobs.map((job) => {
+      const selectedTask = tasks.find((task) => task.name === job);
+      return selectedTask ? selectedTask.id : null;
+    });
+    const filteredJobIds = jobIds.filter((id) => id !== null);
+    try {
+      await AsyncStorage.setItem('TASK_KEY', JSON.stringify(filteredJobIds));
+      navigation.navigate('PersonalizationScreen2');
+    } catch (error) {
+      console.log('Error saving job IDs:', error);
+    }
   };
 
   const jobCategories = tasks
-    .filter((task) => !task.parent) // Filter tasks with no parent
+    .filter((task) => !task.parent)
     .map((task) => ({
       name: task.name,
       jobs: tasks
-        .filter((subTask) => subTask.parent === task.id) // Filter tasks with parent as current task id
+        .filter((subTask) => subTask.parent === task.id)
         .map((subTask) => ({ name: subTask.name })),
     }));
 
