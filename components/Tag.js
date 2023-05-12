@@ -1,7 +1,7 @@
 import { Pressable, Text, StyleSheet } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-export default function Tag({ tagColor, tagText, tagClose, onPressClose }) {
+export default function Tag({ tagColor, tagText, tagClose, tagOpen, onPressClose }) {
   if (tagClose) {
     return (
       <Pressable
@@ -13,6 +13,18 @@ export default function Tag({ tagColor, tagText, tagClose, onPressClose }) {
       >
         <Text style={[theme.textVariants.uiS, { color: theme.colors.textPrimary }]}>{tagText}</Text>
         <MaterialCommunityIcons name={'close-thick'} size={17} color={theme.colors.textPrimary} />
+      </Pressable>
+    );
+  } else if (tagOpen) {
+    return (
+      <Pressable
+        style={[
+          styles.tag,
+          { backgroundColor: tagColor, flexDirection: 'row', justifyContent: 'space-between' },
+        ]}
+      >
+        <Text style={[theme.textVariants.uiS, { color: theme.colors.textPrimary }]}>{tagText}</Text>
+        <MaterialCommunityIcons name={'chevron-down'} size={17} color={theme.colors.textPrimary} />
       </Pressable>
     );
   }
