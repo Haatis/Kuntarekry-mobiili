@@ -1,18 +1,14 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import Slider from '@react-native-community/slider';
 import { useState } from 'react';
 import { useJobLocations } from '../../hooks/uselocations';
 import { theme } from '../../styles/theme';
 import { useOnboarding } from '../../hooks/useonboarding';
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MapView, { Marker, Circle } from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PersonalizationScreen2() {
   const { finishOnboarding } = useOnboarding();
-  const [sliderValue, setSliderValue] = useState(0);
-  const [radius, setRadius] = useState(0);
   const { locations } = useJobLocations();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -43,18 +39,6 @@ export default function PersonalizationScreen2() {
     } catch (error) {
       console.log('Error saving selected location ID:', error);
     }
-  };
-
-  const onSliderValueChange = (value) => {
-    setSliderValue(value);
-    setRadius(value * 1000); // convert km to m
-  };
-
-  const ouluCoords = { latitude: 65.0121, longitude: 25.4651 };
-  const initialRegion = {
-    ...ouluCoords,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
   };
 
   return (
@@ -119,40 +103,8 @@ export default function PersonalizationScreen2() {
               width: '100%',
               paddingHorizontal: 16,
             }}
-          >
-            <Text style={theme.textVariants.uiM}>Etäisyys: </Text>
-            <Text style={theme.textVariants.uiM}>{sliderValue} km</Text>
-          </View>
-
-          <Slider
-            style={{ width: '100%', height: 40 }}
-            minimumValue={0}
-            maximumValue={50}
-            minimumTrackTintColor={theme.colors.primary}
-            maximumTrackTintColor={theme.colors.textPrimary}
-            thumbTintColor={theme.colors.primary}
-            step={1}
-            onValueChange={(value) => onSliderValueChange(value)}
-          />
+          ></View>
         </View>
-        <MapView
-          style={{
-            width: '100%',
-            height: 400,
-            borderWidth: 1,
-            borderColor: theme.colors.outlineDark,
-          }}
-          initialRegion={initialRegion}
-        >
-          <Marker coordinate={ouluCoords} />
-          <Circle
-            center={ouluCoords}
-            radius={radius}
-            fillColor="rgba(0, 128, 255, 0.2)"
-            strokeColor="rgba(0, 128, 255, 0.5)"
-            strokeWidth={2}
-          />
-        </MapView>
       </View>
       <TouchableOpacity
         onPress={() => saveAndContinue()}
