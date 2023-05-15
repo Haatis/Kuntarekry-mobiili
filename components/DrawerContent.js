@@ -11,10 +11,29 @@ import { useJobTasks } from '../hooks/usejobtasks';
 export function DrawerContent({ setIsDrawerOpen }) {
   const drawerStatus = useDrawerStatus();
   const { tasks } = useJobTasks();
+  const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const [selectedFilters, setSelectedFilters] = React.useState([]);
 
   React.useEffect(() => {
     setIsDrawerOpen(drawerStatus === 'open');
   }, [drawerStatus, setIsDrawerOpen]);
+
+  const handleOpenCategory = (categoryName) => {
+    if (selectedCategory === categoryName) {
+      setSelectedCategory(null);
+    } else {
+      setSelectedCategory(categoryName);
+    }
+  };
+
+  const selectFilter = (filter) => {
+    if (selectedFilters.includes(filter)) {
+      setSelectedFilters(selectedFilters.filter((selectedFilter) => selectedFilter !== filter));
+    } else {
+      setSelectedFilters([...selectedFilters, filter]);
+    }
+  };
+
   const jobCategories = tasks
     .filter((task) => !task.parent)
     .map((task) => ({
@@ -29,8 +48,15 @@ export function DrawerContent({ setIsDrawerOpen }) {
       <View style={{ marginLeft: 16, marginTop: 16, marginRight: 16 }}>
         <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Valitut suodattimet</Text>
         <View style={styles.tagRow}>
-          <Tag tagColor={theme.colors.tag1} tagText="Kokoaikatyö" tagClose={true} />
-          <Tag tagColor={theme.colors.tag1} tagText="Osa-aikatyö" tagClose={true} />
+          {selectedFilters.map((filter) => (
+            <Tag
+              key={filter}
+              tagColor={theme.colors.tag1}
+              tagText={filter}
+              onPress={() => selectFilter(filter)}
+              selected={selectedFilters.includes(filter)}
+            />
+          ))}
         </View>
         <View style={{ marginTop: 16 }}>
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset 406</Text>
@@ -41,7 +67,23 @@ export function DrawerContent({ setIsDrawerOpen }) {
         </View>
         {jobCategories.map((category) => (
           <View style={styles.tagRow} key={category.name}>
-            <Tag tagColor={theme.colors.tag1} tagText={category.name} tagOpen={true} />
+            <Tag
+              tagColor={theme.colors.tag4}
+              tagText={category.name}
+              tagOpen={true}
+              onPress={() => handleOpenCategory(category.name)}
+              selected={selectedCategory === category.name}
+            />
+            {selectedCategory === category.name &&
+              category.jobs.map((job) => (
+                <Tag
+                  key={job.name}
+                  tagColor={theme.colors.tag1}
+                  tagText={job.name}
+                  onPress={() => selectFilter(job.name)}
+                  selected={selectedFilters.includes(job.name)}
+                />
+              ))}
           </View>
         ))}
         <View style={styles.filterRow}>
