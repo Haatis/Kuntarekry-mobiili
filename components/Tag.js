@@ -1,7 +1,16 @@
 import { Pressable, Text, StyleSheet, View } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-export default function Tag({ tagColor, tagText, tagClose, tagOpen, onPress, selected }) {
+export default function Tag({
+  tagColor,
+  tagText,
+  tagClose,
+  tagOpen,
+  onPress,
+  onPress2,
+  selected,
+  selected2,
+}) {
   if (tagClose) {
     return (
       <Pressable
@@ -18,11 +27,12 @@ export default function Tag({ tagColor, tagText, tagClose, tagOpen, onPress, sel
   } else if (tagOpen) {
     return (
       <Pressable
-        onPress={onPress}
+        onPress={onPress2}
         style={[
           styles.tagOpen,
           { backgroundColor: tagColor, flexDirection: 'row', justifyContent: 'space-between' },
           selected && { width: '100%' },
+          selected2 && { backgroundColor: 'rgba(0, 0, 0, 0.15)' },
         ]}
       >
         <Text
@@ -38,7 +48,8 @@ export default function Tag({ tagColor, tagText, tagClose, tagOpen, onPress, sel
         >
           {tagText}
         </Text>
-        <View
+        <Pressable
+          onPress={onPress}
           style={{
             backgroundColor: 'rgba(0, 0, 0, 0.15)',
             borderBottomRightRadius: 4,
@@ -60,7 +71,7 @@ export default function Tag({ tagColor, tagText, tagClose, tagOpen, onPress, sel
               color={theme.colors.textPrimary}
             />
           )}
-        </View>
+        </Pressable>
       </Pressable>
     );
   }

@@ -72,7 +72,9 @@ export function DrawerContent({ setIsDrawerOpen }) {
               tagText={category.name}
               tagOpen={true}
               onPress={() => handleOpenCategory(category.name)}
+              onPress2={() => selectFilter(category.name)}
               selected={selectedCategory === category.name}
+              selected2={selectedFilters.includes(category.name)}
             />
             {selectedCategory === category.name &&
               category.jobs.map((job) => (
