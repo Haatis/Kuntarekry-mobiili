@@ -76,16 +76,18 @@ export default function Tag({
     );
   }
 
-  return (
-    <Pressable onPress={onPress} style={[styles.tag, { backgroundColor: tagColor }]}>
+  if (tagText == null) return;
+  const tags = tagText.split(', ').filter((tag) => tag.length > 0);
+  return tags.map((item) => (
+    <Pressable key={item} onPress={onPress} style={[styles.tag, { backgroundColor: tagColor }]}>
       <View style={{ flexDirection: 'row' }}>
-        <Text style={[theme.textVariants.uiS, { color: theme.colors.textPrimary }]}>{tagText}</Text>
+        <Text style={[theme.textVariants.uiS, { color: theme.colors.textPrimary }]}>{item}</Text>
         {selected && (
           <MaterialCommunityIcons name={'close-thick'} size={17} color={theme.colors.textPrimary} />
         )}
       </View>
     </Pressable>
-  );
+  ));
 }
 
 const styles = StyleSheet.create({
