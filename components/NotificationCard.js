@@ -1,7 +1,7 @@
 import { Pressable, Image, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Tag from './Tag';
+import Tag from './Tags/Tag';
 
 export default function Notification({ job, cardType }) {
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');

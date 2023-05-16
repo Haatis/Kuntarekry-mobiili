@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { theme } from '../../styles/theme';
 import { useState } from 'react';
-import TagLarge from '../../components/TagLarge';
+import TagLarge from '../../components/Tags/TagLarge';
 import DropDown from '../../components/DropDown';
 import { useNavigation } from '@react-navigation/native';
 import { useJobTasks } from '../../hooks/usejobtasks';

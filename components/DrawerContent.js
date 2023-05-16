@@ -5,13 +5,17 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import { Text } from 'react-native';
 import { theme } from '../styles/theme';
-import Tag from './Tag';
+import Tag from './Tags/Tag';
 import { useJobTasks } from '../hooks/usejobtasks';
 import { Pressable } from 'react-native';
+import TagDropDown from './Tags/TagDropDown';
+import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 
 export function DrawerContent({ setIsDrawerOpen }) {
   const drawerStatus = useDrawerStatus();
   const { tasks } = useJobTasks();
+  const { jobs } = useJobAdvertisements();
+  const jobsLength = jobs.length;
   const [selectedCategory, setSelectedCategory] = React.useState(null); //keski esim hallinto ja toimistotyö
   const [selectedTab, setSelectedTab] = React.useState(null); // ylin, esim tehtäväalueet
   const [selectedFilters, setSelectedFilters] = React.useState([]); //alin esim Viestintä
@@ -96,7 +100,7 @@ export function DrawerContent({ setIsDrawerOpen }) {
           ))}
         </View>
         <View style={{ marginTop: 16 }}>
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset 406</Text>
+          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset {jobsLength} </Text>
         </View>
         <Pressable onPress={() => handleOpenTab('Tehtäväalueet')} style={styles.filterRow}>
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tehtäväalueet</Text>
@@ -109,10 +113,9 @@ export function DrawerContent({ setIsDrawerOpen }) {
         {selectedTab === 'Tehtäväalueet' &&
           jobCategories.map((category) => (
             <View style={styles.tagRow} key={category.name}>
-              <Tag
+              <TagDropDown
                 tagColor={theme.colors.tag4}
                 tagText={category.name}
-                tagOpen={true}
                 onPress={() => handleOpenCategory(category.name)}
                 onPress2={() => selectFilter(category.name, null, category.jobs)}
                 selected={selectedCategory === category.name}

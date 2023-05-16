@@ -2,7 +2,7 @@ import { Pressable, Image, ImageBackground, StyleSheet, Text, View } from 'react
 import { theme } from '../styles/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Tag from './Tag';
+import Tag from './Tags/Tag';
 import { useNavigation } from '@react-navigation/native';
 
 export default function SwipeableCard({ job }) {

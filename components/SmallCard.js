@@ -1,11 +1,11 @@
 import { Pressable, Image, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Tag from './Tag';
+import Tag from './Tags/Tag';
 import { useNavigation } from '@react-navigation/native';
 
 export default function SmallCard({ job, cardType }) {
-  const imgNumber = job.organization.length;
+  const imgNumber = job.organization?.length;
   const navigation = useNavigation();
 
   const imageURL = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
