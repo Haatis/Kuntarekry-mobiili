@@ -9,6 +9,7 @@ import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 
 export default function CardScreen() {
   const { jobs } = useJobAdvertisements();
+  const { currentItems, updateStack } = UpdateCardStack(jobs);
 
   const [topCardIndex, setTopCardIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -64,8 +65,24 @@ export default function CardScreen() {
       useNativeDriver: true,
     }).start(() => {
       setShowModal(false);
+      updateIndex();
     });
   };
+
+  const updateIndex = () => {
+    setTopCardIndex((currentValue) => {
+      if (currentValue == 2) {
+        console.log('get new cards');
+        updateStack();
+        return 0;
+      } else {
+        console.log('update index');
+        return currentValue + 1;
+      }
+    });
+  };
+
+  console.log('topCardIndex = ' + topCardIndex);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -79,16 +96,15 @@ export default function CardScreen() {
             toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
             useNativeDriver: false,
           }).start(() => {
-            setTopCardIndex(topCardIndex + 1);
-            pan.setValue({ x: 0, y: 0 });
             openModal();
+            pan.setValue({ x: 0, y: 0 });
           });
         } else if (gestureState.dx < -120) {
           Animated.spring(pan, {
             toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
             useNativeDriver: false,
           }).start(() => {
-            setTopCardIndex(topCardIndex + 1);
+            updateIndex();
             pan.setValue({ x: 0, y: 0 });
           });
         } else {
@@ -103,8 +119,7 @@ export default function CardScreen() {
   return (
     <>
       <View style={styles.container}>
-        {jobs
-          .slice(topCardIndex, topCardIndex + 3)
+        {currentItems
           .map((job, i) => {
             if (i < topCardIndex) {
               return null;
@@ -172,13 +187,13 @@ export default function CardScreen() {
           <View style={styles.likedCard}>
             <View style={{ alignItems: 'center' }}>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {jobs[topCardIndex].jobAdvertisement.title}
+                {currentItems[topCardIndex].jobAdvertisement.title}
               </Text>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {jobs[topCardIndex].jobAdvertisement.profitCenter}
+                {currentItems[topCardIndex].jobAdvertisement.profitCenter}
               </Text>
               <Text numberOfLines={8} style={{ padding: 16, color: 'white' }}>
-                {jobs[topCardIndex].jobAdvertisement.jobDesc}
+                {currentItems[topCardIndex].jobAdvertisement.jobDesc}
               </Text>
               <MaterialCommunityIcons
                 name={'heart'}
@@ -214,6 +229,24 @@ export default function CardScreen() {
       )}
     </>
   );
+}
+
+export function UpdateCardStack(items) {
+  const [start, setStart] = useState(0);
+  const STACK_SIZE = 3;
+  const currentPage = 1 + start / STACK_SIZE;
+  const startOffset = currentPage === 1 ? 0 : (currentPage - 1) * STACK_SIZE;
+  const endOffset = startOffset + STACK_SIZE;
+  const currentItems = items.slice(startOffset, endOffset);
+  const pageCount = Math.ceil(items.length / STACK_SIZE);
+
+  const updateStack = () => {
+    if (pageCount > currentPage) {
+      setStart((current) => current + STACK_SIZE);
+    }
+  };
+
+  return { currentItems, updateStack };
 }
 
 const styles = StyleSheet.create({

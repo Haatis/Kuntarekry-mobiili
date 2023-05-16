@@ -14,7 +14,7 @@ export default function SwipeableCard({ job }) {
 
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
 
-  const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job,worker`;
+  const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job`;
 
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
