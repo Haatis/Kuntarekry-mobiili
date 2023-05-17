@@ -1,50 +1,23 @@
-import { useRef } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useState } from 'react';
 
 function SearchContent({ navigation }) {
   const { jobs } = useJobAdvertisements();
   const jobsLength = jobs.length;
-  const initialVisibleJobs = 20;
-  const [jobsVisible, setJobsVisible] = useState(initialVisibleJobs);
-  const scrollViewRef = useRef(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleScroll = (event) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-    const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
-
-    if (isCloseToBottom && !loading) {
-      setLoading(true);
-      setTimeout(() => {
-        const newVisibleJobs = jobsVisible + 20;
-        setJobsVisible(newVisibleJobs);
-        setLoading(false);
-      }, 1000);
-    }
-  };
 
   return (
     <>
-      <ScrollView
-        ref={scrollViewRef}
-        style={{ width: '100%', height: '100%', paddingHorizontal: 8, backgroundColor: 'white' }}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      >
-        <View style={{ height: 70 }} />
-        {jobs.slice(0, jobsVisible).map((job, index) => (
-          <SmallCard key={index} job={job.jobAdvertisement} />
-        ))}
-        {loading && (
-          <ActivityIndicator style={{ marginTop: 20 }} color={theme.colors.textPrimary} />
-        )}
-      </ScrollView>
+      <FlatList
+        contentContainerStyle={{
+          paddingHorizontal: 8,
+          marginTop: 66,
+        }}
+        data={jobs}
+        renderItem={({ item, index }) => <SmallCard key={index} job={item.jobAdvertisement} />}
+      ></FlatList>
       <View style={{ position: 'absolute', width: '100%', paddingHorizontal: 8 }}>
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
           <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
@@ -78,7 +51,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
-
     width: '100%',
   },
 });
