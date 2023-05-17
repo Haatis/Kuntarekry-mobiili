@@ -1,6 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
+import { View, FlatList } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import { Text } from 'react-native';
@@ -88,95 +87,92 @@ export function DrawerContent({ setIsDrawerOpen }) {
   const jobOrganisations = organisations.map((org) => org.name);
 
   return (
-    <DrawerContentScrollView>
-      <View style={{ marginLeft: 16, marginTop: 16, marginRight: 16 }}>
-        {selectedFilters.length > 0 && (
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Valitut suodattimet</Text>
-        )}
-        <View style={styles.tagRow}>
-          {selectedFilters.map((filter) => (
-            <Tag
-              key={filter}
-              tagColor={theme.colors.tag1}
-              tagText={filter}
-              onPress={() => selectFilter(filter)}
-              selected={selectedFilters.includes(filter)}
-            />
-          ))}
-        </View>
-        <View style={{ marginTop: 16 }}>
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset {jobsLength} </Text>
-        </View>
-        <Pressable onPress={() => handleOpenTab('Tehtäväalueet')} style={styles.filterRow}>
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
-            Tehtäväalueet {selectedFiltersCount}
-          </Text>
-          {selectedTab === 'Tehtäväalueet' ? (
-            <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
-          ) : (
-            <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
+    <FlatList
+      ListHeaderComponent={() => (
+        <View style={{ marginLeft: 16, marginTop: 16, marginRight: 16 }}>
+          {selectedFilters.length > 0 && (
+            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Valitut suodattimet</Text>
           )}
-        </Pressable>
-        {selectedTab === 'Tehtäväalueet' &&
-          jobTasks.map((category) => (
-            <View style={styles.tagRow} key={category.name}>
-              <TagDropDown
-                tagColor={theme.colors.tag4}
-                tagText={category.name}
-                onPress={() => handleOpenCategory(category.name)}
-                onPress2={() => selectFilter(category.name, null, category.jobs)}
-                selected={selectedCategory === category.name}
-                selected2={selectedFilters.includes(category.name)}
-              />
-              {selectedCategory === category.name &&
-                category.jobs.map((job) => (
-                  <Tag
-                    key={job.name}
-                    tagColor={theme.colors.tag1}
-                    tagText={job.name}
-                    onPress={() => selectFilter(job.name, job.parent, null)}
-                    selected={selectedFilters.includes(job.name)}
-                  />
-                ))}
-            </View>
-          ))}
-        <Pressable onPress={() => handleOpenTab('Työnantaja')} style={styles.filterRow}>
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
-            Työnantaja {selectedFiltersCount}
-          </Text>
-          {selectedTab === 'Työnantaja' ? (
-            <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
-          ) : (
-            <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
-          )}
-        </Pressable>
-        <View style={styles.tagRow}>
-          {selectedTab === 'Työnantaja' &&
-            jobOrganisations.map((org) => (
+          <View style={styles.tagRow}>
+            {selectedFilters.map((filter) => (
               <Tag
-                key={org}
+                key={filter}
                 tagColor={theme.colors.tag1}
-                tagText={org}
-                onPress={() => selectFilter(org)}
-                selected={selectedFilters.includes(org)}
+                tagText={filter}
+                onPress={() => selectFilter(filter)}
+                selected={selectedFilters.includes(filter)}
               />
             ))}
+          </View>
+          <View style={{ marginTop: 16 }}>
+            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset {jobsLength} </Text>
+          </View>
+          <Pressable onPress={() => handleOpenTab('Tehtäväalueet')} style={styles.filterRow}>
+            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
+              Tehtäväalueet {selectedFiltersCount}
+            </Text>
+            {selectedTab === 'Tehtäväalueet' ? (
+              <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
+            ) : (
+              <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
+            )}
+          </Pressable>
+          {selectedTab === 'Tehtäväalueet' &&
+            jobTasks.map((category) => (
+              <View style={styles.tagRow} key={category.name}>
+                <TagDropDown
+                  tagColor={theme.colors.tag4}
+                  tagText={category.name}
+                  onPress={() => handleOpenCategory(category.name)}
+                  onPress2={() => selectFilter(category.name, null, category.jobs)}
+                  selected={selectedCategory === category.name}
+                  selected2={selectedFilters.includes(category.name)}
+                />
+                {selectedCategory === category.name &&
+                  category.jobs.map((job) => (
+                    <Tag
+                      key={job.name}
+                      tagColor={theme.colors.tag1}
+                      tagText={job.name}
+                      onPress={() => selectFilter(job.name, job.parent, null)}
+                      selected={selectedFilters.includes(job.name)}
+                    />
+                  ))}
+              </View>
+            ))}
+          <Pressable onPress={() => handleOpenTab('Työnantaja')} style={styles.filterRow}>
+            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
+              Työnantaja {selectedFiltersCount}
+            </Text>
+            {selectedTab === 'Työnantaja' ? (
+              <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
+            ) : (
+              <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
+            )}
+          </Pressable>
+          {selectedTab === 'Työnantaja' && (
+            <FlatList
+              data={jobOrganisations}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <View style={styles.tagRow}>
+                  <Tag
+                    key={item}
+                    tagColor={theme.colors.tag1}
+                    tagText={item}
+                    onPress={() => selectFilter(item)}
+                    selected={selectedFilters.includes(item)}
+                  />
+                </View>
+              )}
+              windowSize={5} // Adjust the number based on performance needs
+            />
+          )}
         </View>
-
-        <View style={styles.filterRow}>
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tyyppi</Text>
-          <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
-        </View>
-        <View style={styles.filterRow}>
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Työsuhde</Text>
-          <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
-        </View>
-        <View style={styles.tagRow}>
-          <Tag tagColor={theme.colors.tag1} tagText="kokoaikatyö" />
-          <Tag tagColor={theme.colors.tag1} tagText="Osa-aikatyö" />
-        </View>
-      </View>
-    </DrawerContentScrollView>
+      )}
+      data={[]} // Add data if needed for the outer FlatList
+      renderItem={() => null} // Add renderItem if needed for the outer FlatList
+    />
   );
 }
 
