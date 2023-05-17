@@ -10,15 +10,18 @@ import { useJobTasks } from '../hooks/usejobtasks';
 import { Pressable } from 'react-native';
 import TagDropDown from './Tags/TagDropDown';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
+import { useJobOrganisations } from '../hooks/usejoborganisations';
 
 export function DrawerContent({ setIsDrawerOpen }) {
   const drawerStatus = useDrawerStatus();
   const { tasks } = useJobTasks();
   const { jobs } = useJobAdvertisements();
+  const { organisations } = useJobOrganisations();
   const jobsLength = jobs.length;
   const [selectedCategory, setSelectedCategory] = React.useState(null); //keski esim hallinto ja toimistotyö
   const [selectedTab, setSelectedTab] = React.useState(null); // ylin, esim tehtäväalueet
   const [selectedFilters, setSelectedFilters] = React.useState([]); //alin esim Viestintä
+  const selectedFiltersCount = selectedFilters.length;
 
   React.useEffect(() => {
     setIsDrawerOpen(drawerStatus === 'open');
@@ -73,7 +76,7 @@ export function DrawerContent({ setIsDrawerOpen }) {
     }
   };
 
-  const jobCategories = tasks
+  const jobTasks = tasks
     .filter((task) => !task.parent)
     .map((task) => ({
       name: task.name,
@@ -81,6 +84,8 @@ export function DrawerContent({ setIsDrawerOpen }) {
         .filter((subTask) => subTask.parent === task.id)
         .map((subTask) => ({ name: subTask.name, parent: task.name })),
     }));
+
+  const jobOrganisations = organisations.map((org) => org.name);
 
   return (
     <DrawerContentScrollView>
@@ -103,7 +108,9 @@ export function DrawerContent({ setIsDrawerOpen }) {
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset {jobsLength} </Text>
         </View>
         <Pressable onPress={() => handleOpenTab('Tehtäväalueet')} style={styles.filterRow}>
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tehtäväalueet</Text>
+          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
+            Tehtäväalueet {selectedFiltersCount}
+          </Text>
           {selectedTab === 'Tehtäväalueet' ? (
             <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
           ) : (
@@ -111,7 +118,7 @@ export function DrawerContent({ setIsDrawerOpen }) {
           )}
         </Pressable>
         {selectedTab === 'Tehtäväalueet' &&
-          jobCategories.map((category) => (
+          jobTasks.map((category) => (
             <View style={styles.tagRow} key={category.name}>
               <TagDropDown
                 tagColor={theme.colors.tag4}
@@ -133,10 +140,29 @@ export function DrawerContent({ setIsDrawerOpen }) {
                 ))}
             </View>
           ))}
-        <View style={styles.filterRow}>
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Työnantaja</Text>
-          <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
+        <Pressable onPress={() => handleOpenTab('Työnantaja')} style={styles.filterRow}>
+          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
+            Työnantaja {selectedFiltersCount}
+          </Text>
+          {selectedTab === 'Työnantaja' ? (
+            <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
+          ) : (
+            <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
+          )}
+        </Pressable>
+        <View style={styles.tagRow}>
+          {selectedTab === 'Työnantaja' &&
+            jobOrganisations.map((org) => (
+              <Tag
+                key={org}
+                tagColor={theme.colors.tag1}
+                tagText={org}
+                onPress={() => selectFilter(org)}
+                selected={selectedFilters.includes(org)}
+              />
+            ))}
         </View>
+
         <View style={styles.filterRow}>
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tyyppi</Text>
           <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />

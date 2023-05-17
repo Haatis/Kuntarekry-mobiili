@@ -19,7 +19,7 @@ export default function TagDropDown({ tagColor, tagText, onPress, onPress2, sele
             color: theme.colors.textPrimary,
             borderRadius: 4,
             paddingHorizontal: 8,
-            paddingVertical: 4,
+            paddingVertical: 8,
           },
         ]}
       >
@@ -31,8 +31,8 @@ export default function TagDropDown({ tagColor, tagText, onPress, onPress2, sele
           backgroundColor: 'rgba(0, 0, 0, 0.15)',
           borderBottomRightRadius: 4,
           borderTopRightRadius: 4,
-          paddingHorizontal: 4,
-          paddingVertical: 4,
+          paddingHorizontal: 8,
+          paddingVertical: 8,
         }}
       >
         {selected ? (
