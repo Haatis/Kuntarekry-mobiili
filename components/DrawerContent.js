@@ -153,17 +153,17 @@ export function DrawerContent({ setIsDrawerOpen }) {
           {selectedTab === 'Työnantaja' && (
             <FlatList
               data={jobOrganisations}
+              style={styles.tagRow}
               keyExtractor={(item) => item}
               renderItem={({ item }) => (
-                <View style={styles.tagRow}>
-                  <Tag
-                    key={item}
-                    tagColor={theme.colors.tag1}
-                    tagText={item}
-                    onPress={() => selectFilter(item)}
-                    selected={selectedFilters.includes(item)}
-                  />
-                </View>
+                <Tag
+                  key={item}
+                  tagColor={theme.colors.tag1}
+                  tagText={item}
+                  onPress={() => selectFilter(item)}
+                  selected={selectedFilters.includes(item)}
+                  style={styles.tag}
+                />
               )}
               windowSize={5} // Adjust the number based on performance needs
             />
@@ -182,7 +182,6 @@ const styles = {
     gap: 8,
     marginTop: 8,
     flexWrap: 'wrap',
-    width: '100%',
   },
   filterRow: {
     flexDirection: 'row',
