@@ -10,7 +10,7 @@ export default function SwipeableCard({ job }) {
 
   const navigation = useNavigation();
 
-  const imgNumber = job.organization.length;
+  const imgNumber = job.organization?.length;
 
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
 

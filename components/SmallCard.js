@@ -31,7 +31,7 @@ export default function SmallCard({ job, cardType }) {
             numberOfLines={2}
             style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}
           >
-            {job.organization}
+            {job.profitCenter}
           </Text>
         </View>
         {
