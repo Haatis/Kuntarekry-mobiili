@@ -20,7 +20,8 @@ export function DrawerContent({ setIsDrawerOpen }) {
   const [selectedCategory, setSelectedCategory] = React.useState(null); //keski esim hallinto ja toimistotyö
   const [selectedTab, setSelectedTab] = React.useState(null); // ylin, esim tehtäväalueet
   const [selectedFilters, setSelectedFilters] = React.useState([]); //alin esim Viestintä
-  const selectedFiltersCount = selectedFilters.length;
+  const [selectedTaskCount, setSelectedTaskCount] = React.useState(0);
+  const [selectedOrganisationCount, setSelectedOrganisationCount] = React.useState(0);
 
   React.useEffect(() => {
     setIsDrawerOpen(drawerStatus === 'open');
@@ -41,38 +42,24 @@ export function DrawerContent({ setIsDrawerOpen }) {
     }
   };
 
-  const selectFilter = (filter, parent, children) => {
-    if (selectedFilters.includes(filter)) {
-      setSelectedFilters((prevFilters) =>
-        prevFilters.filter((selectedFilter) => selectedFilter !== filter)
-      );
+  const selectFilter = (filter, type) => {
+    if (selectedFilters.some((item) => item.filter === filter)) {
+      setSelectedFilters(selectedFilters.filter((item) => item.filter !== filter));
     } else {
-      setSelectedFilters((prevFilters) => [...prevFilters, filter]);
+      setSelectedFilters([...selectedFilters, { filter, type }]);
     }
+  };
 
-    if (parent) {
-      const isParentSelected = selectedFilters.includes(parent);
+  React.useEffect(() => {
+    countTypes();
+  }, [selectedFilters]);
 
-      if (isParentSelected) {
-        setSelectedFilters((prevFilters) =>
-          prevFilters.filter((selectedFilter) => selectedFilter !== parent)
-        );
-      } else if (children) {
-        setSelectedFilters((prevFilters) =>
-          prevFilters.filter((selectedFilter) => {
-            const childNames = children.map((child) => child.name);
-            return !childNames.includes(selectedFilter);
-          })
-        );
-      }
-    } else if (children) {
-      setSelectedFilters((prevFilters) =>
-        prevFilters.filter((selectedFilter) => {
-          const childNames = children.map((child) => child.name);
-          return !childNames.includes(selectedFilter);
-        })
-      );
-    }
+  const countTypes = () => {
+    const taskCount = selectedFilters.filter((item) => item.type === 'Tehtäväalueet').length;
+    const organisationCount = selectedFilters.filter((item) => item.type === 'Työnantaja').length;
+
+    setSelectedTaskCount(taskCount);
+    setSelectedOrganisationCount(organisationCount);
   };
 
   const jobTasks = tasks
@@ -108,11 +95,13 @@ export function DrawerContent({ setIsDrawerOpen }) {
           <View style={styles.tagRow}>
             {selectedFilters.map((filter) => (
               <Tag
-                key={filter}
+                key={filter.filter} // Use the 'filter' property as the key
                 tagColor={theme.colors.tag1}
-                tagText={filter}
-                onPress={() => selectFilter(filter)}
-                selected={selectedFilters.includes(filter)}
+                tagText={filter.filter} // Access the 'filter' property for the tag text
+                onPress={() => selectFilter(filter.filter, filter.type)} // Pass both 'filter' and 'type' to selectFilter
+                selected={selectedFilters.some(
+                  (selectedFilter) => selectedFilter.filter === filter.filter
+                )} // Check if 'filter' exists in selectedFilters
               />
             ))}
           </View>
@@ -121,7 +110,7 @@ export function DrawerContent({ setIsDrawerOpen }) {
           </View>
           <Pressable onPress={() => handleOpenTab('Tehtäväalueet')} style={styles.filterRow}>
             <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
-              Tehtäväalueet {selectedFiltersCount}
+              Tehtäväalueet {selectedTaskCount}
             </Text>
             {selectedTab === 'Tehtäväalueet' ? (
               <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
@@ -136,9 +125,11 @@ export function DrawerContent({ setIsDrawerOpen }) {
                   tagColor={theme.colors.tag4}
                   tagText={category.name}
                   onPress={() => handleOpenCategory(category.name)}
-                  onPress2={() => selectFilter(category.name, null, category.jobs)}
+                  onPress2={() => selectFilter(category.name, 'Tehtäväalueet')}
                   selected={selectedCategory === category.name}
-                  selected2={selectedFilters.includes(category.name)}
+                  selected2={selectedFilters.some(
+                    (selectedFilter) => selectedFilter.filter === category.name
+                  )}
                 />
                 {selectedCategory === category.name &&
                   category.jobs.map((job) => (
@@ -146,15 +137,17 @@ export function DrawerContent({ setIsDrawerOpen }) {
                       key={job.name}
                       tagColor={theme.colors.tag1}
                       tagText={job.name}
-                      onPress={() => selectFilter(job.name, job.parent, null)}
-                      selected={selectedFilters.includes(job.name)}
+                      onPress={() => selectFilter(job.name, 'Tehtäväalueet')}
+                      selected={selectedFilters.some(
+                        (selectedFilter) => selectedFilter.filter === job.name
+                      )}
                     />
                   ))}
               </View>
             ))}
           <Pressable onPress={() => handleOpenTab('Työnantaja')} style={styles.filterRow}>
             <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
-              Työnantaja {selectedFiltersCount}
+              Työnantaja {selectedOrganisationCount}
             </Text>
             {selectedTab === 'Työnantaja' ? (
               <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
@@ -179,8 +172,10 @@ export function DrawerContent({ setIsDrawerOpen }) {
                         key={organisation}
                         tagColor={theme.colors.tag1}
                         tagText={organisation}
-                        onPress={() => selectFilter(organisation)}
-                        selected={selectedFilters.includes(organisation)}
+                        onPress={() => selectFilter(organisation, 'Työnantaja')}
+                        selected={selectedFilters.some(
+                          (selectedFilter) => selectedFilter.filter === organisation
+                        )}
                       />
                     ))}
                 </View>
@@ -189,8 +184,8 @@ export function DrawerContent({ setIsDrawerOpen }) {
           )}
         </View>
       )}
-      data={[]} // Add data if needed for the outer FlatList
-      renderItem={() => null} // Add renderItem if needed for the outer FlatList
+      data={[]}
+      renderItem={() => null}
     />
   );
 }
