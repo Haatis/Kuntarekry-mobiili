@@ -6,7 +6,6 @@ import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 
 function SearchContent({ navigation }) {
   const { jobs } = useJobAdvertisements();
-  const jobsLength = jobs.length;
 
   return (
     <>
@@ -17,16 +16,16 @@ function SearchContent({ navigation }) {
         }}
         data={jobs}
         renderItem={({ item, index }) => <SmallCard key={index} job={item.jobAdvertisement} />}
-      ></FlatList>
+      />
       <View style={{ position: 'absolute', width: '100%', paddingHorizontal: 8 }}>
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
           <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
-            Haku: Kaikki ilmoitukset ({jobsLength})
+            Haku: Kaikki ilmoitukset ({jobs.length})
           </Text>
           <View style={{ flexDirection: 'row' }}>
-            <MaterialCommunityIcons name={'magnify'} size={30} color={theme.colors.textPrimary} />
+            <MaterialCommunityIcons name="magnify" size={30} color={theme.colors.textPrimary} />
             <MaterialCommunityIcons
-              name={'filter-outline'}
+              name="filter-outline"
               size={30}
               color={theme.colors.textPrimary}
               onPress={() => navigation.openDrawer()}

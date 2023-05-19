@@ -36,13 +36,13 @@ export default function Notification({ job, cardType }) {
             default: (
               <View style={[styles.button, { borderColor: theme.colors.secondary }]}>
                 <MaterialCommunityIcons
-                  name={'heart-outline'}
+                  name="heart-outline"
                   size={24}
                   color={theme.colors.secondary}
                 />
               </View>
             ),
-            hidden: <MaterialCommunityIcons name={'close-thick'} size={16} color={'black'} />,
+            hidden: <MaterialCommunityIcons name="close-thick" size={16} color="black" />,
             applied: null,
           }[cardType]
         }
@@ -52,7 +52,7 @@ export default function Notification({ job, cardType }) {
           <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />
           <Tag tagColor={theme.colors.tag1} tagText="Kokoaikatyö" />
           <Tag tagColor={theme.colors.tag1} tagText="Suomi" />
-          <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
+          <MaterialCommunityIcons name="chevron-down" size={24} color="black" />
         </View>
         <View style={styles.dateTextContainer}>
           <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>

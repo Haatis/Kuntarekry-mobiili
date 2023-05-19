@@ -3,12 +3,14 @@ import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Tag from './Tags/Tag';
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
 
 export default function SmallCard({ job, cardType }) {
   const imgNumber = job.organization?.length;
   const navigation = useNavigation();
-
+  const [showAllTags, setShowAllTags] = useState(false);
   const imageURL = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
+  //  const [rowWidth, seRowWidth] = useState(0);
 
   if (cardType == null) {
     cardType = 'default';
@@ -16,6 +18,39 @@ export default function SmallCard({ job, cardType }) {
   const trimmedDesc = job.jobDesc?.trim().replace(/\s+/g, ' ');
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
 
+  //  console.log(rowWidth);
+  function TagRow() {
+    if (showAllTags) {
+      return (
+        <>
+          <View style={styles.tagsAll}>
+            <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
+            <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
+            <Tag tagColor={theme.colors.tag1} tagText={job.location} />
+          </View>
+          <Pressable onPress={() => setShowAllTags(!showAllTags)}>
+            <MaterialCommunityIcons name="chevron-up" size={24} color="black" />
+          </Pressable>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <View style={styles.tagsLimited}>
+            <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
+            <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
+            <Tag tagColor={theme.colors.tag1} tagText={job.location} />
+          </View>
+          <Pressable
+            style={{ borderWidth: 1, borderColor: theme.colors.outlineDark, borderRadius: 99 }}
+            onPress={() => setShowAllTags(!showAllTags)}
+          >
+            <MaterialCommunityIcons name="chevron-down" size={24} color="black" />
+          </Pressable>
+        </>
+      );
+    }
+  }
   return (
     <Pressable
       onPress={() => navigation.navigate('JobScreen', { job: job })}
@@ -39,23 +74,27 @@ export default function SmallCard({ job, cardType }) {
             default: (
               <View style={[styles.button, { borderColor: theme.colors.secondary }]}>
                 <MaterialCommunityIcons
-                  name={'heart-outline'}
+                  name="heart-outline"
                   size={24}
                   color={theme.colors.secondary}
                 />
               </View>
             ),
-            hidden: <MaterialCommunityIcons name={'close-thick'} size={16} color={'black'} />,
+            hidden: <MaterialCommunityIcons name="close-thick" size={16} color="black" />,
             applied: null,
           }[cardType]
         }
       </View>
       <View style={styles.cardBottom}>
-        <View style={styles.tagRow}>
-          <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
-          <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
-          <Tag tagColor={theme.colors.tag1} tagText={job.location} />
-          <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
+        <View
+          style={styles.tagRow}
+          /*           onLayout={(event) =>
+            seRowWidth({
+              width: event.nativeEvent.layout.width,
+            })
+          } */
+        >
+          <TagRow />
         </View>
         <Text numberOfLines={4} style={[theme.textVariants.textM, styles.description]}>
           {trimmedDesc}
@@ -124,6 +163,19 @@ const styles = StyleSheet.create({
   tagRow: {
     flexDirection: 'row',
     gap: 8,
+    paddingHorizontal: 16,
+  },
+  tagsAll: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    flex: 1,
+    gap: 8,
+  },
+  tagsLimited: {
+    flexDirection: 'row',
+    gap: 8,
+    maxWidth: '100%',
+    overflow: 'hidden',
   },
   textContainer: {
     borderTopLeftRadius: 8,

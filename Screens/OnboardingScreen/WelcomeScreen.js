@@ -59,22 +59,10 @@ export default function WelcomeScreen() {
                   <Text style={{ fontWeight: 'bold' }}>Löydät meidät myös täältä:</Text>
                 </Text>
                 <View style={styles.webIconContainer}>
-                  <MaterialCommunityIcons
-                    name={'facebook'}
-                    size={40}
-                    color={theme.colors.primary}
-                  />
-                  <MaterialCommunityIcons name={'twitter'} size={40} color={theme.colors.primary} />
-                  <MaterialCommunityIcons
-                    name={'instagram'}
-                    size={40}
-                    color={theme.colors.primary}
-                  />
-                  <MaterialCommunityIcons
-                    name={'linkedin'}
-                    size={40}
-                    color={theme.colors.primary}
-                  />
+                  <MaterialCommunityIcons name="facebook" size={40} color={theme.colors.primary} />
+                  <MaterialCommunityIcons name="twitter" size={40} color={theme.colors.primary} />
+                  <MaterialCommunityIcons name="instagram" size={40} color={theme.colors.primary} />
+                  <MaterialCommunityIcons name="linkedin" size={40} color={theme.colors.primary} />
                 </View>
                 <Text style={[theme.textVariants.uiM, { paddingBottom: 8, textAlign: 'center' }]}>
                   Kieli{' '}
@@ -93,9 +81,9 @@ export default function WelcomeScreen() {
                 <Pressable onPress={() => navigation.navigate('LoginScreen')} style={styles.button}>
                   <Text style={[theme.textVariants.uiM, { color: 'white' }]}>Jatka eteenpäin</Text>
                   <MaterialCommunityIcons
-                    name={'chevron-right'}
+                    name="chevron-right"
                     size={22}
-                    color={'white'}
+                    color="white"
                     style={{ marginTop: 3 }}
                   />
                 </Pressable>

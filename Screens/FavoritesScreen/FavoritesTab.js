@@ -10,7 +10,7 @@ export default function FavoritesTab() {
           Luo uusi kansio
         </Text>
         <MaterialCommunityIcons
-          name={'plus'}
+          name="plus"
           size={40}
           color={theme.colors.textPrimary}
           style={{

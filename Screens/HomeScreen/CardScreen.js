@@ -196,19 +196,19 @@ export default function CardScreen() {
                 {currentItems[topCardIndex].jobAdvertisement.jobDesc}
               </Text>
               <MaterialCommunityIcons
-                name={'heart'}
+                name="heart"
                 size={40}
                 color={theme.colors.secondary}
                 style={{ padding: 16, backgroundColor: 'white', borderRadius: 999 }}
               />
             </View>
-            <DropDown category={'Lisätty kansioon: Kaikki Suosikit'} />
+            <DropDown category="Lisätty kansioon: Kaikki Suosikit" />
             <Pressable style={styles.button}>
               <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
                 Ilmoitukseen
               </Text>
               <MaterialCommunityIcons
-                name={'chevron-right'}
+                name="chevron-right"
                 size={28}
                 color={theme.colors.textPrimary}
                 style={{ marginTop: 3 }}

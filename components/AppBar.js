@@ -51,11 +51,7 @@ export default function AppBar({ back, title, underTitle }) {
           style={[styles.backButton, theme.outlineDark, theme.dropShadow]}
           onPress={() => navigation.goBack()}
         >
-          <MaterialCommunityIcons
-            name={'chevron-left'}
-            size={36}
-            color={theme.colors.textPrimary}
-          />
+          <MaterialCommunityIcons name="chevron-left" size={36} color={theme.colors.textPrimary} />
         </Pressable>
       ) : null}
     </View>
