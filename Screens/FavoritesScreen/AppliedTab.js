@@ -8,8 +8,8 @@ export default function AppliedTab() {
 
   return (
     <View style={theme.containerList}>
-      <SmallCard cardType={'applied'} job={jobs[0].jobAdvertisement} />
-      <SmallCard cardType={'applied'} job={jobs[1].jobAdvertisement} />
+      <SmallCard cardType="applied" job={jobs[0].jobAdvertisement} />
+      <SmallCard cardType="applied" job={jobs[1].jobAdvertisement} />
     </View>
   );
 }

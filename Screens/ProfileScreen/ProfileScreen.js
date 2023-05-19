@@ -39,7 +39,7 @@ export default function ProfileScreen() {
             <View style={styles.squareContainer}>
               <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
-                  name={'card-account-details'}
+                  name="card-account-details"
                   size={40}
                   color={theme.colors.textPrimary}
                 />
@@ -49,7 +49,7 @@ export default function ProfileScreen() {
             <View style={styles.squareContainer}>
               <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
-                  name={'file-account'}
+                  name="file-account"
                   size={40}
                   color={theme.colors.textPrimary}
                 />
@@ -58,11 +58,7 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.squareContainer}>
               <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons
-                  name={'school'}
-                  size={40}
-                  color={theme.colors.textPrimary}
-                />
+                <MaterialCommunityIcons name="school" size={40} color={theme.colors.textPrimary} />
                 <Text style={{ textAlign: 'center', marginTop: 8 }}>Pätevyydet</Text>
               </View>
             </View>
@@ -71,7 +67,7 @@ export default function ProfileScreen() {
             <View style={styles.squareContainer}>
               <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
-                  name={'account-filter'}
+                  name="account-filter"
                   size={40}
                   color={theme.colors.textPrimary}
                 />
@@ -81,7 +77,7 @@ export default function ProfileScreen() {
             <View style={styles.squareContainer}>
               <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
-                  name={'file-image'}
+                  name="file-image"
                   size={40}
                   color={theme.colors.textPrimary}
                 />
@@ -91,7 +87,7 @@ export default function ProfileScreen() {
             <View style={styles.squareContainer}>
               <View style={[theme.outline, styles.square, theme.dropShadow]}>
                 <MaterialCommunityIcons
-                  name={'dots-vertical'}
+                  name="dots-vertical"
                   size={40}
                   color={theme.colors.textPrimary}
                 />

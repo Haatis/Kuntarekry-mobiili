@@ -49,7 +49,7 @@ export default function SwipeableCard({ job }) {
                   {job.profitCenter}
                 </Text>
               </View>
-              <MaterialCommunityIcons name={'chevron-right'} size={40} color={'white'} />
+              <MaterialCommunityIcons name="chevron-right" size={40} color="white" />
             </Pressable>
           </LinearGradient>
         </LinearGradient>
@@ -62,7 +62,7 @@ export default function SwipeableCard({ job }) {
           <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />
           <Tag tagColor={theme.colors.tag1} tagText="Kokoaikatyö" />
           <Tag tagColor={theme.colors.tag1} tagText="Suomi" />
-          <MaterialCommunityIcons name={'chevron-down'} size={24} color={'black'} />
+          <MaterialCommunityIcons name="chevron-down" size={24} color="black" />
         </View>
         <Text
           numberOfLines={7}
@@ -72,10 +72,10 @@ export default function SwipeableCard({ job }) {
         </Text>
         <View style={styles.buttonRow}>
           <View style={[styles.button, { borderColor: theme.colors.danger }]}>
-            <MaterialCommunityIcons name={'close-thick'} size={45} color={theme.colors.danger} />
+            <MaterialCommunityIcons name="close-thick" size={45} color={theme.colors.danger} />
           </View>
           <View style={[styles.button, { borderColor: theme.colors.secondary }]}>
-            <MaterialCommunityIcons name={'heart'} size={40} color={theme.colors.secondary} />
+            <MaterialCommunityIcons name="heart" size={40} color={theme.colors.secondary} />
           </View>
         </View>
       </View>

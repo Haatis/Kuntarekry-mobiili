@@ -8,8 +8,8 @@ export default function HiddenTab() {
 
   return (
     <View style={theme.containerList}>
-      <SmallCard cardType={'hidden'} job={jobs[0].jobAdvertisement} />
-      <SmallCard cardType={'hidden'} job={jobs[1].jobAdvertisement} />
+      <SmallCard cardType="hidden" job={jobs[0].jobAdvertisement} />
+      <SmallCard cardType="hidden" job={jobs[1].jobAdvertisement} />
     </View>
   );
 }

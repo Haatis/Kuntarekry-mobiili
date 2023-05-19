@@ -66,11 +66,7 @@ export default function PersonalizationScreen2() {
                 onChangeText={handleSearch}
               />
             )}
-            <MaterialCommunityIcons
-              name={'map-marker'}
-              size={30}
-              color={theme.colors.textPrimary}
-            />
+            <MaterialCommunityIcons name="map-marker" size={30} color={theme.colors.textPrimary} />
           </View>
           <View
             style={[

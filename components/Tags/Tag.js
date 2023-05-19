@@ -12,7 +12,7 @@ export default function Tag({ tagColor, tagText, tagClose, onPress, selected, la
         ]}
       >
         <Text style={[theme.textVariants.uiS, { color: theme.colors.textPrimary }]}>{tagText}</Text>
-        <MaterialCommunityIcons name={'close-thick'} size={17} color={theme.colors.textPrimary} />
+        <MaterialCommunityIcons name="close-thick" size={17} color={theme.colors.textPrimary} />
       </Pressable>
     );
   }

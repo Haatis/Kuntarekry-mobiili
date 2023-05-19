@@ -36,13 +36,9 @@ export default function TagDropDown({ tagColor, tagText, onPress, onPress2, sele
         }}
       >
         {selected ? (
-          <MaterialCommunityIcons name={'chevron-up'} size={17} color={theme.colors.textPrimary} />
+          <MaterialCommunityIcons name="chevron-up" size={17} color={theme.colors.textPrimary} />
         ) : (
-          <MaterialCommunityIcons
-            name={'chevron-down'}
-            size={17}
-            color={theme.colors.textPrimary}
-          />
+          <MaterialCommunityIcons name="chevron-down" size={17} color={theme.colors.textPrimary} />
         )}
       </Pressable>
     </Pressable>

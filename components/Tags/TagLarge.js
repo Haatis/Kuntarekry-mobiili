@@ -20,7 +20,7 @@ export default function TagLarge({ tagColor, tagText, tagClose, onPressClose }) 
           {tagText}
         </Text>
         <MaterialCommunityIcons
-          name={'close-thick'}
+          name="close-thick"
           size={17}
           color={theme.colors.textPrimary}
           style={{ marginLeft: 8 }}
