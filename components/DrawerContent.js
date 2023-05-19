@@ -86,6 +86,18 @@ export function DrawerContent({ setIsDrawerOpen }) {
 
   const jobOrganisations = organisations.map((org) => org.name);
 
+  const sortedOrganisations = {};
+  for (let i = 0; i < jobOrganisations.length; i++) {
+    const firstLetter = jobOrganisations[i][0];
+    if (sortedOrganisations[firstLetter]) {
+      sortedOrganisations[firstLetter].push(jobOrganisations[i]);
+    } else {
+      sortedOrganisations[firstLetter] = [jobOrganisations[i]];
+    }
+  }
+
+  const sortedLetters = Object.keys(sortedOrganisations);
+
   return (
     <FlatList
       ListHeaderComponent={() => (
@@ -151,22 +163,29 @@ export function DrawerContent({ setIsDrawerOpen }) {
             )}
           </Pressable>
           {selectedTab === 'Työnantaja' && (
-            <FlatList
-              data={jobOrganisations}
-              style={styles.tagRow}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <Tag
-                  key={item}
-                  tagColor={theme.colors.tag1}
-                  tagText={item}
-                  onPress={() => selectFilter(item)}
-                  selected={selectedFilters.includes(item)}
-                  style={styles.tag}
-                />
-              )}
-              windowSize={5} // Adjust the number based on performance needs
-            />
+            <View style={styles.tagRow}>
+              {sortedLetters.map((letter, index) => (
+                <View style={styles.tagRow} key={index}>
+                  <TagDropDown
+                    tagColor={theme.colors.tag4}
+                    tagText={letter}
+                    onPress={() => handleOpenCategory(index)}
+                    onPress2={() => handleOpenCategory(index)}
+                    selected={selectedCategory === index}
+                  />
+                  {selectedCategory === index &&
+                    sortedOrganisations[letter].map((organisation) => (
+                      <Tag
+                        key={organisation}
+                        tagColor={theme.colors.tag1}
+                        tagText={organisation}
+                        onPress={() => selectFilter(organisation)}
+                        selected={selectedFilters.includes(organisation)}
+                      />
+                    ))}
+                </View>
+              ))}
+            </View>
           )}
         </View>
       )}
