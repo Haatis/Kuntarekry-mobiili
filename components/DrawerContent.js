@@ -43,56 +43,43 @@ export function DrawerContent({ setIsDrawerOpen }) {
   };
 
   const selectParentFilter = (filter, children, type) => {
-    const isChildSelected = children.some((child) =>
-      selectedFilters.some((item) => item.filter === child.name)
+    setSelectedFilters((prevFilters) =>
+      prevFilters.filter(
+        (selectedFilter) => !children.some((child) => child.name === selectedFilter.filter)
+      )
     );
-
-    if (isChildSelected) {
-      setSelectedFilters((prevFilters) =>
-        prevFilters.filter(
-          (selectedFilter) => !children.some((child) => child.name === selectedFilter.filter)
-        )
-      );
-    }
 
     const isParentSelected = selectedFilters.some((item) => item.filter === filter);
 
-    if (isParentSelected) {
-      setSelectedFilters((prevFilters) =>
-        prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
-      );
-    } else {
-      setSelectedFilters((prevFilters) => [...prevFilters, { filter, type }]);
-    }
+    setSelectedFilters((prevFilters) =>
+      isParentSelected
+        ? prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
+        : [...prevFilters, { filter, type }]
+    );
   };
 
   const selectChildFilter = (filter, parent, type) => {
-    const isParentSelected = selectedFilters.some(
-      (selectedFilter) => selectedFilter.filter === parent
+    setSelectedFilters((prevFilters) =>
+      prevFilters.filter((selectedFilter) => selectedFilter.filter !== parent)
     );
 
-    if (isParentSelected) {
-      setSelectedFilters((prevFilters) =>
-        prevFilters.filter((selectedFilter) => selectedFilter.filter !== parent)
-      );
-    }
-
     const isChildSelected = selectedFilters.some((item) => item.filter === filter);
-    if (isChildSelected) {
-      setSelectedFilters((prevFilters) =>
-        prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
-      );
-    } else {
-      setSelectedFilters((prevFilters) => [...prevFilters, { filter, type }]);
-    }
+
+    setSelectedFilters((prevFilters) =>
+      isChildSelected
+        ? prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
+        : [...prevFilters, { filter, type }]
+    );
   };
 
   const selectFilter = (filter, type) => {
-    if (selectedFilters.some((item) => item.filter === filter)) {
-      setSelectedFilters(selectedFilters.filter((item) => item.filter !== filter));
-    } else {
-      setSelectedFilters([...selectedFilters, { filter, type }]);
-    }
+    const isSelected = selectedFilters.some((item) => item.filter === filter);
+
+    setSelectedFilters((prevFilters) =>
+      isSelected
+        ? prevFilters.filter((item) => item.filter !== filter)
+        : [...prevFilters, { filter, type }]
+    );
   };
 
   React.useEffect(() => {
@@ -156,7 +143,7 @@ export function DrawerContent({ setIsDrawerOpen }) {
           </View>
           <Pressable onPress={() => handleOpenTab('Tehtäväalueet')} style={styles.filterRow}>
             <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
-              Tehtäväalueet {selectedTaskCount}
+              Tehtäväalueet {selectedTaskCount !== 0 ? selectedTaskCount : ''}
             </Text>
             {selectedTab === 'Tehtäväalueet' ? (
               <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
@@ -205,7 +192,7 @@ export function DrawerContent({ setIsDrawerOpen }) {
             })}
           <Pressable onPress={() => handleOpenTab('Työnantaja')} style={styles.filterRow}>
             <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
-              Työnantaja {selectedOrganisationCount}
+              Työnantaja {selectedOrganisationCount !== 0 ? selectedOrganisationCount : ''}
             </Text>
             {selectedTab === 'Työnantaja' ? (
               <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
