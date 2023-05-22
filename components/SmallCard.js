@@ -1,4 +1,4 @@
-import { Pressable, Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Tag from './Tags/Tag';
@@ -29,7 +29,7 @@ function SmallCard({ job, cardType }) {
             <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
             <Tag tagColor={theme.colors.tag1} tagText={job.location} />
           </View>
-          <Pressable
+          <TouchableOpacity
             style={{
               borderWidth: 1,
               borderColor: theme.colors.outlineDark,
@@ -39,7 +39,7 @@ function SmallCard({ job, cardType }) {
             onPress={() => setShowAllTags(!showAllTags)}
           >
             <MaterialCommunityIcons name="chevron-up" size={24} color="black" />
-          </Pressable>
+          </TouchableOpacity>
         </>
       );
     } else if (contentWidth > rowWidth) {
@@ -50,7 +50,7 @@ function SmallCard({ job, cardType }) {
             <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
             <Tag tagColor={theme.colors.tag1} tagText={job.location} />
           </View>
-          <Pressable
+          <TouchableOpacity
             style={{
               borderWidth: 1,
               borderColor: theme.colors.outlineDark,
@@ -59,7 +59,7 @@ function SmallCard({ job, cardType }) {
             onPress={() => setShowAllTags(!showAllTags)}
           >
             <MaterialCommunityIcons name="chevron-down" size={24} color="black" />
-          </Pressable>
+          </TouchableOpacity>
         </>
       );
     } else {
@@ -73,14 +73,14 @@ function SmallCard({ job, cardType }) {
     }
   }
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={() => navigation.navigate('JobScreen', { job: job })}
       style={[theme.outline, theme.dropShadow, styles.card]}
     >
       <View style={styles.cardTop}>
-        <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
+        <TouchableOpacity style={[theme.outline, theme.dropShadow, styles.avatar]}>
           <Image style={styles.avatarImage} source={{ uri: imageURL }} />
-        </Pressable>
+        </TouchableOpacity>
         <View style={styles.textContainer}>
           <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
           <Text
@@ -132,7 +132,7 @@ function SmallCard({ job, cardType }) {
           </Text>
         )}
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
@@ -183,13 +183,13 @@ const styles = StyleSheet.create({
   tagRow: {
     flexDirection: 'row',
     gap: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
   },
   tagsAll: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    flex: 1,
     gap: 8,
+    width: '100%',
   },
   tagsLong: {
     flexDirection: 'row',
