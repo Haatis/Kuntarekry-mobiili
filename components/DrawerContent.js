@@ -1,17 +1,15 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import { Text } from 'react-native';
 import { theme } from '../styles/theme';
 import Tag from './Tags/Tag';
 import { useJobTasks } from '../hooks/usejobtasks';
-import { Pressable } from 'react-native';
-import TagDropDown from './Tags/TagDropDown';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 import { useJobOrganisations } from '../hooks/usejoborganisations';
 import DrawerTab from './DrawerTab';
 import { useJobLocations } from '../hooks/uselocations';
+import FilterTab from './FilterTab';
 
 export function DrawerContent({ setIsDrawerOpen }) {
   const drawerStatus = useDrawerStatus();
@@ -20,10 +18,9 @@ export function DrawerContent({ setIsDrawerOpen }) {
   const { organisations } = useJobOrganisations();
   const jobsLength = jobs.length;
   const { locations } = useJobLocations();
-  const [selectedCategory, setSelectedCategory] = React.useState(null); //keski esim hallinto ja toimistotyö
-  const [selectedLocation, setSelectedLocation] = React.useState(null); //keski esim hallinto ja toimistotyö
-  const [selectedTab, setSelectedTab] = React.useState(null); // ylin, esim tehtäväalueet
-  const [selectedFilters, setSelectedFilters] = React.useState([]); //alin esim Viestintä
+  const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const [selectedTab, setSelectedTab] = React.useState(null);
+  const [selectedFilters, setSelectedFilters] = React.useState([]);
   const [selectedTaskCount, setSelectedTaskCount] = React.useState(0);
   const [selectedLocationCount, setSelectedLocationCount] = React.useState(0);
   const [selectedOrganisationCount, setSelectedOrganisationCount] = React.useState(0);
@@ -58,13 +55,6 @@ export function DrawerContent({ setIsDrawerOpen }) {
       setSelectedCategory(null);
     } else {
       setSelectedCategory(categoryName);
-    }
-  };
-  const handleOpenLocation = (locationName) => {
-    if (selectedLocation === locationName) {
-      setSelectedLocation(null);
-    } else {
-      setSelectedLocation(locationName);
     }
   };
 
@@ -123,7 +113,6 @@ export function DrawerContent({ setIsDrawerOpen }) {
 
   const countTypes = () => {
     const taskCount = selectedFilters.filter((item) => item.type === 'Tehtäväalueet').length;
-    const organisationCount = selectedFilters.filter((item) => item.type === 'Työnantaja').length;
     const typeCount = selectedFilters.filter((item) => item.type === 'Tyyppi').length;
     const employmentCount = selectedFilters.filter((item) => item.type === 'Työsuhde').length;
     const employmentTypeCount = selectedFilters.filter(
@@ -131,6 +120,7 @@ export function DrawerContent({ setIsDrawerOpen }) {
     ).length;
     const languageCount = selectedFilters.filter((item) => item.type === 'Kieli').length;
     const locationCount = selectedFilters.filter((item) => item.type === 'Sijainti').length;
+    const organisationCount = selectedFilters.filter((item) => item.type === 'Työnantaja').length;
 
     setSelectedLocationCount(locationCount);
     setSelectedEmploymentTypeCount(employmentTypeCount);
@@ -140,12 +130,11 @@ export function DrawerContent({ setIsDrawerOpen }) {
     setSelectedTypeCount(typeCount);
     setSelectedLanguageCount(languageCount);
   };
-
   const jobTasks = tasks
     .filter((task) => !task.parent)
     .map((task) => ({
       name: task.name,
-      jobs: tasks
+      children: tasks
         .filter((subTask) => subTask.parent === task.id)
         .map((subTask) => ({ name: subTask.name, parent: task.name })),
     }));
@@ -196,150 +185,44 @@ export function DrawerContent({ setIsDrawerOpen }) {
           <View style={{ marginTop: 16 }}>
             <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset {jobsLength} </Text>
           </View>
-          <Pressable onPress={() => handleOpenTab('Tehtäväalueet')} style={styles.filterRow}>
-            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
-              Tehtäväalueet {selectedTaskCount !== 0 ? selectedTaskCount : ''}
-            </Text>
-            {selectedTab === 'Tehtäväalueet' ? (
-              <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
-            ) : (
-              <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
-            )}
-          </Pressable>
-          {selectedTab === 'Tehtäväalueet' &&
-            jobTasks.map((category) => {
-              const selectedChildCount = category.jobs.filter((job) =>
-                selectedFilters.some((selectedFilter) => selectedFilter.filter === job.name)
-              ).length;
+          <FilterTab
+            currentTab={'Tehtäväalueet'}
+            handleOpenTab={handleOpenTab}
+            selectedTab={selectedTab}
+            selectedTaskCount={selectedTaskCount}
+            jobTasks={jobTasks}
+            selectedFilters={selectedFilters}
+            selectParentFilter={selectParentFilter}
+            selectedCategory={selectedCategory}
+            handleOpenCategory={handleOpenCategory}
+            selectChildFilter={selectChildFilter}
+          />
+          <FilterTab
+            currentTab={'Sijainti'}
+            handleOpenTab={handleOpenTab}
+            selectedTab={selectedTab}
+            selectedTaskCount={selectedLocationCount}
+            jobTasks={jobLocations}
+            selectedFilters={selectedFilters}
+            selectParentFilter={selectParentFilter}
+            selectedCategory={selectedCategory}
+            handleOpenCategory={handleOpenCategory}
+            selectChildFilter={selectChildFilter}
+          />
+          <FilterTab
+            currentTab={'Työnantaja'}
+            handleOpenTab={handleOpenTab}
+            selectedTab={selectedTab}
+            selectedTaskCount={selectedOrganisationCount} // Update prop name here
+            sortedLetters={sortedLetters}
+            jobTasks={sortedOrganisations}
+            selectedFilters={selectedFilters}
+            selectParentFilter={selectParentFilter}
+            selectedCategory={selectedCategory}
+            handleOpenCategory={handleOpenCategory}
+            selectChildFilter={selectFilter}
+          />
 
-              return (
-                <View style={styles.tagRow} key={category.name}>
-                  <TagDropDown
-                    tagColor={theme.colors.tag4}
-                    tagText={
-                      selectedChildCount > 0
-                        ? `${category.name} (${selectedChildCount})`
-                        : category.name
-                    }
-                    onPress={() => handleOpenCategory(category.name)}
-                    onPress2={() =>
-                      selectParentFilter(category.name, category.jobs, 'Tehtäväalueet')
-                    }
-                    selected={selectedCategory === category.name}
-                    selected2={selectedFilters.some(
-                      (selectedFilter) => selectedFilter.filter === category.name
-                    )}
-                  />
-                  {selectedCategory === category.name &&
-                    category.jobs.map((job) => (
-                      <Tag
-                        key={job.name}
-                        tagColor={theme.colors.tag1}
-                        tagText={job.name}
-                        onPress={() => selectChildFilter(job.name, job.parent, 'Tehtäväalueet')}
-                        selected={selectedFilters.some(
-                          (selectedFilter) => selectedFilter.filter === job.name
-                        )}
-                      />
-                    ))}
-                </View>
-              );
-            })}
-          <Pressable onPress={() => handleOpenTab('Locations')} style={styles.filterRow}>
-            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
-              Sijainti {selectedLocationCount !== 0 ? selectedLocationCount : ''}
-            </Text>
-            {selectedTab === 'Locations' ? (
-              <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
-            ) : (
-              <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
-            )}
-          </Pressable>
-          {selectedTab === 'Locations' &&
-            jobLocations.map((location) => {
-              const selectedChildCount = location.children.filter((child) =>
-                selectedFilters.some((selectedFilter) => selectedFilter.filter === child.name)
-              ).length;
-
-              return (
-                <View style={styles.tagRow} key={location.name}>
-                  <TagDropDown
-                    tagColor={theme.colors.tag4}
-                    tagText={
-                      selectedChildCount > 0
-                        ? `${location.name} (${selectedChildCount})`
-                        : location.name
-                    }
-                    onPress={() => handleOpenLocation(location.name)}
-                    onPress2={() =>
-                      selectParentFilter(location.name, location.children, 'Locations')
-                    }
-                    selected={selectedLocation === location.name}
-                    selected2={selectedFilters.some(
-                      (selectedFilter) => selectedFilter.filter === location.name
-                    )}
-                  />
-                  {selectedLocation === location.name &&
-                    location.children.map((child) => (
-                      <Tag
-                        key={child.name}
-                        tagColor={theme.colors.tag1}
-                        tagText={child.name}
-                        onPress={() => selectChildFilter(child.name, child.parent, 'Locations')}
-                        selected={selectedFilters.some(
-                          (selectedFilter) => selectedFilter.filter === child.name
-                        )}
-                      />
-                    ))}
-                </View>
-              );
-            })}
-
-          <Pressable onPress={() => handleOpenTab('Työnantaja')} style={styles.filterRow}>
-            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
-              Työnantaja {selectedOrganisationCount !== 0 ? selectedOrganisationCount : ''}
-            </Text>
-            {selectedTab === 'Työnantaja' ? (
-              <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
-            ) : (
-              <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
-            )}
-          </Pressable>
-          {selectedTab === 'Työnantaja' && (
-            <View style={styles.tagRow}>
-              {sortedLetters.map((letter, index) => {
-                const selectedChildCount = sortedOrganisations[letter].filter((organisation) =>
-                  selectedFilters.some((selectedFilter) => selectedFilter.filter === organisation)
-                ).length;
-
-                return (
-                  <View style={styles.tagRow} key={index}>
-                    <TagDropDown
-                      tagColor={theme.colors.tag4}
-                      tagText={
-                        selectedChildCount > 0 ? `${letter} (${selectedChildCount})` : letter
-                      }
-                      onPress={() => handleOpenCategory(index)}
-                      onPress2={() => handleOpenCategory(index)}
-                      selected={selectedCategory === index}
-                    />
-                    {selectedCategory === index &&
-                      sortedOrganisations[letter].map((organisation) => (
-                        <Tag
-                          key={organisation}
-                          tagColor={theme.colors.tag1}
-                          tagText={organisation}
-                          onPress={() => selectFilter(organisation, 'Työnantaja')}
-                          selected={selectedFilters.some(
-                            (selectedFilter) => selectedFilter.filter === organisation
-                          )}
-                        />
-                      ))}
-                  </View>
-                );
-              })}
-            </View>
-          )}
           <DrawerTab
             tabName="Tyyppi"
             selectedTab={selectedTab}
