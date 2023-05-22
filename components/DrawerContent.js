@@ -11,6 +11,7 @@ import TagDropDown from './Tags/TagDropDown';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 import { useJobOrganisations } from '../hooks/usejoborganisations';
 import DrawerTab from './DrawerTab';
+import { useJobLocations } from '../hooks/uselocations';
 
 export function DrawerContent({ setIsDrawerOpen }) {
   const drawerStatus = useDrawerStatus();
@@ -18,14 +19,18 @@ export function DrawerContent({ setIsDrawerOpen }) {
   const { jobs } = useJobAdvertisements();
   const { organisations } = useJobOrganisations();
   const jobsLength = jobs.length;
+  const { locations } = useJobLocations();
   const [selectedCategory, setSelectedCategory] = React.useState(null); //keski esim hallinto ja toimistotyö
+  const [selectedLocation, setSelectedLocation] = React.useState(null); //keski esim hallinto ja toimistotyö
   const [selectedTab, setSelectedTab] = React.useState(null); // ylin, esim tehtäväalueet
   const [selectedFilters, setSelectedFilters] = React.useState([]); //alin esim Viestintä
   const [selectedTaskCount, setSelectedTaskCount] = React.useState(0);
+  const [selectedLocationCount, setSelectedLocationCount] = React.useState(0);
   const [selectedOrganisationCount, setSelectedOrganisationCount] = React.useState(0);
   const [selectedTypeCount, setSelectedTypeCount] = React.useState(0);
   const [selectedEmploymentCount, setSelectedEmploymentCount] = React.useState(0);
   const [selectedEmploymentTypeCount, setSelectedEmploymentTypeCount] = React.useState(0);
+  const [selectedLanguageCount, setSelectedLanguageCount] = React.useState(0);
   const jobTypes = [
     'Työpaikka',
     'Keikkatyö',
@@ -42,6 +47,8 @@ export function DrawerContent({ setIsDrawerOpen }) {
 
   const employmentType = ['Vakinainen', 'Määräaikainen'];
 
+  const language = ['Suomi', 'Svenska', 'English'];
+
   React.useEffect(() => {
     setIsDrawerOpen(drawerStatus === 'open');
   }, [drawerStatus, setIsDrawerOpen]);
@@ -53,6 +60,14 @@ export function DrawerContent({ setIsDrawerOpen }) {
       setSelectedCategory(categoryName);
     }
   };
+  const handleOpenLocation = (locationName) => {
+    if (selectedLocation === locationName) {
+      setSelectedLocation(null);
+    } else {
+      setSelectedLocation(locationName);
+    }
+  };
+
   const handleOpenTab = (tabName) => {
     if (selectedTab === tabName) {
       setSelectedTab(null);
@@ -114,12 +129,16 @@ export function DrawerContent({ setIsDrawerOpen }) {
     const employmentTypeCount = selectedFilters.filter(
       (item) => item.type === 'Työn luonne'
     ).length;
+    const languageCount = selectedFilters.filter((item) => item.type === 'Kieli').length;
+    const locationCount = selectedFilters.filter((item) => item.type === 'Sijainti').length;
 
+    setSelectedLocationCount(locationCount);
     setSelectedEmploymentTypeCount(employmentTypeCount);
     setSelectedEmploymentCount(employmentCount);
     setSelectedTaskCount(taskCount);
     setSelectedOrganisationCount(organisationCount);
     setSelectedTypeCount(typeCount);
+    setSelectedLanguageCount(languageCount);
   };
 
   const jobTasks = tasks
@@ -129,6 +148,15 @@ export function DrawerContent({ setIsDrawerOpen }) {
       jobs: tasks
         .filter((subTask) => subTask.parent === task.id)
         .map((subTask) => ({ name: subTask.name, parent: task.name })),
+    }));
+
+  const jobLocations = locations
+    .filter((location) => !location.parent)
+    .map((location) => ({
+      name: location.name,
+      children: locations
+        .filter((subLocation) => subLocation.parent === location.id)
+        .map((subLocation) => ({ name: subLocation.name, parent: location.name })),
     }));
 
   const jobOrganisations = organisations.map((org) => org.name);
@@ -217,6 +245,56 @@ export function DrawerContent({ setIsDrawerOpen }) {
                 </View>
               );
             })}
+          <Pressable onPress={() => handleOpenTab('Locations')} style={styles.filterRow}>
+            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
+              Sijainti {selectedLocationCount !== 0 ? selectedLocationCount : ''}
+            </Text>
+            {selectedTab === 'Locations' ? (
+              <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
+            ) : (
+              <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
+            )}
+          </Pressable>
+          {selectedTab === 'Locations' &&
+            jobLocations.map((location) => {
+              const selectedChildCount = location.children.filter((child) =>
+                selectedFilters.some((selectedFilter) => selectedFilter.filter === child.name)
+              ).length;
+
+              return (
+                <View style={styles.tagRow} key={location.name}>
+                  <TagDropDown
+                    tagColor={theme.colors.tag4}
+                    tagText={
+                      selectedChildCount > 0
+                        ? `${location.name} (${selectedChildCount})`
+                        : location.name
+                    }
+                    onPress={() => handleOpenLocation(location.name)}
+                    onPress2={() =>
+                      selectParentFilter(location.name, location.children, 'Locations')
+                    }
+                    selected={selectedLocation === location.name}
+                    selected2={selectedFilters.some(
+                      (selectedFilter) => selectedFilter.filter === location.name
+                    )}
+                  />
+                  {selectedLocation === location.name &&
+                    location.children.map((child) => (
+                      <Tag
+                        key={child.name}
+                        tagColor={theme.colors.tag1}
+                        tagText={child.name}
+                        onPress={() => selectChildFilter(child.name, child.parent, 'Locations')}
+                        selected={selectedFilters.some(
+                          (selectedFilter) => selectedFilter.filter === child.name
+                        )}
+                      />
+                    ))}
+                </View>
+              );
+            })}
+
           <Pressable onPress={() => handleOpenTab('Työnantaja')} style={styles.filterRow}>
             <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
               Työnantaja {selectedOrganisationCount !== 0 ? selectedOrganisationCount : ''}
@@ -288,6 +366,16 @@ export function DrawerContent({ setIsDrawerOpen }) {
             handleOpenTab={handleOpenTab}
             count={selectedEmploymentTypeCount}
             data={employmentType}
+            selectFilter={selectFilter}
+            selectedFilters={selectedFilters}
+            theme={theme}
+          />
+          <DrawerTab
+            tabName="Kieli"
+            selectedTab={selectedTab}
+            handleOpenTab={handleOpenTab}
+            count={selectedLanguageCount}
+            data={language}
             selectFilter={selectFilter}
             selectedFilters={selectedFilters}
             theme={theme}
