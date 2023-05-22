@@ -42,6 +42,51 @@ export function DrawerContent({ setIsDrawerOpen }) {
     }
   };
 
+  const selectParentFilter = (filter, children, type) => {
+    const isChildSelected = children.some((child) =>
+      selectedFilters.some((item) => item.filter === child.name)
+    );
+
+    if (isChildSelected) {
+      setSelectedFilters((prevFilters) =>
+        prevFilters.filter(
+          (selectedFilter) => !children.some((child) => child.name === selectedFilter.filter)
+        )
+      );
+    }
+
+    const isParentSelected = selectedFilters.some((item) => item.filter === filter);
+
+    if (isParentSelected) {
+      setSelectedFilters((prevFilters) =>
+        prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
+      );
+    } else {
+      setSelectedFilters((prevFilters) => [...prevFilters, { filter, type }]);
+    }
+  };
+
+  const selectChildFilter = (filter, parent, type) => {
+    const isParentSelected = selectedFilters.some(
+      (selectedFilter) => selectedFilter.filter === parent
+    );
+
+    if (isParentSelected) {
+      setSelectedFilters((prevFilters) =>
+        prevFilters.filter((selectedFilter) => selectedFilter.filter !== parent)
+      );
+    }
+
+    const isChildSelected = selectedFilters.some((item) => item.filter === filter);
+    if (isChildSelected) {
+      setSelectedFilters((prevFilters) =>
+        prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
+      );
+    } else {
+      setSelectedFilters((prevFilters) => [...prevFilters, { filter, type }]);
+    }
+  };
+
   const selectFilter = (filter, type) => {
     if (selectedFilters.some((item) => item.filter === filter)) {
       setSelectedFilters(selectedFilters.filter((item) => item.filter !== filter));
@@ -52,6 +97,7 @@ export function DrawerContent({ setIsDrawerOpen }) {
 
   React.useEffect(() => {
     countTypes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFilters]);
 
   const countTypes = () => {
@@ -119,32 +165,44 @@ export function DrawerContent({ setIsDrawerOpen }) {
             )}
           </Pressable>
           {selectedTab === 'Tehtäväalueet' &&
-            jobTasks.map((category) => (
-              <View style={styles.tagRow} key={category.name}>
-                <TagDropDown
-                  tagColor={theme.colors.tag4}
-                  tagText={category.name}
-                  onPress={() => handleOpenCategory(category.name)}
-                  onPress2={() => selectFilter(category.name, 'Tehtäväalueet')}
-                  selected={selectedCategory === category.name}
-                  selected2={selectedFilters.some(
-                    (selectedFilter) => selectedFilter.filter === category.name
-                  )}
-                />
-                {selectedCategory === category.name &&
-                  category.jobs.map((job) => (
-                    <Tag
-                      key={job.name}
-                      tagColor={theme.colors.tag1}
-                      tagText={job.name}
-                      onPress={() => selectFilter(job.name, 'Tehtäväalueet')}
-                      selected={selectedFilters.some(
-                        (selectedFilter) => selectedFilter.filter === job.name
-                      )}
-                    />
-                  ))}
-              </View>
-            ))}
+            jobTasks.map((category) => {
+              const selectedChildCount = category.jobs.filter((job) =>
+                selectedFilters.some((selectedFilter) => selectedFilter.filter === job.name)
+              ).length;
+
+              return (
+                <View style={styles.tagRow} key={category.name}>
+                  <TagDropDown
+                    tagColor={theme.colors.tag4}
+                    tagText={
+                      selectedChildCount > 0
+                        ? `${category.name} (${selectedChildCount})`
+                        : category.name
+                    }
+                    onPress={() => handleOpenCategory(category.name)}
+                    onPress2={() =>
+                      selectParentFilter(category.name, category.jobs, 'Tehtäväalueet')
+                    }
+                    selected={selectedCategory === category.name}
+                    selected2={selectedFilters.some(
+                      (selectedFilter) => selectedFilter.filter === category.name
+                    )}
+                  />
+                  {selectedCategory === category.name &&
+                    category.jobs.map((job) => (
+                      <Tag
+                        key={job.name}
+                        tagColor={theme.colors.tag1}
+                        tagText={job.name}
+                        onPress={() => selectChildFilter(job.name, job.parent, 'Tehtäväalueet')}
+                        selected={selectedFilters.some(
+                          (selectedFilter) => selectedFilter.filter === job.name
+                        )}
+                      />
+                    ))}
+                </View>
+              );
+            })}
           <Pressable onPress={() => handleOpenTab('Työnantaja')} style={styles.filterRow}>
             <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
               Työnantaja {selectedOrganisationCount}
