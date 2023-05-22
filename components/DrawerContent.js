@@ -10,6 +10,7 @@ import { Pressable } from 'react-native';
 import TagDropDown from './Tags/TagDropDown';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 import { useJobOrganisations } from '../hooks/usejoborganisations';
+import DrawerTab from './DrawerTab';
 
 export function DrawerContent({ setIsDrawerOpen }) {
   const drawerStatus = useDrawerStatus();
@@ -22,6 +23,24 @@ export function DrawerContent({ setIsDrawerOpen }) {
   const [selectedFilters, setSelectedFilters] = React.useState([]); //alin esim Viestintä
   const [selectedTaskCount, setSelectedTaskCount] = React.useState(0);
   const [selectedOrganisationCount, setSelectedOrganisationCount] = React.useState(0);
+  const [selectedTypeCount, setSelectedTypeCount] = React.useState(0);
+  const [selectedEmploymentCount, setSelectedEmploymentCount] = React.useState(0);
+  const [selectedEmploymentTypeCount, setSelectedEmploymentTypeCount] = React.useState(0);
+  const jobTypes = [
+    'Työpaikka',
+    'Keikkatyö',
+    'Kesätyö',
+    'Harjoittelu',
+    'Oppisopimus',
+    'Työkokeilu',
+    'Anonyymi',
+    'Työsuhde',
+    'Virkasuhde',
+    'Avoin haku',
+  ];
+  const employment = ['Kokoaikatyö', 'Osa-aikatyö', '3-vuorotyö', 'Tuntityö', '2-vuorotyö'];
+
+  const employmentType = ['Vakinainen', 'Määräaikainen'];
 
   React.useEffect(() => {
     setIsDrawerOpen(drawerStatus === 'open');
@@ -90,9 +109,17 @@ export function DrawerContent({ setIsDrawerOpen }) {
   const countTypes = () => {
     const taskCount = selectedFilters.filter((item) => item.type === 'Tehtäväalueet').length;
     const organisationCount = selectedFilters.filter((item) => item.type === 'Työnantaja').length;
+    const typeCount = selectedFilters.filter((item) => item.type === 'Tyyppi').length;
+    const employmentCount = selectedFilters.filter((item) => item.type === 'Työsuhde').length;
+    const employmentTypeCount = selectedFilters.filter(
+      (item) => item.type === 'Työn luonne'
+    ).length;
 
+    setSelectedEmploymentTypeCount(employmentTypeCount);
+    setSelectedEmploymentCount(employmentCount);
     setSelectedTaskCount(taskCount);
     setSelectedOrganisationCount(organisationCount);
+    setSelectedTypeCount(typeCount);
   };
 
   const jobTasks = tasks
@@ -128,13 +155,13 @@ export function DrawerContent({ setIsDrawerOpen }) {
           <View style={styles.tagRow}>
             {selectedFilters.map((filter) => (
               <Tag
-                key={filter.filter} // Use the 'filter' property as the key
+                key={filter.filter}
                 tagColor={theme.colors.tag1}
-                tagText={filter.filter} // Access the 'filter' property for the tag text
-                onPress={() => selectFilter(filter.filter, filter.type)} // Pass both 'filter' and 'type' to selectFilter
+                tagText={filter.filter}
+                onPress={() => selectFilter(filter.filter, filter.type)}
                 selected={selectedFilters.some(
                   (selectedFilter) => selectedFilter.filter === filter.filter
-                )} // Check if 'filter' exists in selectedFilters
+                )}
               />
             ))}
           </View>
@@ -202,31 +229,69 @@ export function DrawerContent({ setIsDrawerOpen }) {
           </Pressable>
           {selectedTab === 'Työnantaja' && (
             <View style={styles.tagRow}>
-              {sortedLetters.map((letter, index) => (
-                <View style={styles.tagRow} key={index}>
-                  <TagDropDown
-                    tagColor={theme.colors.tag4}
-                    tagText={letter}
-                    onPress={() => handleOpenCategory(index)}
-                    onPress2={() => handleOpenCategory(index)}
-                    selected={selectedCategory === index}
-                  />
-                  {selectedCategory === index &&
-                    sortedOrganisations[letter].map((organisation) => (
-                      <Tag
-                        key={organisation}
-                        tagColor={theme.colors.tag1}
-                        tagText={organisation}
-                        onPress={() => selectFilter(organisation, 'Työnantaja')}
-                        selected={selectedFilters.some(
-                          (selectedFilter) => selectedFilter.filter === organisation
-                        )}
-                      />
-                    ))}
-                </View>
-              ))}
+              {sortedLetters.map((letter, index) => {
+                const selectedChildCount = sortedOrganisations[letter].filter((organisation) =>
+                  selectedFilters.some((selectedFilter) => selectedFilter.filter === organisation)
+                ).length;
+
+                return (
+                  <View style={styles.tagRow} key={index}>
+                    <TagDropDown
+                      tagColor={theme.colors.tag4}
+                      tagText={
+                        selectedChildCount > 0 ? `${letter} (${selectedChildCount})` : letter
+                      }
+                      onPress={() => handleOpenCategory(index)}
+                      onPress2={() => handleOpenCategory(index)}
+                      selected={selectedCategory === index}
+                    />
+                    {selectedCategory === index &&
+                      sortedOrganisations[letter].map((organisation) => (
+                        <Tag
+                          key={organisation}
+                          tagColor={theme.colors.tag1}
+                          tagText={organisation}
+                          onPress={() => selectFilter(organisation, 'Työnantaja')}
+                          selected={selectedFilters.some(
+                            (selectedFilter) => selectedFilter.filter === organisation
+                          )}
+                        />
+                      ))}
+                  </View>
+                );
+              })}
             </View>
           )}
+          <DrawerTab
+            tabName="Tyyppi"
+            selectedTab={selectedTab}
+            handleOpenTab={handleOpenTab}
+            count={selectedTypeCount}
+            data={jobTypes}
+            selectFilter={selectFilter}
+            selectedFilters={selectedFilters}
+            theme={theme}
+          />
+          <DrawerTab
+            tabName="Työsuhde"
+            selectedTab={selectedTab}
+            handleOpenTab={handleOpenTab}
+            count={selectedEmploymentCount}
+            data={employment}
+            selectFilter={selectFilter}
+            selectedFilters={selectedFilters}
+            theme={theme}
+          />
+          <DrawerTab
+            tabName="Työn luonne"
+            selectedTab={selectedTab}
+            handleOpenTab={handleOpenTab}
+            count={selectedEmploymentTypeCount}
+            data={employmentType}
+            selectFilter={selectFilter}
+            selectedFilters={selectedFilters}
+            theme={theme}
+          />
         </View>
       )}
       data={[]}
