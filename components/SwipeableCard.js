@@ -1,4 +1,4 @@
-import { Pressable, Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { Image, ImageBackground, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { theme } from '../styles/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -36,13 +36,13 @@ export default function SwipeableCard({ job }) {
             end={{ x: 0, y: 1 }}
             style={styles.gradient2}
           >
-            <Pressable
+            <TouchableOpacity
               onPress={() => navigation.navigate('JobScreen', { job: job })}
               style={styles.cardTop}
             >
-              <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
+              <TouchableOpacity style={[theme.outline, theme.dropShadow, styles.avatar]}>
                 <Image style={styles.avatarImage} source={{ uri: randomEmployerImage }} />
-              </Pressable>
+              </TouchableOpacity>
               <View style={styles.textContainer}>
                 <Text style={[theme.textVariants.textXL, { color: 'white' }]}>{job.title}</Text>
                 <Text style={[theme.textVariants.textM, { color: 'white' }]}>
@@ -50,7 +50,7 @@ export default function SwipeableCard({ job }) {
                 </Text>
               </View>
               <MaterialCommunityIcons name="chevron-right" size={40} color="white" />
-            </Pressable>
+            </TouchableOpacity>
           </LinearGradient>
         </LinearGradient>
       </ImageBackground>
@@ -72,7 +72,7 @@ export default function SwipeableCard({ job }) {
         </Text>
         <View style={styles.buttonRow}>
           <View style={[styles.button, { borderColor: theme.colors.danger }]}>
-            <MaterialCommunityIcons name="close-thick" size={45} color={theme.colors.danger} />
+            <MaterialCommunityIcons name="close-thick" size={44} color={theme.colors.danger} />
           </View>
           <View style={[styles.button, { borderColor: theme.colors.secondary }]}>
             <MaterialCommunityIcons name="heart" size={40} color={theme.colors.secondary} />
