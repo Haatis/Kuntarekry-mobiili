@@ -165,7 +165,7 @@ export default function CardScreen() {
                   }}
                   {...panResponder.panHandlers}
                 >
-                  <SwipeableCard index={i} job={job.jobAdvertisement} />
+                  <SwipeableCard job={job.jobAdvertisement} />
                 </Animated.View>
               );
             }
@@ -232,18 +232,14 @@ export default function CardScreen() {
 }
 
 export function UpdateCardStack(items) {
-  const [start, setStart] = useState(0);
-  const STACK_SIZE = 3;
-  const currentPage = 1 + start / STACK_SIZE;
-  const startOffset = currentPage === 1 ? 0 : (currentPage - 1) * STACK_SIZE;
+  const STACK_SIZE = 5;
+  const SWIPES_BEFORE_UPDATE = 3;
+  const [startOffset, setStartOffset] = useState(0);
   const endOffset = startOffset + STACK_SIZE;
   const currentItems = items.slice(startOffset, endOffset);
-  const pageCount = Math.ceil(items.length / STACK_SIZE);
 
   const updateStack = () => {
-    if (pageCount > currentPage) {
-      setStart((current) => current + STACK_SIZE);
-    }
+    setStartOffset((current) => current + SWIPES_BEFORE_UPDATE);
   };
 
   return { currentItems, updateStack };
