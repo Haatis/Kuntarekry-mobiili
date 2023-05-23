@@ -1,6 +1,21 @@
+import React from 'react';
 import { Pressable, Text, StyleSheet, View } from 'react-native';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+function TagContent({ item, selected }) {
+  return (
+    <View style={{ flexDirection: 'row' }}>
+      <Text style={[theme.textVariants.uiS, { color: theme.colors.textPrimary }]}>{item}</Text>
+      {selected && (
+        <MaterialCommunityIcons name={'close-thick'} size={17} color={theme.colors.textPrimary} />
+      )}
+    </View>
+  );
+}
+
+const MemoizedTagContent = React.memo(TagContent);
+
 export default function Tag({ tagColor, tagText, tagClose, onPress, selected, larger }) {
   if (tagClose) {
     return (
@@ -17,39 +32,15 @@ export default function Tag({ tagColor, tagText, tagClose, onPress, selected, la
     );
   }
 
-  if (tagText == null) return;
+  if (tagText == null) return null;
   const tags = tagText.split(', ').filter((tag) => tag.length > 0);
-  if (larger) {
-    return tags.map((item) => (
-      <Pressable key={item} onPress={onPress} style={[styles.tagL, { backgroundColor: tagColor }]}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={[theme.textVariants.uiS, { color: theme.colors.textPrimary }]}>{item}</Text>
-          {selected && (
-            <MaterialCommunityIcons
-              name={'close-thick'}
-              size={17}
-              color={theme.colors.textPrimary}
-            />
-          )}
-        </View>
-      </Pressable>
-    ));
-  } else {
-    return tags.map((item) => (
-      <Pressable key={item} onPress={onPress} style={[styles.tag, { backgroundColor: tagColor }]}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={[theme.textVariants.uiS, { color: theme.colors.textPrimary }]}>{item}</Text>
-          {selected && (
-            <MaterialCommunityIcons
-              name={'close-thick'}
-              size={17}
-              color={theme.colors.textPrimary}
-            />
-          )}
-        </View>
-      </Pressable>
-    ));
-  }
+  const TagComponent = larger ? styles.tagL : styles.tag;
+
+  return tags.map((item) => (
+    <Pressable key={item} onPress={onPress} style={[TagComponent, { backgroundColor: tagColor }]}>
+      <MemoizedTagContent item={item} selected={selected} />
+    </Pressable>
+  ));
 }
 
 const styles = StyleSheet.create({

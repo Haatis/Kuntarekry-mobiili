@@ -1,5 +1,7 @@
-import React from 'react';
-import { View, FlatList } from 'react-native';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+import React, { useMemo, useEffect, useState } from 'react';
+import { View, FlatList, ScrollView } from 'react-native';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import { Text } from 'react-native';
 import { theme } from '../styles/theme';
@@ -18,52 +20,51 @@ export function DrawerContent({ setIsDrawerOpen }) {
   const { organisations } = useJobOrganisations();
   const jobsLength = jobs.length;
   const { locations } = useJobLocations();
-  const [selectedCategory, setSelectedCategory] = React.useState(null);
-  const [selectedTab, setSelectedTab] = React.useState(null);
-  const [selectedFilters, setSelectedFilters] = React.useState([]);
-  const [selectedTaskCount, setSelectedTaskCount] = React.useState(0);
-  const [selectedLocationCount, setSelectedLocationCount] = React.useState(0);
-  const [selectedOrganisationCount, setSelectedOrganisationCount] = React.useState(0);
-  const [selectedTypeCount, setSelectedTypeCount] = React.useState(0);
-  const [selectedEmploymentCount, setSelectedEmploymentCount] = React.useState(0);
-  const [selectedEmploymentTypeCount, setSelectedEmploymentTypeCount] = React.useState(0);
-  const [selectedLanguageCount, setSelectedLanguageCount] = React.useState(0);
-  const jobTypes = [
-    'Työpaikka',
-    'Keikkatyö',
-    'Kesätyö',
-    'Harjoittelu',
-    'Oppisopimus',
-    'Työkokeilu',
-    'Anonyymi',
-    'Työsuhde',
-    'Virkasuhde',
-    'Avoin haku',
-  ];
-  const employment = ['Kokoaikatyö', 'Osa-aikatyö', '3-vuorotyö', 'Tuntityö', '2-vuorotyö'];
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedTab, setSelectedTab] = useState(null);
+  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedTaskCount, setSelectedTaskCount] = useState(0);
+  const [selectedOrganisationCount, setSelectedOrganisationCount] = useState(0);
+  const [selectedLocationCount, setSelectedLocationCount] = useState(0);
+  const [selectedEmploymentCount, setSelectedEmploymentCount] = useState(0);
+  const [selectedEmploymentTypeCount, setSelectedEmploymentTypeCount] = useState(0);
+  const [selectedLanguageCount, setSelectedLanguageCount] = useState(0);
+  const [selectedTypeCount, setSelectedTypeCount] = useState(0);
 
-  const employmentType = ['Vakinainen', 'Määräaikainen'];
+  const jobTypes = useMemo(
+    () => [
+      'Työpaikka',
+      'Keikkatyö',
+      'Kesätyö',
+      'Harjoittelu',
+      'Oppisopimus',
+      'Työkokeilu',
+      'Anonyymi',
+      'Työsuhde',
+      'Virkasuhde',
+      'Avoin haku',
+    ],
+    []
+  );
+  const employment = useMemo(
+    () => ['Kokoaikatyö', 'Osa-aikatyö', '3-vuorotyö', 'Tuntityö', '2-vuorotyö'],
+    []
+  );
+  const employmentType = useMemo(() => ['Vakinainen', 'Määräaikainen'], []);
+  const language = useMemo(() => ['Suomi', 'Svenska', 'English'], []);
 
-  const language = ['Suomi', 'Svenska', 'English'];
-
-  React.useEffect(() => {
+  useEffect(() => {
     setIsDrawerOpen(drawerStatus === 'open');
   }, [drawerStatus, setIsDrawerOpen]);
 
   const handleOpenCategory = (categoryName) => {
-    if (selectedCategory === categoryName) {
-      setSelectedCategory(null);
-    } else {
-      setSelectedCategory(categoryName);
-    }
+    setSelectedCategory((prevSelectedCategory) =>
+      prevSelectedCategory === categoryName ? null : categoryName
+    );
   };
 
   const handleOpenTab = (tabName) => {
-    if (selectedTab === tabName) {
-      setSelectedTab(null);
-    } else {
-      setSelectedTab(tabName);
-    }
+    setSelectedTab((prevSelectedTab) => (prevSelectedTab === tabName ? null : tabName));
   };
 
   const selectParentFilter = (filter, children, type) => {
@@ -73,13 +74,13 @@ export function DrawerContent({ setIsDrawerOpen }) {
       )
     );
 
-    const isParentSelected = selectedFilters.some((item) => item.filter === filter);
+    setSelectedFilters((prevFilters) => {
+      const isParentSelected = prevFilters.some((item) => item.filter === filter);
 
-    setSelectedFilters((prevFilters) =>
-      isParentSelected
+      return isParentSelected
         ? prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
-        : [...prevFilters, { filter, type }]
-    );
+        : [...prevFilters, { filter, type }];
+    });
   };
 
   const selectChildFilter = (filter, parent, type) => {
@@ -87,28 +88,31 @@ export function DrawerContent({ setIsDrawerOpen }) {
       prevFilters.filter((selectedFilter) => selectedFilter.filter !== parent)
     );
 
-    const isChildSelected = selectedFilters.some((item) => item.filter === filter);
+    setSelectedFilters((prevFilters) => {
+      const isChildSelected = prevFilters.some((item) => item.filter === filter);
 
-    setSelectedFilters((prevFilters) =>
-      isChildSelected
+      return isChildSelected
         ? prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
-        : [...prevFilters, { filter, type }]
-    );
+        : [...prevFilters, { filter, type }];
+    });
   };
 
   const selectFilter = (filter, type) => {
-    const isSelected = selectedFilters.some((item) => item.filter === filter);
+    setSelectedFilters((prevFilters) => {
+      const updatedFilters = new Set(prevFilters.map((item) => item.filter));
 
-    setSelectedFilters((prevFilters) =>
-      isSelected
-        ? prevFilters.filter((item) => item.filter !== filter)
-        : [...prevFilters, { filter, type }]
-    );
+      if (updatedFilters.has(filter)) {
+        updatedFilters.delete(filter);
+      } else {
+        updatedFilters.add(filter);
+      }
+
+      return Array.from(updatedFilters).map((filter) => ({ filter, type }));
+    });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     countTypes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFilters]);
 
   const countTypes = () => {
@@ -130,144 +134,148 @@ export function DrawerContent({ setIsDrawerOpen }) {
     setSelectedTypeCount(typeCount);
     setSelectedLanguageCount(languageCount);
   };
-  const jobTasks = tasks
-    .filter((task) => !task.parent)
-    .map((task) => ({
-      name: task.name,
-      children: tasks
-        .filter((subTask) => subTask.parent === task.id)
-        .map((subTask) => ({ name: subTask.name, parent: task.name })),
-    }));
 
-  const jobLocations = locations
-    .filter((location) => !location.parent)
-    .map((location) => ({
-      name: location.name,
-      children: locations
-        .filter((subLocation) => subLocation.parent === location.id)
-        .map((subLocation) => ({ name: subLocation.name, parent: location.name })),
-    }));
+  const jobTasks = useMemo(() => {
+    return tasks
+      .filter((task) => !task.parent)
+      .map((task) => ({
+        name: task.name,
+        children: tasks
+          .filter((subTask) => subTask.parent === task.id)
+          .map((subTask) => ({ name: subTask.name, parent: task.name })),
+      }));
+  }, [tasks]);
 
-  const jobOrganisations = organisations.map((org) => org.name);
+  const jobLocations = useMemo(() => {
+    return locations
+      .filter((location) => !location.parent)
+      .map((location) => ({
+        name: location.name,
+        children: locations
+          .filter((subLocation) => subLocation.parent === location.id)
+          .map((subLocation) => ({ name: subLocation.name, parent: location.name })),
+      }));
+  }, [locations]);
 
-  const sortedOrganisations = {};
-  for (let i = 0; i < jobOrganisations.length; i++) {
-    const firstLetter = jobOrganisations[i][0];
-    if (sortedOrganisations[firstLetter]) {
-      sortedOrganisations[firstLetter].push(jobOrganisations[i]);
-    } else {
-      sortedOrganisations[firstLetter] = [jobOrganisations[i]];
+  const jobOrganisations = useMemo(() => organisations.map((org) => org.name), [organisations]);
+
+  const sortedOrganisations = useMemo(() => {
+    const sortedOrgs = {};
+    for (const orgName of jobOrganisations) {
+      const firstLetter = orgName[0];
+      if (sortedOrgs[firstLetter]) {
+        sortedOrgs[firstLetter].push(orgName);
+      } else {
+        sortedOrgs[firstLetter] = [orgName];
+      }
     }
-  }
+    return sortedOrgs;
+  }, [jobOrganisations]);
 
-  const sortedLetters = Object.keys(sortedOrganisations);
+  const sortedLetters = useMemo(() => Object.keys(sortedOrganisations), [sortedOrganisations]);
 
   return (
-    <FlatList
-      ListHeaderComponent={() => (
-        <View style={{ marginLeft: 16, marginTop: 16, marginRight: 16 }}>
-          {selectedFilters.length > 0 && (
-            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Valitut suodattimet</Text>
-          )}
-          <View style={styles.tagRow}>
-            {selectedFilters.map((filter) => (
-              <Tag
-                key={filter.filter}
-                tagColor={theme.colors.tag1}
-                tagText={filter.filter}
-                onPress={() => selectFilter(filter.filter, filter.type)}
-                selected={selectedFilters.some(
-                  (selectedFilter) => selectedFilter.filter === filter.filter
-                )}
-              />
-            ))}
-          </View>
-          <View style={{ marginTop: 16 }}>
-            <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset {jobsLength} </Text>
-          </View>
-          <FilterTab
-            currentTab={'Tehtäväalueet'}
-            handleOpenTab={handleOpenTab}
-            selectedTab={selectedTab}
-            selectedTaskCount={selectedTaskCount}
-            jobTasks={jobTasks}
-            selectedFilters={selectedFilters}
-            selectParentFilter={selectParentFilter}
-            selectedCategory={selectedCategory}
-            handleOpenCategory={handleOpenCategory}
-            selectChildFilter={selectChildFilter}
-          />
-          <FilterTab
-            currentTab={'Sijainti'}
-            handleOpenTab={handleOpenTab}
-            selectedTab={selectedTab}
-            selectedTaskCount={selectedLocationCount}
-            jobTasks={jobLocations}
-            selectedFilters={selectedFilters}
-            selectParentFilter={selectParentFilter}
-            selectedCategory={selectedCategory}
-            handleOpenCategory={handleOpenCategory}
-            selectChildFilter={selectChildFilter}
-          />
-          <FilterTab
-            currentTab={'Työnantaja'}
-            handleOpenTab={handleOpenTab}
-            selectedTab={selectedTab}
-            selectedTaskCount={selectedOrganisationCount} // Update prop name here
-            sortedLetters={sortedLetters}
-            jobTasks={sortedOrganisations}
-            selectedFilters={selectedFilters}
-            selectParentFilter={selectParentFilter}
-            selectedCategory={selectedCategory}
-            handleOpenCategory={handleOpenCategory}
-            selectChildFilter={selectFilter}
-          />
-
-          <DrawerTab
-            tabName="Tyyppi"
-            selectedTab={selectedTab}
-            handleOpenTab={handleOpenTab}
-            count={selectedTypeCount}
-            data={jobTypes}
-            selectFilter={selectFilter}
-            selectedFilters={selectedFilters}
-            theme={theme}
-          />
-          <DrawerTab
-            tabName="Työsuhde"
-            selectedTab={selectedTab}
-            handleOpenTab={handleOpenTab}
-            count={selectedEmploymentCount}
-            data={employment}
-            selectFilter={selectFilter}
-            selectedFilters={selectedFilters}
-            theme={theme}
-          />
-          <DrawerTab
-            tabName="Työn luonne"
-            selectedTab={selectedTab}
-            handleOpenTab={handleOpenTab}
-            count={selectedEmploymentTypeCount}
-            data={employmentType}
-            selectFilter={selectFilter}
-            selectedFilters={selectedFilters}
-            theme={theme}
-          />
-          <DrawerTab
-            tabName="Kieli"
-            selectedTab={selectedTab}
-            handleOpenTab={handleOpenTab}
-            count={selectedLanguageCount}
-            data={language}
-            selectFilter={selectFilter}
-            selectedFilters={selectedFilters}
-            theme={theme}
-          />
+    <ScrollView>
+      <View style={{ marginLeft: 16, marginTop: 16, marginRight: 16 }}>
+        {selectedFilters.length > 0 && (
+          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Valitut suodattimet</Text>
+        )}
+        <View style={styles.tagRow}>
+          {selectedFilters.map((filter) => (
+            <Tag
+              key={filter.filter}
+              tagColor={theme.colors.tag1}
+              tagText={filter.filter}
+              onPress={() => selectFilter(filter.filter, filter.type)}
+              selected={selectedFilters.some(
+                (selectedFilter) => selectedFilter.filter === filter.filter
+              )}
+            />
+          ))}
         </View>
-      )}
-      data={[]}
-      renderItem={() => null}
-    />
+        <View style={{ marginTop: 16 }}>
+          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset {jobsLength} </Text>
+        </View>
+        <FilterTab
+          currentTab={'Tehtäväalueet'}
+          handleOpenTab={handleOpenTab}
+          selectedTab={selectedTab}
+          selectedTaskCount={selectedTaskCount}
+          jobTasks={jobTasks}
+          selectedFilters={selectedFilters}
+          selectParentFilter={selectParentFilter}
+          selectedCategory={selectedCategory}
+          handleOpenCategory={handleOpenCategory}
+          selectChildFilter={selectChildFilter}
+        />
+        <FilterTab
+          currentTab={'Sijainti'}
+          handleOpenTab={handleOpenTab}
+          selectedTab={selectedTab}
+          selectedTaskCount={selectedLocationCount}
+          jobTasks={jobLocations}
+          selectedFilters={selectedFilters}
+          selectParentFilter={selectParentFilter}
+          selectedCategory={selectedCategory}
+          handleOpenCategory={handleOpenCategory}
+          selectChildFilter={selectChildFilter}
+        />
+        <FilterTab
+          currentTab={'Työnantaja'}
+          handleOpenTab={handleOpenTab}
+          selectedTab={selectedTab}
+          selectedTaskCount={selectedOrganisationCount} // Update prop name here
+          sortedLetters={sortedLetters}
+          jobTasks={sortedOrganisations}
+          selectedFilters={selectedFilters}
+          selectParentFilter={selectParentFilter}
+          selectedCategory={selectedCategory}
+          handleOpenCategory={handleOpenCategory}
+          selectChildFilter={selectFilter}
+        />
+
+        <DrawerTab
+          tabName="Tyyppi"
+          selectedTab={selectedTab}
+          handleOpenTab={handleOpenTab}
+          count={selectedTypeCount}
+          data={jobTypes}
+          selectFilter={selectFilter}
+          selectedFilters={selectedFilters}
+          theme={theme}
+        />
+        <DrawerTab
+          tabName="Työsuhde"
+          selectedTab={selectedTab}
+          handleOpenTab={handleOpenTab}
+          count={selectedEmploymentCount}
+          data={employment}
+          selectFilter={selectFilter}
+          selectedFilters={selectedFilters}
+          theme={theme}
+        />
+        <DrawerTab
+          tabName="Työn luonne"
+          selectedTab={selectedTab}
+          handleOpenTab={handleOpenTab}
+          count={selectedEmploymentTypeCount}
+          data={employmentType}
+          selectFilter={selectFilter}
+          selectedFilters={selectedFilters}
+          theme={theme}
+        />
+        <DrawerTab
+          tabName="Kieli"
+          selectedTab={selectedTab}
+          handleOpenTab={handleOpenTab}
+          count={selectedLanguageCount}
+          data={language}
+          selectFilter={selectFilter}
+          selectedFilters={selectedFilters}
+          theme={theme}
+        />
+      </View>
+    </ScrollView>
   );
 }
 
