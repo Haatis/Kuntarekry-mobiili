@@ -60,12 +60,12 @@ export default function CardScreen() {
   };
 
   const closeModal = () => {
+    updateIndex();
     Animated.spring(modalY, {
       toValue: SCREEN_HEIGHT,
       useNativeDriver: true,
     }).start(() => {
       setShowModal(false);
-      updateIndex();
     });
   };
 
