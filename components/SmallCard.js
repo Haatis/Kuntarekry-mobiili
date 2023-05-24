@@ -1,15 +1,14 @@
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Tag from './Tags/Tag';
 import { useNavigation } from '@react-navigation/native';
 import { memo, useState } from 'react';
+import TagRow from './TagRow';
 
 export default memo(SmallCard);
 function SmallCard({ job, cardType }) {
   const imgNumber = job.organization?.length;
   const navigation = useNavigation();
-  const [showAllTags, setShowAllTags] = useState(false);
   const imageURL = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
   const [rowWidth, setRowWidth] = useState(0);
   const [contentWidth, setContentWidth] = useState(0);
@@ -20,58 +19,6 @@ function SmallCard({ job, cardType }) {
   const trimmedDesc = job.jobDesc?.trim().replace(/\s+/g, ' ');
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
 
-  function TagRow() {
-    if (showAllTags) {
-      return (
-        <>
-          <View style={styles.tagsAll}>
-            <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
-            <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
-            <Tag tagColor={theme.colors.tag1} tagText={job.location} />
-          </View>
-          <TouchableOpacity
-            style={{
-              borderWidth: 1,
-              borderColor: theme.colors.outlineDark,
-              borderRadius: 99,
-              height: 24,
-            }}
-            onPress={() => setShowAllTags(!showAllTags)}
-          >
-            <MaterialCommunityIcons name="chevron-up" size={24} color="black" />
-          </TouchableOpacity>
-        </>
-      );
-    } else if (contentWidth > rowWidth) {
-      return (
-        <>
-          <View style={styles.tagsLong}>
-            <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
-            <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
-            <Tag tagColor={theme.colors.tag1} tagText={job.location} />
-          </View>
-          <TouchableOpacity
-            style={{
-              borderWidth: 1,
-              borderColor: theme.colors.outlineDark,
-              borderRadius: 99,
-            }}
-            onPress={() => setShowAllTags(!showAllTags)}
-          >
-            <MaterialCommunityIcons name="chevron-down" size={24} color="black" />
-          </TouchableOpacity>
-        </>
-      );
-    } else {
-      return (
-        <View style={styles.tagsShort}>
-          <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
-          <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
-          <Tag tagColor={theme.colors.tag1} tagText={job.location} />
-        </View>
-      );
-    }
-  }
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('JobScreen', { job: job })}
@@ -114,7 +61,7 @@ function SmallCard({ job, cardType }) {
           style={styles.tagRow}
           onLayout={(event) => setContentWidth(event.nativeEvent.layout.width)}
         >
-          <TagRow />
+          <TagRow contentWidth={contentWidth} rowWidth={rowWidth} job={job} />
         </View>
         <Text numberOfLines={4} style={[theme.textVariants.textM, styles.description]}>
           {trimmedDesc}
@@ -184,23 +131,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     paddingHorizontal: 24,
-  },
-  tagsAll: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    width: '100%',
-  },
-  tagsLong: {
-    flexDirection: 'row',
-    gap: 8,
-    maxWidth: '100%',
-    overflow: 'hidden',
-  },
-  tagsShort: {
-    flexDirection: 'row',
-    gap: 8,
-    overflow: 'hidden',
   },
   textContainer: {
     borderTopLeftRadius: 8,
