@@ -26,9 +26,9 @@ function SearchContent({ navigation }) {
   return (
     <>
       <FlatList
+        ListHeaderComponent={<View style={{ marginTop: 66 }}></View>}
         contentContainerStyle={{
           paddingHorizontal: 8,
-          marginTop: 66,
         }}
         data={filteredJobs}
         renderItem={({ item, index }) => <SmallCard key={index} job={item.jobAdvertisement} />}
