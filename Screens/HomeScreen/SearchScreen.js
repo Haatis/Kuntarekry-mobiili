@@ -4,25 +4,51 @@ import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 import { useFilters } from '../../hooks/usejobfilters';
+import { useMemo } from 'react';
 
 function SearchContent({ navigation }) {
   const { jobs } = useJobAdvertisements();
   const { selectedFilters } = useFilters();
 
-  const filteredJobs = jobs.filter((job) => {
+  const filteredJobs = useMemo(() => {
     if (selectedFilters.length === 0) {
-      return true;
+      return jobs; // Return all jobs if no filters are selected
     }
 
-    return selectedFilters.some((filter) => {
-      if (filter.type === 'Sijainti') {
-        return job.jobAdvertisement.location === filter.filter;
-      }
+    const matchingSijaintiFilters = selectedFilters.filter((filter) => filter.type === 'Sijainti');
+    const matchingTehtavaalueetFilters = selectedFilters.filter(
+      (filter) => filter.type === 'Tehtäväalueet'
+    );
 
-      return true;
+    return jobs.filter((job) => {
+      const hasMatchingSijainti =
+        matchingSijaintiFilters.length === 0 ||
+        matchingSijaintiFilters.some((filter) => {
+          if (filter.children) {
+            const childrenFilters = filter.children.map((child) => child.name);
+            return childrenFilters.includes(job.jobAdvertisement.location);
+          } else {
+            return job.jobAdvertisement.location === filter.filter;
+          }
+        });
+
+      const hasMatchingTehtavaalueet =
+        matchingTehtavaalueetFilters.length === 0 ||
+        matchingTehtavaalueetFilters.some((filter) => {
+          if (filter.children) {
+            const childrenFilters = filter.children.map((child) => child.name);
+            return childrenFilters.includes(job.jobAdvertisement.taskArea);
+          } else {
+            return job.jobAdvertisement.taskArea === filter.filter;
+          }
+        });
+
+      return (
+        (hasMatchingSijainti && matchingTehtavaalueetFilters.length === 0) ||
+        (hasMatchingSijainti && hasMatchingTehtavaalueet)
+      );
     });
-  });
-
+  }, [jobs, selectedFilters]);
   return (
     <>
       <FlatList
@@ -48,11 +74,13 @@ function SearchContent({ navigation }) {
                 color={theme.colors.textPrimary}
                 onPress={() => navigation.openDrawer()}
               />
-              <View style={styles.filterCircle}>
-                {selectedFilters.length > 0 && (
-                  <Text style={styles.filterCount}>{selectedFilters.length}</Text>
-                )}
-              </View>
+              {selectedFilters.length > 0 && (
+                <View style={styles.filterCircle}>
+                  {selectedFilters.length > 0 && (
+                    <Text style={styles.filterCount}>{selectedFilters.length}</Text>
+                  )}
+                </View>
+              )}
             </Pressable>
           </View>
         </View>
