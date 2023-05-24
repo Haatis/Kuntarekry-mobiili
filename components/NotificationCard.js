@@ -1,15 +1,18 @@
 import { Pressable, Image, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Tag from './Tags/Tag';
+import { useState } from 'react';
+import TagRow from './TagRow';
 
 export default function Notification({ job, cardType }) {
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
   const publicationStarts = new Date(job.publicationStarts)?.toLocaleDateString('fi-FI');
 
   const imgNumber = job.organization.length;
-
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
+
+  const [rowWidth, setRowWidth] = useState(0);
+  const [contentWidth, setContentWidth] = useState(0);
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
@@ -47,12 +50,15 @@ export default function Notification({ job, cardType }) {
           }[cardType]
         }
       </View>
-      <View style={styles.cardBottom}>
-        <View style={styles.tagRow}>
-          <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />
-          <Tag tagColor={theme.colors.tag1} tagText="Kokoaikatyö" />
-          <Tag tagColor={theme.colors.tag1} tagText="Suomi" />
-          <MaterialCommunityIcons name="chevron-down" size={24} color="black" />
+      <View
+        style={styles.cardBottom}
+        onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
+      >
+        <View
+          style={styles.tagRow}
+          onLayout={(event) => setContentWidth(event.nativeEvent.layout.width)}
+        >
+          <TagRow contentWidth={contentWidth} rowWidth={rowWidth} job={job} />
         </View>
         <View style={styles.dateTextContainer}>
           <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
@@ -109,6 +115,7 @@ const styles = StyleSheet.create({
   tagRow: {
     flexDirection: 'row',
     gap: 8,
+    paddingHorizontal: 24,
   },
   textContainer: {
     borderTopLeftRadius: 8,
