@@ -16,7 +16,7 @@ export default function TagDropDown({ tagColor, tagText, onPress, onPress2, sele
         style={[
           theme.textVariants.uiS,
           {
-            color: theme.colors.textPrimary,
+            color: selected2 ? 'white' : theme.colors.textPrimary,
             borderRadius: 4,
             paddingHorizontal: 8,
             paddingVertical: 8,
@@ -36,9 +36,17 @@ export default function TagDropDown({ tagColor, tagText, onPress, onPress2, sele
         }}
       >
         {selected ? (
-          <MaterialCommunityIcons name="chevron-up" size={17} color={theme.colors.textPrimary} />
+          <MaterialCommunityIcons
+            name="chevron-up"
+            size={17}
+            color={selected2 ? 'white' : theme.colors.textPrimary}
+          />
         ) : (
-          <MaterialCommunityIcons name="chevron-down" size={17} color={theme.colors.textPrimary} />
+          <MaterialCommunityIcons
+            name="chevron-down"
+            size={17}
+            color={selected2 ? 'white' : theme.colors.textPrimary}
+          />
         )}
       </Pressable>
     </Pressable>

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useMemo, useEffect, useState } from 'react';
-import { View, FlatList, ScrollView } from 'react-native';
+import { View, ScrollView, StatusBar } from 'react-native';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import { Text } from 'react-native';
 import { theme } from '../styles/theme';
@@ -13,7 +13,7 @@ import DrawerTab from './DrawerTab';
 import { useJobLocations } from '../hooks/uselocations';
 import FilterTab from './FilterTab';
 
-export function DrawerContent({ setIsDrawerOpen }) {
+export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const drawerStatus = useDrawerStatus();
   const { tasks } = useJobTasks();
   const { jobs } = useJobAdvertisements();
@@ -54,8 +54,10 @@ export function DrawerContent({ setIsDrawerOpen }) {
   const language = useMemo(() => ['Suomi', 'Svenska', 'English'], []);
 
   useEffect(() => {
+    const drawerStatus = 'open';
     setIsDrawerOpen(drawerStatus === 'open');
-  }, [drawerStatus, setIsDrawerOpen]);
+    onStatusChange(drawerStatus, selectedFilters);
+  }, [selectedFilters, setIsDrawerOpen, onStatusChange]);
 
   const handleOpenCategory = (categoryName) => {
     setSelectedCategory((prevSelectedCategory) =>
@@ -173,10 +175,10 @@ export function DrawerContent({ setIsDrawerOpen }) {
   }, [jobOrganisations]);
 
   const sortedLetters = useMemo(() => Object.keys(sortedOrganisations), [sortedOrganisations]);
-
+  let statusbarHeight = StatusBar.currentHeight;
   return (
-    <ScrollView>
-      <View style={{ marginLeft: 16, marginTop: 16, marginRight: 16 }}>
+    <ScrollView style={{ marginTop: statusbarHeight }}>
+      <View style={{ marginLeft: 16, marginBottom: 16, marginRight: 16 }}>
         {selectedFilters.length > 0 && (
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Valitut suodattimet</Text>
         )}
