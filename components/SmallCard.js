@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -20,7 +20,7 @@ function SmallCard({ job, cardType }) {
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => navigation.navigate('JobScreen', { job: job })}
       style={[theme.outline, theme.dropShadow, styles.card]}
     >
@@ -79,7 +79,7 @@ function SmallCard({ job, cardType }) {
           </Text>
         )}
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     borderRadius: 8,
-    marginBottom: 8,
     width: '100%',
   },
   cardBottom: {

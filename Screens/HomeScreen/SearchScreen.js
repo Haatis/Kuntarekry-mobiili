@@ -4,6 +4,7 @@ import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 import { useFilters } from '../../hooks/usejobfilters';
+import SwipeableRow from '../../components/SwipeableRow';
 
 function SearchContent({ navigation }) {
   const { jobs } = useJobAdvertisements();
@@ -26,12 +27,17 @@ function SearchContent({ navigation }) {
   return (
     <>
       <FlatList
-        ListHeaderComponent={<View style={{ marginTop: 66 }}></View>}
+        ListHeaderComponent={<View style={{ marginTop: 58 }}></View>}
         contentContainerStyle={{
           paddingHorizontal: 8,
+          gap: 4,
         }}
         data={filteredJobs}
-        renderItem={({ item, index }) => <SmallCard key={index} job={item.jobAdvertisement} />}
+        renderItem={({ item, index }) => (
+          <SwipeableRow>
+            <SmallCard key={index} job={item.jobAdvertisement} />
+          </SwipeableRow>
+        )}
       />
       <View style={{ position: 'absolute', width: '100%', paddingHorizontal: 8 }}>
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
