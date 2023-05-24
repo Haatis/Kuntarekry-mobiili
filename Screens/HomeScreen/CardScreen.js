@@ -121,7 +121,7 @@ export default function CardScreen() {
       <View style={styles.container}>
         {currentItems
           .map((job, i) => {
-            if (i < topCardIndex) {
+            if (i < topCardIndex || i > topCardIndex + 1) {
               return null;
             } else if (i == topCardIndex) {
               return (
