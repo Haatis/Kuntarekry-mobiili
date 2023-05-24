@@ -24,9 +24,9 @@ const FilterTab = ({
             {currentTab} {selectedTaskCount !== 0 ? selectedTaskCount : ''}
           </Text>
           {selectedTab === currentTab ? (
-            <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
+            <MaterialCommunityIcons name="chevron-up" size={30} color="white" />
           ) : (
-            <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
+            <MaterialCommunityIcons name="chevron-down" size={30} color="white" />
           )}
         </Pressable>
         {selectedTab === currentTab &&
@@ -76,9 +76,9 @@ const FilterTab = ({
             {currentTab} {selectedTaskCount !== 0 ? selectedTaskCount : ''}
           </Text>
           {selectedTab === currentTab ? (
-            <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
+            <MaterialCommunityIcons name="chevron-up" size={30} color="white" />
           ) : (
-            <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
+            <MaterialCommunityIcons name="chevron-down" size={30} color="white" />
           )}
         </Pressable>
         {selectedTab === currentTab && (

@@ -199,7 +199,7 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset {jobsLength} </Text>
         </View>
         <FilterTab
-          currentTab={'Tehtäväalueet'}
+          currentTab="Tehtäväalueet"
           handleOpenTab={handleOpenTab}
           selectedTab={selectedTab}
           selectedTaskCount={selectedTaskCount}
@@ -211,7 +211,7 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
           selectChildFilter={selectChildFilter}
         />
         <FilterTab
-          currentTab={'Sijainti'}
+          currentTab="Sijainti"
           handleOpenTab={handleOpenTab}
           selectedTab={selectedTab}
           selectedTaskCount={selectedLocationCount}
@@ -223,7 +223,7 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
           selectChildFilter={selectChildFilter}
         />
         <FilterTab
-          currentTab={'Työnantaja'}
+          currentTab="Työnantaja"
           handleOpenTab={handleOpenTab}
           selectedTab={selectedTab}
           selectedTaskCount={selectedOrganisationCount} // Update prop name here
