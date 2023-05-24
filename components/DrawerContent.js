@@ -81,7 +81,7 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
 
       return isParentSelected
         ? prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
-        : [...prevFilters, { filter, type }];
+        : [...prevFilters, { filter, type, children }];
     });
   };
 
@@ -95,7 +95,7 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
 
       return isChildSelected
         ? prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
-        : [...prevFilters, { filter, type }];
+        : [...prevFilters, { filter, type, parent }];
     });
   };
 
@@ -188,7 +188,15 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
               key={filter.filter}
               tagColor={theme.colors.tag1}
               tagText={filter.filter}
-              onPress={() => selectFilter(filter.filter, filter.type)}
+              onPress={() => {
+                if (filter.parent) {
+                  selectChildFilter(filter.filter, filter.parent, filter.type);
+                } else if (filter.children) {
+                  selectParentFilter(filter.filter, filter.children, filter.type);
+                } else {
+                  selectFilter(filter.filter, filter.type);
+                }
+              }}
               selected={selectedFilters.some(
                 (selectedFilter) => selectedFilter.filter === filter.filter
               )}
