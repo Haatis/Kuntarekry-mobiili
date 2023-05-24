@@ -2,19 +2,20 @@ import { Image, ImageBackground, StyleSheet, Text, View, TouchableOpacity } from
 import { theme } from '../styles/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Tag from './Tags/Tag';
 import { useNavigation } from '@react-navigation/native';
+import TagRow from './TagRow';
+import { useState } from 'react';
 
 export default function SwipeableCard({ job }) {
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
-
   const navigation = useNavigation();
 
   const imgNumber = job.organization?.length;
-
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
-
   const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job`;
+
+  const [rowWidth, setRowWidth] = useState(0);
+  const [contentWidth, setContentWidth] = useState(0);
 
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
@@ -54,15 +55,18 @@ export default function SwipeableCard({ job }) {
           </LinearGradient>
         </LinearGradient>
       </ImageBackground>
-      <View style={styles.cardBottom}>
+      <View
+        style={styles.cardBottom}
+        onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
+      >
         <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
           Haku päättyy: {publicationEnds}
         </Text>
-        <View style={styles.tagRow}>
-          <Tag tagColor={theme.colors.tag2} tagText="Vakinainen" />
-          <Tag tagColor={theme.colors.tag1} tagText="Kokoaikatyö" />
-          <Tag tagColor={theme.colors.tag1} tagText="Suomi" />
-          <MaterialCommunityIcons name="chevron-down" size={24} color="black" />
+        <View
+          style={styles.tagRow}
+          onLayout={(event) => setContentWidth(event.nativeEvent.layout.width)}
+        >
+          <TagRow contentWidth={contentWidth} rowWidth={rowWidth} job={job} />
         </View>
         <Text
           numberOfLines={7}
@@ -146,6 +150,7 @@ const styles = StyleSheet.create({
   tagRow: {
     flexDirection: 'row',
     gap: 8,
+    paddingHorizontal: 24,
   },
   textContainer: {
     borderTopLeftRadius: 8,

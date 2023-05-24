@@ -38,13 +38,13 @@ export default function TagDropDown({ tagColor, tagText, onPress, onPress2, sele
         {selected ? (
           <MaterialCommunityIcons
             name="chevron-up"
-            size={17}
+            size={16}
             color={selected2 ? 'white' : theme.colors.textPrimary}
           />
         ) : (
           <MaterialCommunityIcons
             name="chevron-down"
-            size={17}
+            size={16}
             color={selected2 ? 'white' : theme.colors.textPrimary}
           />
         )}

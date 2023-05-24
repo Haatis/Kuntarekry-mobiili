@@ -19,9 +19,9 @@ const DrawerTab = ({
           {tabName} {count !== 0 ? count : ''}
         </Text>
         {selectedTab === tabName ? (
-          <MaterialCommunityIcons name={'chevron-up'} size={30} color={'white'} />
+          <MaterialCommunityIcons name="chevron-up" size={30} color="white" />
         ) : (
-          <MaterialCommunityIcons name={'chevron-down'} size={30} color={'white'} />
+          <MaterialCommunityIcons name="chevron-down" size={30} color="white" />
         )}
       </Pressable>
       {selectedTab === tabName && (

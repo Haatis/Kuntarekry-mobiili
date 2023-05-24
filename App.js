@@ -93,6 +93,8 @@ function AppWrapper() {
                   screenOptions={() => ({
                     drawerStyle: {
                       backgroundColor: theme.colors.primary,
+                      borderBottomLeftRadius: 8,
+                      borderTopLeftRadius: 8,
                     },
 
                     drawerPosition: 'right',
