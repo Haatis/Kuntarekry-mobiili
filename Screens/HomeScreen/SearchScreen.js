@@ -3,9 +3,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
+import { useFilters } from '../../hooks/usejobfilters';
 
 function SearchContent({ navigation }) {
   const { jobs } = useJobAdvertisements();
+  const { selectedFilters } = useFilters();
 
   return (
     <>
@@ -20,7 +22,11 @@ function SearchContent({ navigation }) {
       <View style={{ position: 'absolute', width: '100%', paddingHorizontal: 8 }}>
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
           <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
-            Haku: Kaikki ilmoitukset ({jobs.length})
+            Haku:{' '}
+            {selectedFilters.length > 0
+              ? selectedFilters.map((filter) => filter.filter).join(', ')
+              : 'Kaikki ilmoitukset'}{' '}
+            ({jobs.length})
           </Text>
           <View style={{ flexDirection: 'row' }}>
             <MaterialCommunityIcons name="magnify" size={30} color={theme.colors.textPrimary} />

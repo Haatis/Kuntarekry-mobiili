@@ -28,11 +28,11 @@ import { JobAdvertisementProvider } from './hooks/usejobadvertisements';
 import { JobTaskProvider } from './hooks/usejobtasks';
 import { JobLocationProvider } from './hooks/uselocations';
 import { JobOrganisationProvider } from './hooks/usejoborganisations';
+import { FilterProvider } from './hooks/usejobfilters';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
-
 SplashScreen.preventAutoHideAsync().catch(console.warn);
 
 export default function App() {
@@ -49,6 +49,12 @@ function AppWrapper() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const { onboardingDone } = useOnboarding();
+  const [selectedFilters, setSelectedFilters] = useState([]);
+
+  const handleDrawerStatusChange = (status, filters) => {
+    setIsDrawerOpen(status === 'open');
+    setSelectedFilters(filters);
+  };
 
   useEffect(() => {
     async function loadResourcesAndDataAsync() {
@@ -80,37 +86,43 @@ function AppWrapper() {
       <JobTaskProvider>
         <JobLocationProvider>
           <JobOrganisationProvider>
-            <NavigationContainer>
-              <StatusBar style="inverted" />
-              <Drawer.Navigator
-                screenOptions={() => ({
-                  drawerStyle: {
-                    backgroundColor: theme.colors.primary,
-                  },
+            <FilterProvider selectedFilters={selectedFilters}>
+              <NavigationContainer>
+                <StatusBar style="inverted" />
+                <Drawer.Navigator
+                  screenOptions={() => ({
+                    drawerStyle: {
+                      backgroundColor: theme.colors.primary,
+                    },
 
-                  drawerPosition: 'right',
-                  gestureEnabled: false,
-                  swipeEnabled: isDrawerOpen, // enable swipe only when drawer is open
-                })}
-                drawerContent={(props) => (
-                  <DrawerContent {...props} setIsDrawerOpen={setIsDrawerOpen} />
-                )}
-              >
-                {onboardingDone ? (
-                  <Drawer.Screen
-                    name="Search"
-                    component={StackNavigator}
-                    options={{ headerShown: false }}
-                  />
-                ) : (
-                  <Drawer.Screen
-                    name="Onboarding"
-                    component={OnBoardingStackNavigator}
-                    options={{ headerShown: false }}
-                  />
-                )}
-              </Drawer.Navigator>
-            </NavigationContainer>
+                    drawerPosition: 'right',
+                    gestureEnabled: false,
+                    swipeEnabled: isDrawerOpen, // enable swipe only when drawer is open
+                  })}
+                  drawerContent={(props) => (
+                    <DrawerContent
+                      {...props}
+                      setIsDrawerOpen={setIsDrawerOpen}
+                      onStatusChange={handleDrawerStatusChange}
+                    />
+                  )}
+                >
+                  {onboardingDone ? (
+                    <Drawer.Screen
+                      name="Search"
+                      component={StackNavigator}
+                      options={{ headerShown: false }}
+                    />
+                  ) : (
+                    <Drawer.Screen
+                      name="Onboarding"
+                      component={OnBoardingStackNavigator}
+                      options={{ headerShown: false }}
+                    />
+                  )}
+                </Drawer.Navigator>
+              </NavigationContainer>
+            </FilterProvider>
           </JobOrganisationProvider>
         </JobLocationProvider>
       </JobTaskProvider>
