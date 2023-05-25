@@ -7,18 +7,16 @@ import { Text } from 'react-native';
 import { theme } from '../styles/theme';
 import Tag from './Tags/Tag';
 import { useJobTasks } from '../hooks/usejobtasks';
-import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 import { useJobOrganisations } from '../hooks/usejoborganisations';
 import DrawerTab from './DrawerTab';
 import { useJobLocations } from '../hooks/uselocations';
 import FilterTab from './FilterTab';
+import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 
 export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const drawerStatus = useDrawerStatus();
   const { tasks } = useJobTasks();
-  const { jobs } = useJobAdvertisements();
   const { organisations } = useJobOrganisations();
-  const jobsLength = jobs.length;
   const { locations } = useJobLocations();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
@@ -30,6 +28,46 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const [selectedEmploymentTypeCount, setSelectedEmploymentTypeCount] = useState(0);
   const [selectedLanguageCount, setSelectedLanguageCount] = useState(0);
   const [selectedTypeCount, setSelectedTypeCount] = useState(0);
+  const { jobs } = useJobAdvertisements();
+
+  const filteredJobs = useMemo(() => {
+    if (selectedFilters.length === 0) {
+      return jobs; // Return all jobs if no filters are selected
+    }
+
+    const filterDictionary = selectedFilters.reduce((dict, filter) => {
+      if (!dict[filter.type]) {
+        dict[filter.type] = [];
+      }
+      dict[filter.type].push(filter);
+      return dict;
+    }, {});
+
+    return jobs.filter((job) => {
+      const hasMatchingSijainti =
+        !filterDictionary['Sijainti'] ||
+        filterDictionary['Sijainti'].some((filter) => {
+          if (filter.parent) {
+            return job.jobAdvertisement.location === filter.filter;
+          } else {
+            return job.jobAdvertisement.region === filter.filter;
+          }
+        });
+
+      const hasMatchingTehtavaalueet =
+        !filterDictionary['Tehtäväalueet'] ||
+        filterDictionary['Tehtäväalueet'].some((filter) => {
+          if (filter.children) {
+            const childrenFilters = filter.children.map((child) => child.name);
+            return childrenFilters.includes(job.jobAdvertisement.taskArea);
+          } else {
+            return job.jobAdvertisement.taskArea === filter.filter;
+          }
+        });
+
+      return hasMatchingSijainti && hasMatchingTehtavaalueet;
+    });
+  }, [jobs, selectedFilters]);
 
   const jobTypes = useMemo(
     () => [
@@ -54,10 +92,9 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const language = useMemo(() => ['Suomi', 'Svenska', 'English'], []);
 
   useEffect(() => {
-    const drawerStatus = 'open';
     setIsDrawerOpen(drawerStatus === 'open');
-    onStatusChange(drawerStatus, selectedFilters);
-  }, [selectedFilters, setIsDrawerOpen, onStatusChange]);
+    onStatusChange(drawerStatus, filteredJobs, selectedFilters.length);
+  }, [filteredJobs, setIsDrawerOpen, drawerStatus, selectedFilters.length]);
 
   const handleOpenCategory = (categoryName) => {
     setSelectedCategory((prevSelectedCategory) =>
@@ -189,12 +226,22 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
               tagColor={theme.colors.tag1}
               tagText={filter.filter}
               onPress={() => {
-                if (filter.parent) {
-                  selectChildFilter(filter.filter, filter.parent, filter.type);
-                } else if (filter.children) {
-                  selectParentFilter(filter.filter, filter.children, filter.type);
+                if (filter.type === 'Sijainti') {
+                  if (filter.parent) {
+                    selectChildFilter(filter.filter, filter.type);
+                  } else if (filter.children) {
+                    selectParentFilter(filter.filter, filter.children, filter.type);
+                  } else {
+                    selectFilter(filter.filter, filter.type);
+                  }
                 } else {
-                  selectFilter(filter.filter, filter.type);
+                  if (filter.parent) {
+                    selectChildFilter(filter.filter, filter.parent, filter.type);
+                  } else if (filter.children) {
+                    selectParentFilter(filter.filter, filter.children, filter.type);
+                  } else {
+                    selectFilter(filter.filter, filter.type);
+                  }
                 }
               }}
               selected={selectedFilters.some(
@@ -204,7 +251,9 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
           ))}
         </View>
         <View style={{ marginTop: 16 }}>
-          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>Tulokset {jobsLength} </Text>
+          <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
+            Tulokset {filteredJobs.length}
+          </Text>
         </View>
         <FilterTab
           currentTab="Tehtäväalueet"

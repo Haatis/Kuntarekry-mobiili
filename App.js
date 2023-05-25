@@ -1,7 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 import HomeScreen from './Screens/HomeScreen/HomeScreen';
 import SettingsScreen from './Screens/SettingsScreen/SettingsScreen';
 import ProfileScreen from './Screens/ProfileScreen/ProfileScreen';
@@ -28,7 +27,7 @@ import { JobAdvertisementProvider } from './hooks/usejobadvertisements';
 import { JobTaskProvider } from './hooks/usejobtasks';
 import { JobLocationProvider } from './hooks/uselocations';
 import { JobOrganisationProvider } from './hooks/usejoborganisations';
-import { FilterProvider } from './hooks/usejobfilters';
+import { FilteredJobsProvider } from './hooks/usejobfilters';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -49,10 +48,11 @@ function AppWrapper() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const { onboardingDone } = useOnboarding();
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [filteredJobs, setFilteredjobs] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState(0);
 
-  const handleDrawerStatusChange = (status, filters) => {
-    setIsDrawerOpen(status === 'open');
+  const handleDrawerStatusChange = (status, jobs, filters) => {
+    setFilteredjobs(jobs);
     setSelectedFilters(filters);
   };
 
@@ -86,7 +86,7 @@ function AppWrapper() {
       <JobTaskProvider>
         <JobLocationProvider>
           <JobOrganisationProvider>
-            <FilterProvider selectedFilters={selectedFilters}>
+            <FilteredJobsProvider filteredJobs={filteredJobs} selectedFilters={selectedFilters}>
               <NavigationContainer>
                 <StatusBar style="inverted" />
                 <Drawer.Navigator
@@ -124,7 +124,7 @@ function AppWrapper() {
                   )}
                 </Drawer.Navigator>
               </NavigationContainer>
-            </FilterProvider>
+            </FilteredJobsProvider>
           </JobOrganisationProvider>
         </JobLocationProvider>
       </JobTaskProvider>
