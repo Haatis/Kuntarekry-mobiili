@@ -39,6 +39,13 @@ function SearchContent({ navigation }) {
                 color={theme.colors.textPrimary}
                 onPress={() => navigation.openDrawer()}
               />
+              {filters.selectedFilters > 0 && (
+                <View style={styles.filterCircle}>
+                  {filters.selectedFilters > 0 && (
+                    <Text style={styles.filterCount}>{filters.selectedFilters}</Text>
+                  )}
+                </View>
+              )}
             </Pressable>
           </View>
         </View>

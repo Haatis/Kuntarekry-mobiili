@@ -49,9 +49,11 @@ function AppWrapper() {
   const [isLoaded, setIsLoaded] = useState(false);
   const { onboardingDone } = useOnboarding();
   const [filteredJobs, setFilteredjobs] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState(0);
 
-  const handleDrawerStatusChange = (status, jobs) => {
+  const handleDrawerStatusChange = (status, jobs, filters) => {
     setFilteredjobs(jobs);
+    setSelectedFilters(filters);
   };
 
   useEffect(() => {
@@ -84,7 +86,7 @@ function AppWrapper() {
       <JobTaskProvider>
         <JobLocationProvider>
           <JobOrganisationProvider>
-            <FilteredJobsProvider filteredJobs={filteredJobs}>
+            <FilteredJobsProvider filteredJobs={filteredJobs} selectedFilters={selectedFilters}>
               <NavigationContainer>
                 <StatusBar style="inverted" />
                 <Drawer.Navigator

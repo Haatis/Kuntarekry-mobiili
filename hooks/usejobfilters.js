@@ -2,9 +2,11 @@ import { createContext, useContext } from 'react';
 
 const FilteredJobsContext = createContext();
 
-export function FilteredJobsProvider({ children, filteredJobs }) {
+export function FilteredJobsProvider({ children, filteredJobs, selectedFilters }) {
   return (
-    <FilteredJobsContext.Provider value={{ filteredJobs }}>{children}</FilteredJobsContext.Provider>
+    <FilteredJobsContext.Provider value={{ filteredJobs, selectedFilters }}>
+      {children}
+    </FilteredJobsContext.Provider>
   );
 }
 

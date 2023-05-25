@@ -93,8 +93,8 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
 
   useEffect(() => {
     setIsDrawerOpen(drawerStatus === 'open');
-    onStatusChange(drawerStatus, filteredJobs);
-  }, [filteredJobs, setIsDrawerOpen, drawerStatus]);
+    onStatusChange(drawerStatus, filteredJobs, selectedFilters.length);
+  }, [filteredJobs, setIsDrawerOpen, drawerStatus, selectedFilters.length]);
 
   const handleOpenCategory = (categoryName) => {
     setSelectedCategory((prevSelectedCategory) =>
