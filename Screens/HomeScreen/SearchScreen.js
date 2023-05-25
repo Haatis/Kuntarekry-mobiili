@@ -16,15 +16,18 @@ function SearchContent({ navigation }) {
       return jobs; // Return all jobs if no filters are selected
     }
 
-    const matchingSijaintiFilters = selectedFilters.filter((filter) => filter.type === 'Sijainti');
-    const matchingTehtavaalueetFilters = selectedFilters.filter(
-      (filter) => filter.type === 'Tehtäväalueet'
-    );
+    const filterDictionary = selectedFilters.reduce((dict, filter) => {
+      if (!dict[filter.type]) {
+        dict[filter.type] = [];
+      }
+      dict[filter.type].push(filter);
+      return dict;
+    }, {});
 
     return jobs.filter((job) => {
       const hasMatchingSijainti =
-        matchingSijaintiFilters.length === 0 ||
-        matchingSijaintiFilters.some((filter) => {
+        !filterDictionary['Sijainti'] ||
+        filterDictionary['Sijainti'].some((filter) => {
           if (filter.children) {
             const childrenFilters = filter.children.map((child) => child.name);
             return childrenFilters.includes(job.jobAdvertisement.location);
@@ -34,8 +37,8 @@ function SearchContent({ navigation }) {
         });
 
       const hasMatchingTehtavaalueet =
-        matchingTehtavaalueetFilters.length === 0 ||
-        matchingTehtavaalueetFilters.some((filter) => {
+        !filterDictionary['Tehtäväalueet'] ||
+        filterDictionary['Tehtäväalueet'].some((filter) => {
           if (filter.children) {
             const childrenFilters = filter.children.map((child) => child.name);
             return childrenFilters.includes(job.jobAdvertisement.taskArea);
@@ -44,10 +47,7 @@ function SearchContent({ navigation }) {
           }
         });
 
-      return (
-        (hasMatchingSijainti && matchingTehtavaalueetFilters.length === 0) ||
-        (hasMatchingSijainti && hasMatchingTehtavaalueet)
-      );
+      return hasMatchingSijainti && hasMatchingTehtavaalueet;
     });
   }, [jobs, selectedFilters]);
   return (
@@ -58,6 +58,7 @@ function SearchContent({ navigation }) {
           paddingHorizontal: 8,
           gap: 4,
         }}
+        initialNumToRender={10}
         data={filteredJobs}
         renderItem={({ item, index }) => (
           <SwipeableRow>

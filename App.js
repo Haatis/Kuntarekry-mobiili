@@ -1,7 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 import HomeScreen from './Screens/HomeScreen/HomeScreen';
 import SettingsScreen from './Screens/SettingsScreen/SettingsScreen';
 import ProfileScreen from './Screens/ProfileScreen/ProfileScreen';
@@ -52,7 +51,6 @@ function AppWrapper() {
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const handleDrawerStatusChange = (status, filters) => {
-    setIsDrawerOpen(status === 'open');
     setSelectedFilters(filters);
   };
 

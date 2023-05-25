@@ -54,10 +54,9 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const language = useMemo(() => ['Suomi', 'Svenska', 'English'], []);
 
   useEffect(() => {
-    const drawerStatus = 'open';
     setIsDrawerOpen(drawerStatus === 'open');
     onStatusChange(drawerStatus, selectedFilters);
-  }, [selectedFilters, setIsDrawerOpen, onStatusChange]);
+  }, [selectedFilters, setIsDrawerOpen, drawerStatus]);
 
   const handleOpenCategory = (categoryName) => {
     setSelectedCategory((prevSelectedCategory) =>
