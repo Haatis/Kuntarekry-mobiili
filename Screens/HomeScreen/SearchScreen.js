@@ -2,54 +2,12 @@ import { View, StyleSheet, Text, FlatList, Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
-import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
-import { useFilters } from '../../hooks/usejobfilters';
-import { useMemo } from 'react';
+import { useFilteredJobs } from '../../hooks/usejobfilters';
 import SwipeableRow from '../../components/SwipeableRow';
 
 function SearchContent({ navigation }) {
-  const { jobs } = useJobAdvertisements();
-  const { selectedFilters } = useFilters();
+  const filters = useFilteredJobs();
 
-  const filteredJobs = useMemo(() => {
-    if (selectedFilters.length === 0) {
-      return jobs; // Return all jobs if no filters are selected
-    }
-
-    const filterDictionary = selectedFilters.reduce((dict, filter) => {
-      if (!dict[filter.type]) {
-        dict[filter.type] = [];
-      }
-      dict[filter.type].push(filter);
-      return dict;
-    }, {});
-
-    return jobs.filter((job) => {
-      const hasMatchingSijainti =
-        !filterDictionary['Sijainti'] ||
-        filterDictionary['Sijainti'].some((filter) => {
-          if (filter.children) {
-            const childrenFilters = filter.children.map((child) => child.name);
-            return childrenFilters.includes(job.jobAdvertisement.location);
-          } else {
-            return job.jobAdvertisement.location === filter.filter;
-          }
-        });
-
-      const hasMatchingTehtavaalueet =
-        !filterDictionary['Tehtäväalueet'] ||
-        filterDictionary['Tehtäväalueet'].some((filter) => {
-          if (filter.children) {
-            const childrenFilters = filter.children.map((child) => child.name);
-            return childrenFilters.includes(job.jobAdvertisement.taskArea);
-          } else {
-            return job.jobAdvertisement.taskArea === filter.filter;
-          }
-        });
-
-      return hasMatchingSijainti && hasMatchingTehtavaalueet;
-    });
-  }, [jobs, selectedFilters]);
   return (
     <>
       <FlatList
@@ -58,8 +16,7 @@ function SearchContent({ navigation }) {
           paddingHorizontal: 8,
           gap: 4,
         }}
-        initialNumToRender={10}
-        data={filteredJobs}
+        data={filters.filteredJobs}
         renderItem={({ item, index }) => (
           <SwipeableRow>
             <SmallCard key={index} job={item.jobAdvertisement} />
@@ -69,8 +26,9 @@ function SearchContent({ navigation }) {
       <View style={{ position: 'absolute', width: '100%', paddingHorizontal: 8 }}>
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
           <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
-            Haku: {selectedFilters.length > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'} (
-            {filteredJobs.length})
+            Haku:{' '}
+            {filters.filteredJobs.length > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'} (
+            {filters.filteredJobs.length})
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialCommunityIcons name="magnify" size={30} color={theme.colors.textPrimary} />
@@ -81,13 +39,6 @@ function SearchContent({ navigation }) {
                 color={theme.colors.textPrimary}
                 onPress={() => navigation.openDrawer()}
               />
-              {selectedFilters.length > 0 && (
-                <View style={styles.filterCircle}>
-                  {selectedFilters.length > 0 && (
-                    <Text style={styles.filterCount}>{selectedFilters.length}</Text>
-                  )}
-                </View>
-              )}
             </Pressable>
           </View>
         </View>

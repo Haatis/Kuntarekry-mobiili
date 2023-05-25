@@ -1,13 +1,15 @@
 import { createContext, useContext } from 'react';
 
-const FilterContext = createContext();
+const FilteredJobsContext = createContext();
 
-export function FilterProvider({ children, selectedFilters }) {
-  return <FilterContext.Provider value={{ selectedFilters }}>{children}</FilterContext.Provider>;
+export function FilteredJobsProvider({ children, filteredJobs }) {
+  return (
+    <FilteredJobsContext.Provider value={{ filteredJobs }}>{children}</FilteredJobsContext.Provider>
+  );
 }
 
-export function useFilters() {
-  const context = useContext(FilterContext);
+export function useFilteredJobs() {
+  const context = useContext(FilteredJobsContext);
   if (context === undefined) {
     throw new Error('FilterContext not found');
   }

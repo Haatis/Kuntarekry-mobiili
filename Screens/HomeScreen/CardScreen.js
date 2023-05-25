@@ -82,8 +82,6 @@ export default function CardScreen() {
     });
   };
 
-  console.log('topCardIndex = ' + topCardIndex);
-
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,

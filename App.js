@@ -27,7 +27,7 @@ import { JobAdvertisementProvider } from './hooks/usejobadvertisements';
 import { JobTaskProvider } from './hooks/usejobtasks';
 import { JobLocationProvider } from './hooks/uselocations';
 import { JobOrganisationProvider } from './hooks/usejoborganisations';
-import { FilterProvider } from './hooks/usejobfilters';
+import { FilteredJobsProvider } from './hooks/usejobfilters';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -48,10 +48,10 @@ function AppWrapper() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const { onboardingDone } = useOnboarding();
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [filteredJobs, setFilteredjobs] = useState([]);
 
-  const handleDrawerStatusChange = (status, filters) => {
-    setSelectedFilters(filters);
+  const handleDrawerStatusChange = (status, jobs) => {
+    setFilteredjobs(jobs);
   };
 
   useEffect(() => {
@@ -84,7 +84,7 @@ function AppWrapper() {
       <JobTaskProvider>
         <JobLocationProvider>
           <JobOrganisationProvider>
-            <FilterProvider selectedFilters={selectedFilters}>
+            <FilteredJobsProvider filteredJobs={filteredJobs}>
               <NavigationContainer>
                 <StatusBar style="inverted" />
                 <Drawer.Navigator
@@ -122,7 +122,7 @@ function AppWrapper() {
                   )}
                 </Drawer.Navigator>
               </NavigationContainer>
-            </FilterProvider>
+            </FilteredJobsProvider>
           </JobOrganisationProvider>
         </JobLocationProvider>
       </JobTaskProvider>
