@@ -177,15 +177,11 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
 
   const selectFilter = (filter, type) => {
     setSelectedFilters((prevFilters) => {
-      const updatedFilters = new Set(prevFilters.map((item) => item.filter));
+      const isFilterSelected = prevFilters.some((item) => item.filter === filter);
 
-      if (updatedFilters.has(filter)) {
-        updatedFilters.delete(filter);
-      } else {
-        updatedFilters.add(filter);
-      }
-
-      return Array.from(updatedFilters).map((filter) => ({ filter, type }));
+      return isFilterSelected
+        ? prevFilters.filter((selectedFilter) => selectedFilter.filter !== filter)
+        : [...prevFilters, { filter, type }];
     });
   };
 
@@ -299,7 +295,7 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
                   } else {
                     selectFilter(filter.filter, filter.type);
                   }
-                } else {
+                } else if (filter.type === 'Tehtäväalueet') {
                   if (filter.parent) {
                     selectChildFilter(filter.filter, filter.parent, filter.type);
                   } else if (filter.children) {
@@ -307,6 +303,8 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
                   } else {
                     selectFilter(filter.filter, filter.type);
                   }
+                } else {
+                  selectFilter(filter.filter, filter.type);
                 }
               }}
               selected={selectedFilters.some(
