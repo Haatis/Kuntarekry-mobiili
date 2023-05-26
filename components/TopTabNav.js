@@ -31,6 +31,7 @@ export default function TopTabNav({ tabs }) {
               borderBottomWidth: 2,
               borderColor: theme.colors.primary,
             },
+            lazy: true,
           }}
         />
       ))}

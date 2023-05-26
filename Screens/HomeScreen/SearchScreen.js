@@ -17,6 +17,8 @@ function SearchContent({ navigation }) {
           gap: 4,
         }}
         data={filters.filteredJobs}
+        initialNumToRender={10}
+        maxBatchSize={10}
         renderItem={({ item, index }) => (
           <SwipeableRow>
             <SmallCard key={index} job={item.jobAdvertisement} />
@@ -27,7 +29,7 @@ function SearchContent({ navigation }) {
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
           <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
             Haku:{' '}
-            {filters.filteredJobs.length > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'} (
+            {filters.selectedFilters.length > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'} (
             {filters.filteredJobs.length})
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>

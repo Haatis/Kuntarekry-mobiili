@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import { View, ScrollView, StatusBar } from 'react-native';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import { Text } from 'react-native';
@@ -65,7 +65,44 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
           }
         });
 
-      return hasMatchingSijainti && hasMatchingTehtavaalueet;
+      const hasMatchingTyonantaja =
+        !filterDictionary['Työnantaja'] ||
+        filterDictionary['Työnantaja'].some((filter) => {
+          return job.jobAdvertisement.profitCenter === filter.filter;
+        });
+
+      const hasMatchingTyosuhde =
+        !filterDictionary['Työsuhde'] ||
+        filterDictionary['Työsuhde'].some((filter) => {
+          return job.jobAdvertisement.employment === filter.filter;
+        });
+
+      const hasMatchingTyonluonne =
+        !filterDictionary['Työn luonne'] ||
+        filterDictionary['Työn luonne'].some((filter) => {
+          return job.jobAdvertisement.employmentType === filter.filter;
+        });
+
+      const hasMatchingKieli =
+        !filterDictionary['Kieli'] ||
+        filterDictionary['Kieli'].some((filter) => {
+          if (filter.filter === 'Suomi') {
+            return job.jobAdvertisement.language === 'fi_FI';
+          } else if (filter.filter === 'Svenska') {
+            return job.jobAdvertisement.language === 'sv_SE';
+          } else if (filter.filter === 'English') {
+            return job.jobAdvertisement.language === 'en_US';
+          }
+        });
+
+      return (
+        hasMatchingSijainti &&
+        hasMatchingTehtavaalueet &&
+        hasMatchingTyonantaja &&
+        hasMatchingTyosuhde &&
+        hasMatchingTyonluonne &&
+        hasMatchingKieli
+      );
     });
   }, [jobs, selectedFilters]);
 
@@ -88,7 +125,9 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
     () => ['Kokoaikatyö', 'Osa-aikatyö', '3-vuorotyö', 'Tuntityö', '2-vuorotyö'],
     []
   );
+
   const employmentType = useMemo(() => ['Vakinainen', 'Määräaikainen'], []);
+
   const language = useMemo(() => ['Suomi', 'Svenska', 'English'], []);
 
   useEffect(() => {
@@ -96,15 +135,15 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
     onStatusChange(drawerStatus, filteredJobs, selectedFilters.length);
   }, [filteredJobs, setIsDrawerOpen, drawerStatus, selectedFilters.length]);
 
-  const handleOpenCategory = (categoryName) => {
+  const handleOpenCategory = useCallback((categoryName) => {
     setSelectedCategory((prevSelectedCategory) =>
       prevSelectedCategory === categoryName ? null : categoryName
     );
-  };
+  }, []);
 
-  const handleOpenTab = (tabName) => {
+  const handleOpenTab = useCallback((tabName) => {
     setSelectedTab((prevSelectedTab) => (prevSelectedTab === tabName ? null : tabName));
-  };
+  }, []);
 
   const selectParentFilter = (filter, children, type) => {
     setSelectedFilters((prevFilters) =>
@@ -154,25 +193,51 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
     countTypes();
   }, [selectedFilters]);
 
-  const countTypes = () => {
-    const taskCount = selectedFilters.filter((item) => item.type === 'Tehtäväalueet').length;
-    const typeCount = selectedFilters.filter((item) => item.type === 'Tyyppi').length;
-    const employmentCount = selectedFilters.filter((item) => item.type === 'Työsuhde').length;
-    const employmentTypeCount = selectedFilters.filter(
-      (item) => item.type === 'Työn luonne'
-    ).length;
-    const languageCount = selectedFilters.filter((item) => item.type === 'Kieli').length;
-    const locationCount = selectedFilters.filter((item) => item.type === 'Sijainti').length;
-    const organisationCount = selectedFilters.filter((item) => item.type === 'Työnantaja').length;
+  const countTypes = useCallback(() => {
+    let taskCount = 0;
+    let typeCount = 0;
+    let employmentCount = 0;
+    let employmentTypeCount = 0;
+    let languageCount = 0;
+    let locationCount = 0;
+    let organisationCount = 0;
 
-    setSelectedLocationCount(locationCount);
-    setSelectedEmploymentTypeCount(employmentTypeCount);
-    setSelectedEmploymentCount(employmentCount);
+    selectedFilters.forEach((item) => {
+      switch (item.type) {
+        case 'Tehtäväalueet':
+          taskCount++;
+          break;
+        case 'Tyyppi':
+          typeCount++;
+          break;
+        case 'Työsuhde':
+          employmentCount++;
+          break;
+        case 'Työn luonne':
+          employmentTypeCount++;
+          break;
+        case 'Kieli':
+          languageCount++;
+          break;
+        case 'Sijainti':
+          locationCount++;
+          break;
+        case 'Työnantaja':
+          organisationCount++;
+          break;
+        default:
+          break;
+      }
+    });
+
     setSelectedTaskCount(taskCount);
-    setSelectedOrganisationCount(organisationCount);
     setSelectedTypeCount(typeCount);
+    setSelectedEmploymentCount(employmentCount);
+    setSelectedEmploymentTypeCount(employmentTypeCount);
     setSelectedLanguageCount(languageCount);
-  };
+    setSelectedLocationCount(locationCount);
+    setSelectedOrganisationCount(organisationCount);
+  }, [selectedFilters]);
 
   const jobTasks = useMemo(() => {
     return tasks
