@@ -4,10 +4,19 @@ import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useFilteredJobs } from '../../hooks/usejobfilters';
 import SwipeableRow from '../../components/SwipeableRow';
+import { useCallback } from 'react';
 
 function SearchContent({ navigation }) {
   const filters = useFilteredJobs();
 
+  const renderItem = useCallback(
+    ({ item, index }) => (
+      <SwipeableRow>
+        <SmallCard key={index} index={index} job={item.jobAdvertisement} />
+      </SwipeableRow>
+    ),
+    []
+  );
   return (
     <>
       <FlatList
@@ -16,12 +25,9 @@ function SearchContent({ navigation }) {
           paddingHorizontal: 8,
           gap: 4,
         }}
+        windowSize={11}
         data={filters.filteredJobs}
-        renderItem={({ item, index }) => (
-          <SwipeableRow>
-            <SmallCard key={index} job={item.jobAdvertisement} />
-          </SwipeableRow>
-        )}
+        renderItem={renderItem}
       />
       <View style={{ position: 'absolute', width: '100%', paddingHorizontal: 8 }}>
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
