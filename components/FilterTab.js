@@ -3,6 +3,7 @@ import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import Tag from './Tags/Tag';
 import TagDropDown from './Tags/TagDropDown';
 import { theme } from '../styles/theme';
+
 const FilterTab = ({
   handleOpenTab,
   currentTab,
@@ -16,6 +17,8 @@ const FilterTab = ({
   selectChildFilter,
   sortedLetters,
 }) => {
+  const isOpenTab = selectedTab === currentTab;
+
   if (currentTab === 'Tehtäväalueet' || currentTab === 'Sijainti') {
     return (
       <View>
@@ -23,13 +26,13 @@ const FilterTab = ({
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
             {currentTab} {selectedTaskCount !== 0 ? selectedTaskCount : ''}
           </Text>
-          {selectedTab === currentTab ? (
-            <MaterialCommunityIcons name="chevron-up" size={30} color="white" />
-          ) : (
-            <MaterialCommunityIcons name="chevron-down" size={30} color="white" />
-          )}
+          <MaterialCommunityIcons
+            name={isOpenTab ? 'chevron-up' : 'chevron-down'}
+            size={30}
+            color="white"
+          />
         </Pressable>
-        {selectedTab === currentTab &&
+        {isOpenTab &&
           jobTasks.map((category) => {
             const selectedChildCount = category.children.filter((child) =>
               selectedFilters.some((selectedFilter) => selectedFilter.filter === child.name)
@@ -75,13 +78,13 @@ const FilterTab = ({
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
             {currentTab} {selectedTaskCount !== 0 ? selectedTaskCount : ''}
           </Text>
-          {selectedTab === currentTab ? (
-            <MaterialCommunityIcons name="chevron-up" size={30} color="white" />
-          ) : (
-            <MaterialCommunityIcons name="chevron-down" size={30} color="white" />
-          )}
+          <MaterialCommunityIcons
+            name={isOpenTab ? 'chevron-up' : 'chevron-down'}
+            size={30}
+            color="white"
+          />
         </Pressable>
-        {selectedTab === currentTab && (
+        {isOpenTab && (
           <View style={styles.tagRow}>
             {sortedLetters.map((letter, index) => {
               const selectedChildCount = jobTasks[letter].filter((organisation) =>
@@ -89,7 +92,7 @@ const FilterTab = ({
               ).length;
 
               return (
-                <View style={styles.tagRow} key={index}>
+                <View style={styles.tagRow} key={letter}>
                   <TagDropDown
                     tagColor={theme.colors.tag4}
                     tagText={selectedChildCount > 0 ? `${letter} (${selectedChildCount})` : letter}

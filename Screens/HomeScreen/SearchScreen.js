@@ -33,7 +33,7 @@ function SearchContent({ navigation }) {
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
           <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
             Haku:{' '}
-            {filters.filteredJobs.length > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'} (
+            {filters.selectedFilters.length > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'} (
             {filters.filteredJobs.length})
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
