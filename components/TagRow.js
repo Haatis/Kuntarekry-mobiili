@@ -4,15 +4,32 @@ import Tag from './Tags/Tag';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-export default function TagRow({ contentWidth, rowWidth, job }) {
+export default function TagRow({
+  contentWidth,
+  rowWidth,
+  job,
+  renderDetailTags = true,
+  renderTypeTags = true,
+}) {
   const [showAllTags, setShowAllTags] = useState(false);
   if (showAllTags) {
     return (
       <>
         <View style={styles.tagsAll}>
-          <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
-          <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
-          <Tag tagColor={theme.colors.tag1} tagText={job.location} />
+          {renderTypeTags && (
+            <>
+              <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
+              <Tag tagColor={theme.colors.tag5} tagText={job.employmentCategory} />
+              <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
+            </>
+          )}
+          {renderDetailTags && (
+            <>
+              <Tag tagColor={theme.colors.tag3} tagText={job.location} />
+              <Tag tagColor={theme.colors.tag3} tagText={job.region} />
+              <Tag tagColor={theme.colors.tag4} tagText={job.taskArea} />
+            </>
+          )}
         </View>
         <TouchableOpacity
           style={{
@@ -31,9 +48,20 @@ export default function TagRow({ contentWidth, rowWidth, job }) {
     return (
       <>
         <View style={styles.tagsLong}>
-          <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
-          <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
-          <Tag tagColor={theme.colors.tag1} tagText={job.location} />
+          {renderTypeTags && (
+            <>
+              <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
+              <Tag tagColor={theme.colors.tag5} tagText={job.employmentCategory} />
+              <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
+            </>
+          )}
+          {renderDetailTags && (
+            <>
+              <Tag tagColor={theme.colors.tag3} tagText={job.location} />
+              <Tag tagColor={theme.colors.tag3} tagText={job.region} />
+              <Tag tagColor={theme.colors.tag4} tagText={job.taskArea} />
+            </>
+          )}
         </View>
         <TouchableOpacity
           style={{
@@ -50,9 +78,20 @@ export default function TagRow({ contentWidth, rowWidth, job }) {
   } else {
     return (
       <View style={styles.tagsShort}>
-        <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
-        <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
-        <Tag tagColor={theme.colors.tag1} tagText={job.location} />
+        {renderTypeTags && (
+          <>
+            <Tag tagColor={theme.colors.tag2} tagText={job.employmentType} />
+            <Tag tagColor={theme.colors.tag5} tagText={job.employmentCategory} />
+            <Tag tagColor={theme.colors.tag1} tagText={job.employment} />
+          </>
+        )}
+        {renderDetailTags && (
+          <>
+            <Tag tagColor={theme.colors.tag3} tagText={job.location} />
+            <Tag tagColor={theme.colors.tag3} tagText={job.region} />
+            <Tag tagColor={theme.colors.tag4} tagText={job.taskArea} />
+          </>
+        )}
       </View>
     );
   }
