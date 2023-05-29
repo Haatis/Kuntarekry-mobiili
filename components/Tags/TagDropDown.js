@@ -1,9 +1,9 @@
-import { Pressable, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function TagDropDown({ tagColor, tagText, onPress, onPress2, selected, selected2 }) {
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={onPress2}
       style={[
         styles.tagOpen,
@@ -25,7 +25,7 @@ export default function TagDropDown({ tagColor, tagText, onPress, onPress2, sele
       >
         {tagText}
       </Text>
-      <Pressable
+      <TouchableOpacity
         onPress={onPress}
         style={{
           backgroundColor: 'rgba(0, 0, 0, 0.15)',
@@ -48,8 +48,8 @@ export default function TagDropDown({ tagColor, tagText, onPress, onPress2, sele
             color={selected2 ? 'white' : theme.colors.textPrimary}
           />
         )}
-      </Pressable>
-    </Pressable>
+      </TouchableOpacity>
+    </TouchableOpacity>
   );
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -19,7 +19,7 @@ const MemoizedTagContent = React.memo(TagContent);
 export default function Tag({ tagColor, tagText, tagClose, onPress, selected, larger }) {
   if (tagClose) {
     return (
-      <Pressable
+      <TouchableOpacity
         onPress={onPress}
         style={[
           styles.tag,
@@ -28,7 +28,7 @@ export default function Tag({ tagColor, tagText, tagClose, onPress, selected, la
       >
         <Text style={[theme.textVariants.uiS, { color: theme.colors.textPrimary }]}>{tagText}</Text>
         <MaterialCommunityIcons name="close-thick" size={16} color={theme.colors.textPrimary} />
-      </Pressable>
+      </TouchableOpacity>
     );
   }
 
@@ -37,9 +37,13 @@ export default function Tag({ tagColor, tagText, tagClose, onPress, selected, la
   const TagComponent = larger ? styles.tagL : styles.tag;
 
   return tags.map((item) => (
-    <Pressable key={item} onPress={onPress} style={[TagComponent, { backgroundColor: tagColor }]}>
+    <TouchableOpacity
+      key={item}
+      onPress={onPress}
+      style={[TagComponent, { backgroundColor: tagColor }]}
+    >
       <MemoizedTagContent item={item} selected={selected} />
-    </Pressable>
+    </TouchableOpacity>
   ));
 }
 
