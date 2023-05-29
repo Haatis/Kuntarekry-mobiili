@@ -40,8 +40,8 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   useEffect(() => {
     async function getLocation() {
       try {
-        const location = await AsyncStorage.getItem('location');
-        const task = await AsyncStorage.getItem('location');
+        const location = await AsyncStorage.getItem('LOCATION_KEY');
+        const task = await AsyncStorage.getItem('TASK_KEY');
 
         setLocationNumber(location);
         setTaskNumber(JSON.parse(task));
