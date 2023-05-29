@@ -12,7 +12,6 @@ import DrawerTab from './DrawerTab';
 import { useJobLocations } from '../hooks/uselocations';
 import FilterTab from './FilterTab';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DrawerRecommended from './DrawerRecommended';
 import { LOCATION_KEY, TASK_KEY } from '../hooks/usepersonalisation';
 import { usePersonalisation } from '../hooks/usepersonalisation';
@@ -62,7 +61,7 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
         parent: parentName,
       });
     }
-  }, [locationNumber]);
+  }, [locationNumber, locations]);
 
   useEffect(() => {
     if (taskNumber && taskNumber.length > 0) {

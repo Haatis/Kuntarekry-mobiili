@@ -1,14 +1,38 @@
-import { View, StyleSheet, Text, FlatList, Pressable } from 'react-native';
+import { View, StyleSheet, Text, FlatList, Pressable, TextInput } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useFilteredJobs } from '../../hooks/usejobfilters';
 import SwipeableRow from '../../components/SwipeableRow';
 import { useCallback } from 'react';
+import useSearchJobs from '../../hooks/usejobsearch';
+import { useState, useRef } from 'react';
 
 function SearchContent({ navigation }) {
   const filters = useFilteredJobs();
+  const [searchText, setSearchText] = useState('');
+  const [lastSearch, setLastSearch] = useState('');
+  const searchInputRef = useRef(null);
+  const searchJobs = useSearchJobs(filters.filteredJobs, lastSearch);
+  const data = lastSearch ? searchJobs : filters.filteredJobs;
 
+  const handleSearch = () => {
+    if (searchText === '') {
+      if (searchInputRef.current && !searchInputRef.current.isFocused()) {
+        // Focus on the TextInput if search query is empty and it's not already focused
+        searchInputRef.current.focus();
+      } else {
+        // Clear the search text if it's already focused
+        setSearchText('');
+        setLastSearch('');
+      }
+    } else {
+      // Perform search logic here based on the searchText and filters
+      console.log('Performing search with:', searchText);
+      setLastSearch(searchText);
+      setSearchText('');
+    }
+  };
   const renderItem = useCallback(
     ({ item, index }) => (
       <SwipeableRow>
@@ -26,17 +50,30 @@ function SearchContent({ navigation }) {
           gap: 4,
         }}
         windowSize={11}
-        data={filters.filteredJobs}
+        data={data}
         renderItem={renderItem}
       />
       <View style={{ position: 'absolute', width: '100%', paddingHorizontal: 8 }}>
         <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
-          <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
-            Haku: {filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'} (
-            {filters.filteredJobs.length})
-          </Text>
+          <TextInput
+            style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, width: '80%' }]}
+            placeholder={`${
+              filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
+            }${lastSearch ? ` hakusanalla "${lastSearch}"` : ''} (${
+              lastSearch ? searchJobs.length : filters.filteredJobs.length
+            })`}
+            onChangeText={setSearchText}
+            value={searchText}
+            onSubmitEditing={handleSearch}
+            ref={searchInputRef}
+          />
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <MaterialCommunityIcons name="magnify" size={30} color={theme.colors.textPrimary} />
+            <MaterialCommunityIcons
+              name="magnify"
+              size={30}
+              color={theme.colors.textPrimary}
+              onPress={handleSearch}
+            />
             <Pressable style={{ flexDirection: 'row' }}>
               <MaterialCommunityIcons
                 name="filter-outline"
@@ -46,9 +83,7 @@ function SearchContent({ navigation }) {
               />
               {filters.selectedFilters > 0 && (
                 <View style={styles.filterCircle}>
-                  {filters.selectedFilters > 0 && (
-                    <Text style={styles.filterCount}>{filters.selectedFilters}</Text>
-                  )}
+                  <Text style={styles.filterCount}>{filters.selectedFilters}</Text>
                 </View>
               )}
             </Pressable>
