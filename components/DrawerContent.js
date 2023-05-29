@@ -12,6 +12,8 @@ import DrawerTab from './DrawerTab';
 import { useJobLocations } from '../hooks/uselocations';
 import FilterTab from './FilterTab';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import DrawerRecommended from './DrawerRecommended';
 
 export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const drawerStatus = useDrawerStatus();
@@ -29,6 +31,75 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const [selectedLanguageCount, setSelectedLanguageCount] = useState(0);
   const [selectedTypeCount, setSelectedTypeCount] = useState(0);
   const { jobs } = useJobAdvertisements();
+
+  const [locationNumber, setLocationNumber] = useState(null);
+  const [taskNumber, setTaskNumber] = useState([]);
+  const [locationData, setLocationData] = useState(null);
+  const [taskData, setTaskData] = useState([]);
+
+  useEffect(() => {
+    async function getLocation() {
+      try {
+        const location = await AsyncStorage.getItem('location');
+        const task = await AsyncStorage.getItem('location');
+
+        setLocationNumber(location);
+        setTaskNumber(JSON.parse(task));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    getLocation();
+  }, []);
+
+  useEffect(() => {
+    if (locationNumber) {
+      const locationObject = locations.find((location) => location.id === parseInt(locationNumber));
+      const name = locationObject ? locationObject.name : null;
+      const parentObject =
+        locationObject && locationObject.parent
+          ? locations.find((location) => location.id === locationObject.parent)
+          : null;
+      const parentName = parentObject ? parentObject.name : null;
+      const children = locations
+        .filter((location) => location.parent === name)
+        .map((location) => ({
+          name: location.name,
+          parent: location.parent,
+        }));
+      setLocationData({
+        name,
+        children,
+        parent: parentName,
+      });
+    }
+  }, [locationNumber, locations]);
+
+  useEffect(() => {
+    if (taskNumber && taskNumber.length > 0) {
+      const taskData = taskNumber.map((number) => {
+        const taskObject = tasks.find((task) => task.id === number);
+        const name = taskObject ? taskObject.name : null;
+        const parentObject =
+          taskObject && taskObject.parent
+            ? tasks.find((task) => task.id === taskObject.parent)
+            : null;
+        const parentName = parentObject ? parentObject.name : null;
+        const children = tasks
+          .filter((task) => task.parent === name)
+          .map((task) => ({
+            name: task.name,
+            parent: task.parent,
+          }));
+        return {
+          name,
+          children,
+          parent: parentName,
+        };
+      });
+      setTaskData(taskData);
+    }
+  }, [taskNumber, tasks]);
 
   const filteredJobs = useMemo(() => {
     if (selectedFilters.length === 0) {
@@ -146,6 +217,21 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   }, []);
 
   const selectParentFilter = (filter, children, type) => {
+    if (children === '') {
+      if (type === 'Sijainti') {
+        jobLocations.forEach((location) => {
+          if (location.name === filter) {
+            children = location.children;
+          }
+        });
+      } else if (type === 'Tehtäväalueet') {
+        jobTasks.forEach((taskArea) => {
+          if (taskArea.name === filter) {
+            children = taskArea.children;
+          }
+        });
+      }
+    }
     setSelectedFilters((prevFilters) =>
       prevFilters.filter(
         (selectedFilter) => !children.some((child) => child.name === selectedFilter.filter)
@@ -318,6 +404,21 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
             Tulokset {filteredJobs.length}
           </Text>
         </View>
+
+        {taskData && locationData && (
+          <DrawerRecommended
+            tabName="Sinulle suositellut"
+            selectedTab={selectedTab}
+            handleOpenTab={handleOpenTab}
+            count={selectedTypeCount}
+            data={taskData}
+            data2={locationData}
+            selectChildFilter={selectChildFilter}
+            selectParentFilter={selectParentFilter}
+            selectedFilters={selectedFilters}
+            theme={theme}
+          />
+        )}
         <FilterTab
           currentTab="Tehtäväalueet"
           handleOpenTab={handleOpenTab}
