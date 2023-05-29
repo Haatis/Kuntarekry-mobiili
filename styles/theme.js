@@ -13,6 +13,7 @@ export const theme = {
     tag2: '#FAD6D4',
     tag3: '#D4EFFA',
     tag4: '#d0f5dc',
+    tag5: '#faeee3',
     inactiveNav: '#F8F8F8',
     darkBackground: 'rgba(0, 0, 0, 0.25)',
   },

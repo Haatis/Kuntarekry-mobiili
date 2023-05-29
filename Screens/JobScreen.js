@@ -2,6 +2,8 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
+import TagRow from '../components/TagRow';
+import { useState } from 'react';
 
 export default function JobScreen({ route }) {
   const { job } = route.params;
@@ -11,6 +13,11 @@ export default function JobScreen({ route }) {
   const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job`;
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
   const publicationStarts = new Date(job.publicationStarts)?.toLocaleDateString('fi-FI');
+
+  const [rowWidth, setRowWidth] = useState(0);
+  const [employmentWidth, setEmploymentWidth] = useState(0);
+  const [detailWidth, setDetailWidth] = useState(0);
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={{ ...theme.containerTop }}>
@@ -70,16 +77,81 @@ export default function JobScreen({ route }) {
             color="white"
           />
         </TouchableOpacity>
-        <View>
+        <View style={{ width: '100%' }}>
           <View style={styles.detailRow}>
             <MaterialCommunityIcons name="family-tree" size={30} color={theme.colors.button} />
             <Text>{job.organization}</Text>
           </View>
-        </View>
-        <View>
+          <View
+            style={styles.detailRow}
+            onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
+          >
+            <MaterialCommunityIcons
+              name="file-multiple-outline"
+              size={30}
+              color={theme.colors.button}
+            />
+            <View style={{ flexDirection: 'column' }}>
+              <View
+                style={styles.tagRow}
+                onLayout={(event) => setEmploymentWidth(event.nativeEvent.layout.width)}
+              >
+                <TagRow
+                  contentWidth={employmentWidth}
+                  rowWidth={rowWidth}
+                  job={job}
+                  renderDetailTags={false}
+                />
+              </View>
+            </View>
+          </View>
           <View style={styles.detailRow}>
             <MaterialCommunityIcons name="key-variant" size={30} color={theme.colors.button} />
-            <Text>{job.id}</Text>
+            <Text style={{ ...theme.textVariants.uiM, color: theme.colors.textPrimary }}>
+              {job.id}
+            </Text>
+          </View>
+          <View style={styles.detailRow}>
+            <MaterialCommunityIcons
+              name="play-circle-outline"
+              size={30}
+              color={theme.colors.button}
+            />
+            <Text>{job.jobDuration}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <MaterialCommunityIcons name="currency-eur" size={30} color={theme.colors.button} />
+            <Text>{job.salary}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <MaterialCommunityIcons name="calendar-month" size={30} color={theme.colors.button} />
+            <Text>
+              {publicationStarts} - {publicationEnds}
+            </Text>
+          </View>
+          <View style={styles.detailRow}>
+            <MaterialCommunityIcons
+              name="tag-multiple-outline"
+              size={30}
+              color={theme.colors.button}
+            />
+            <View
+              style={styles.tagRow}
+              onLayout={(event) => setDetailWidth(event.nativeEvent.layout.width)}
+            >
+              <TagRow
+                contentWidth={detailWidth}
+                rowWidth={rowWidth}
+                job={job}
+                renderTypeTags={false}
+              />
+            </View>
+          </View>
+          <View>
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons name="email" size={30} color={theme.colors.button} />
+              <Text style={{ ...theme.textVariants.textXL }}>Yhteystietomme</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -126,13 +198,10 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   detailRow: {
-    alignContent: 'center',
     borderColor: theme.colors.outline,
     borderTopWidth: 1,
     flexDirection: 'row',
-    flex: 1,
     gap: 16,
-    justifyContent: 'center',
     padding: 8,
   },
   image: {
@@ -142,6 +211,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
+  },
+  tagRow: {
+    flexDirection: 'row',
+    flex: 1,
+    gap: 8,
   },
   title: {
     color: 'black',
