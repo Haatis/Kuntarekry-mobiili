@@ -14,6 +14,8 @@ import FilterTab from './FilterTab';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DrawerRecommended from './DrawerRecommended';
+import { LOCATION_KEY, TASK_KEY } from '../hooks/usepersonalisation';
+import { usePersonalisation } from '../hooks/usepersonalisation';
 
 export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const drawerStatus = useDrawerStatus();
@@ -32,25 +34,12 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const [selectedTypeCount, setSelectedTypeCount] = useState(0);
   const { jobs } = useJobAdvertisements();
 
-  const [locationNumber, setLocationNumber] = useState(null);
-  const [taskNumber, setTaskNumber] = useState([]);
   const [locationData, setLocationData] = useState(null);
   const [taskData, setTaskData] = useState([]);
 
-  useEffect(() => {
-    async function getLocation() {
-      try {
-        const location = await AsyncStorage.getItem('LOCATION_KEY');
-        const task = await AsyncStorage.getItem('TASK_KEY');
-
-        setLocationNumber(location);
-        setTaskNumber(JSON.parse(task));
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    getLocation();
-  }, []);
+  const personalisationItems = usePersonalisation();
+  const locationNumber = personalisationItems[LOCATION_KEY];
+  const taskNumber = personalisationItems[TASK_KEY];
 
   useEffect(() => {
     if (locationNumber) {
@@ -73,7 +62,7 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
         parent: parentName,
       });
     }
-  }, [locationNumber, locations]);
+  }, [locationNumber]);
 
   useEffect(() => {
     if (taskNumber && taskNumber.length > 0) {

@@ -34,7 +34,7 @@ export default function PersonalizationScreen2() {
   const saveAndContinue = async () => {
     try {
       // Save the selectedLocation.id into AsyncStorage
-      await AsyncStorage.setItem('LOCATION_KEY', selectedLocation.id.toString());
+      await AsyncStorage.setItem('location', selectedLocation.id.toString());
       finishOnboarding();
     } catch (error) {
       console.log('Error saving selected location ID:', error);

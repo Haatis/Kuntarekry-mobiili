@@ -30,7 +30,7 @@ export default function PersonalizationScreen() {
     });
     const filteredJobIds = jobIds.filter((id) => id !== null);
     try {
-      await AsyncStorage.setItem('TASK_KEY', JSON.stringify(filteredJobIds));
+      await AsyncStorage.setItem('task', JSON.stringify(filteredJobIds));
       navigation.navigate('PersonalizationScreen2');
     } catch (error) {
       console.log('Error saving job IDs:', error);
