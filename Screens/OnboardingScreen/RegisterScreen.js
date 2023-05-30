@@ -7,6 +7,8 @@ import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useContext } from 'react';
+import AuthContext from '../../hooks/useauth';
 
 export default function RegisterScreen() {
   const [isChecked, setChecked] = useState(false);
@@ -17,6 +19,7 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
+  const { fetchUserData } = useContext(AuthContext);
 
   const createUser = async () => {
     if (!isChecked) {
@@ -52,6 +55,7 @@ export default function RegisterScreen() {
     try {
       await AsyncStorage.setItem('userData', JSON.stringify(userData));
       alert('Käyttäjä luotu');
+      fetchUserData();
       navigation.navigate('LoginScreen');
     } catch (error) {
       alert('Tapahtui virhe käyttäjän tallentamisessa');

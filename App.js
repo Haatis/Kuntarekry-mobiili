@@ -30,6 +30,7 @@ import { JobOrganisationProvider } from './hooks/usejoborganisations';
 import { FilteredJobsProvider } from './hooks/usejobfilters';
 import { PersonalisationProvider } from './hooks/usepersonalisation';
 import RegisterScreen from './Screens/OnboardingScreen/RegisterScreen';
+import { AuthProvider } from './hooks/useauth';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -40,7 +41,9 @@ export default function App() {
   return (
     <>
       <OnboardingProvider>
-        <AppWrapper />
+        <AuthProvider>
+          <AppWrapper />
+        </AuthProvider>
       </OnboardingProvider>
     </>
   );

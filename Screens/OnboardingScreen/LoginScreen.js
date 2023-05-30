@@ -5,20 +5,16 @@ import Logo from '../../assets/logo.png';
 import BackgroundImage from '../../assets/substract.png';
 import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../../hooks/useauth';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import AuthContext from '../../hooks/useauth';
+import { useContext } from 'react';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { fetchUserData } = useAuth();
-  const { userData } = useAuth();
+  const { userData } = useContext(AuthContext);
   console.log(userData);
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
 
   const handleLogin = () => {
     if (username.trim() === '' || password.trim() === '') {

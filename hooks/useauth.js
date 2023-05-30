@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const useAuth = () => {
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,5 +24,11 @@ export const useAuth = () => {
     fetchUserData();
   }, []);
 
-  return { userData, loading, fetchUserData };
+  return (
+    <AuthContext.Provider value={{ userData, loading, fetchUserData }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+export default AuthContext;
