@@ -47,7 +47,47 @@ function SearchContent({ navigation }) {
   return (
     <>
       <FlatList
-        ListHeaderComponent={<View style={{ marginTop: 58 }}></View>}
+        stickyHeaderIndices={[0]}
+        stickyHeaderHiddenOnScroll={true}
+        ListHeaderComponent={
+          <View style={{ width: '100%' }}>
+            <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
+              <TextInput
+                style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, width: '80%' }]}
+                placeholder={`${
+                  filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
+                }${lastSearch ? ` hakusanalla "${lastSearch}"` : ''} (${
+                  lastSearch ? searchJobs.length : filters.filteredJobs.length
+                })`}
+                onChangeText={setSearchText}
+                value={searchText}
+                onSubmitEditing={handleSearch}
+                ref={searchInputRef}
+              />
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <MaterialCommunityIcons
+                  name="magnify"
+                  size={30}
+                  color={theme.colors.textPrimary}
+                  onPress={handleSearch}
+                />
+                <TouchableOpacity style={{ flexDirection: 'row' }}>
+                  <MaterialCommunityIcons
+                    name="filter-outline"
+                    size={30}
+                    color={theme.colors.textPrimary}
+                    onPress={() => navigation.openDrawer()}
+                  />
+                  {filters.selectedFilters > 0 && (
+                    <View style={styles.filterCircle}>
+                      <Text style={styles.filterCount}>{filters.selectedFilters}</Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        }
         contentContainerStyle={{
           paddingHorizontal: 8,
           gap: 4,
@@ -56,45 +96,6 @@ function SearchContent({ navigation }) {
         data={data}
         renderItem={renderItem}
       />
-      <View style={{ position: 'absolute', width: '100%', paddingHorizontal: 8 }}>
-        <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
-          <TextInput
-            style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, width: '80%' }]}
-            placeholder={`${
-              filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
-            }${lastSearch ? ` hakusanalla "${lastSearch}"` : ''} (${
-              lastSearch ? searchJobs.length : filters.filteredJobs.length
-            })`}
-            onChangeText={setSearchText}
-            value={searchText}
-            onSubmitEditing={handleSearch}
-            ref={searchInputRef}
-          />
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity style={{ flexDirection: 'row' }}>
-              <MaterialCommunityIcons
-                name="magnify"
-                size={30}
-                color={theme.colors.textPrimary}
-                onPress={handleSearch}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: 'row' }}>
-              <MaterialCommunityIcons
-                name="filter-outline"
-                size={30}
-                color={theme.colors.textPrimary}
-                onPress={() => navigation.openDrawer()}
-              />
-              {filters.selectedFilters > 0 && (
-                <View style={styles.filterCircle}>
-                  <Text style={styles.filterCount}>{filters.selectedFilters}</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
     </>
   );
 }
