@@ -6,14 +6,19 @@ import BackgroundImage from '../../assets/substract.png';
 import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../hooks/useauth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { fetchUserData } = useAuth();
   const { userData } = useAuth();
   console.log(userData);
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   const handleLogin = () => {
     if (username.trim() === '' || password.trim() === '') {

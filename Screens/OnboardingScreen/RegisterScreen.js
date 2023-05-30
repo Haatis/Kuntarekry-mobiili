@@ -52,7 +52,6 @@ export default function RegisterScreen() {
     try {
       await AsyncStorage.setItem('userData', JSON.stringify(userData));
       alert('Käyttäjä luotu');
-
       navigation.navigate('LoginScreen');
     } catch (error) {
       alert('Tapahtui virhe käyttäjän tallentamisessa');
