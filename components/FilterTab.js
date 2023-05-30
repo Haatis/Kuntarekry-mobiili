@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import Tag from './Tags/Tag';
 import TagDropDown from './Tags/TagDropDown';
@@ -22,7 +22,7 @@ const FilterTab = ({
   if (currentTab === 'Tehtäväalueet' || currentTab === 'Sijainti') {
     return (
       <View>
-        <Pressable onPress={() => handleOpenTab(currentTab)} style={styles.filterRow}>
+        <TouchableOpacity onPress={() => handleOpenTab(currentTab)} style={styles.filterRow}>
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
             {currentTab} {selectedTaskCount !== 0 ? selectedTaskCount : ''}
           </Text>
@@ -31,7 +31,7 @@ const FilterTab = ({
             size={30}
             color="white"
           />
-        </Pressable>
+        </TouchableOpacity>
         {isOpenTab &&
           jobTasks.map((category) => {
             const selectedChildCount = category.children.filter((child) =>
@@ -74,7 +74,7 @@ const FilterTab = ({
   } else {
     return (
       <View>
-        <Pressable onPress={() => handleOpenTab(currentTab)} style={styles.filterRow}>
+        <TouchableOpacity onPress={() => handleOpenTab(currentTab)} style={styles.filterRow}>
           <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
             {currentTab} {selectedTaskCount !== 0 ? selectedTaskCount : ''}
           </Text>
@@ -83,7 +83,7 @@ const FilterTab = ({
             size={30}
             color="white"
           />
-        </Pressable>
+        </TouchableOpacity>
         {isOpenTab && (
           <View style={styles.tagRow}>
             {sortedLetters.map((letter, index) => {

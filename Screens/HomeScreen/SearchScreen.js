@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, FlatList, Pressable, TextInput } from 'react-native';
+import { View, StyleSheet, Text, FlatList, TextInput } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
@@ -7,6 +7,7 @@ import SwipeableRow from '../../components/SwipeableRow';
 import { useCallback } from 'react';
 import useSearchJobs from '../../hooks/usejobsearch';
 import { useState, useRef } from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function SearchContent({ navigation }) {
   const filters = useFilteredJobs();
@@ -25,6 +26,8 @@ function SearchContent({ navigation }) {
         // Clear the search text if it's already focused
         setSearchText('');
         setLastSearch('');
+        //defocus
+        searchInputRef.current.blur();
       }
     } else {
       // Perform search logic here based on the searchText and filters
@@ -68,7 +71,7 @@ function SearchContent({ navigation }) {
                   color={theme.colors.textPrimary}
                   onPress={handleSearch}
                 />
-                <Pressable style={{ flexDirection: 'row' }}>
+                <TouchableOpacity style={{ flexDirection: 'row' }}>
                   <MaterialCommunityIcons
                     name="filter-outline"
                     size={30}
@@ -80,7 +83,7 @@ function SearchContent({ navigation }) {
                       <Text style={styles.filterCount}>{filters.selectedFilters}</Text>
                     </View>
                   )}
-                </Pressable>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

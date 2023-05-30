@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import Tag from './Tags/Tag';
 
@@ -14,7 +14,7 @@ const DrawerTab = ({
 }) => {
   return (
     <View>
-      <Pressable onPress={() => handleOpenTab(tabName)} style={styles.filterRow}>
+      <TouchableOpacity onPress={() => handleOpenTab(tabName)} style={styles.filterRow}>
         <Text style={[theme.textVariants.uiL, { color: 'white' }]}>
           {tabName} {count !== 0 ? count : ''}
         </Text>
@@ -23,7 +23,7 @@ const DrawerTab = ({
         ) : (
           <MaterialCommunityIcons name="chevron-down" size={30} color="white" />
         )}
-      </Pressable>
+      </TouchableOpacity>
       {selectedTab === tabName && (
         <View style={styles.tagRow}>
           {data.map((type, index) => (
