@@ -5,9 +5,25 @@ import Logo from '../../assets/logo.png';
 import BackgroundImage from '../../assets/substract.png';
 import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../hooks/useauth';
+import { useState } from 'react';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const { userData } = useAuth();
+  console.log(userData);
+
+  const handleLogin = () => {
+    if (username.trim() === '' || password.trim() === '') {
+      alert('Käyttäjätunnus ja salasana ovat pakollisia');
+      return;
+    }
+    userData.username === username && userData.password === password
+      ? navigation.navigate('PersonalizationScreen')
+      : alert('Käyttäjätunnus tai salasana on väärin');
+  };
 
   return (
     <>
@@ -48,8 +64,8 @@ export default function LoginScreen() {
                 >
                   <TextInput
                     style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
-                    defaultValue="PekkaVi80"
-                    onChangeText={(text) => console.log(text)}
+                    defaultValue=""
+                    onChangeText={(text) => setUsername(text)}
                   />
                   <Text style={[theme.textVariants.uiS, styles.labelText]}>Käyttäjätunnus</Text>
                 </View>
@@ -62,8 +78,8 @@ export default function LoginScreen() {
                   <TextInput
                     style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
                     secureTextEntry={true}
-                    defaultValue="12345678"
-                    onChangeText={(text) => console.log(text)}
+                    defaultValue=""
+                    onChangeText={(text) => setPassword(text)}
                   />
                   <Text style={[theme.textVariants.uiS, styles.labelText]}>Salasana</Text>
                 </View>
@@ -78,7 +94,7 @@ export default function LoginScreen() {
                   </Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                  <Pressable style={styles.button}>
+                  <Pressable onPress={() => handleLogin()} style={styles.button}>
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
                       Kirjaudu sisään
                     </Text>
@@ -92,7 +108,10 @@ export default function LoginScreen() {
                   >
                     Jos olet uusi kuntarekryssä luo käyttäjä
                   </Text>
-                  <Pressable style={styles.buttonSM}>
+                  <Pressable
+                    onPress={() => navigation.navigate('RegisterScreen')}
+                    style={styles.buttonSM}
+                  >
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
                       Luo uusi käyttäjä
                     </Text>

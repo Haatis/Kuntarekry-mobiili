@@ -29,6 +29,7 @@ import { JobLocationProvider } from './hooks/uselocations';
 import { JobOrganisationProvider } from './hooks/usejoborganisations';
 import { FilteredJobsProvider } from './hooks/usejobfilters';
 import { PersonalisationProvider } from './hooks/usepersonalisation';
+import RegisterScreen from './Screens/OnboardingScreen/RegisterScreen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -145,6 +146,11 @@ function OnBoardingStackNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="RegisterScreen"
+          component={RegisterScreen}
+          options={{ headerShown: true }}
+        />
         <Stack.Screen name="PersonalizationScreen" component={PersonalizationScreen} />
         <Stack.Screen name="PersonalizationScreen2" component={PersonalizationScreen2} />
       </>
