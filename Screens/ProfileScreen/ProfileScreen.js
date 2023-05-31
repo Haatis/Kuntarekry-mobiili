@@ -20,12 +20,23 @@ export default function ProfileScreen() {
       return (
         <>
           <View style={theme.containerCenter}>
-            <View style={[theme.dropShadow, { borderRadius: 50 }]}>
-              <Image
-                source={ProfileImage}
-                style={[theme.outline, styles.imageStyle]}
-                resizeMode="cover"
-              />
+            <View style={styles.profileContainer}>
+              <TouchableOpacity style={[theme.dropShadow, { borderRadius: 50 }]}>
+                <Image
+                  source={ProfileImage}
+                  style={[theme.outline, styles.imageStyle]}
+                  resizeMode="cover"
+                />
+              </TouchableOpacity>
+              <View style={styles.cameraContainer}>
+                <TouchableOpacity style={styles.cameraButton}>
+                  <MaterialCommunityIcons
+                    name="camera"
+                    size={24}
+                    color={theme.colors.textPrimary}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
             <Text style={{ marginTop: 16, fontFamily: 'SourceSansPro', fontSize: 20 }}>
               {userData.firstName} {userData.lastName}
@@ -149,6 +160,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
   },
+  cameraButton: {
+    padding: 4,
+  },
+  cameraContainer: {
+    backgroundColor: theme.colors.textSecondary + '90',
+    borderRadius: 50,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 1,
+  },
   container: {
     alignItems: 'center',
     flex: 1,
@@ -162,6 +184,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     height: 100,
     width: 100,
+  },
+  profileContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   row: {
     flexDirection: 'row',

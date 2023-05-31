@@ -213,7 +213,7 @@ function StackNavigator() {
           name="BasicInformation"
           component={BasicInformation}
           options={{
-            header: () => <AppBar back={true} title={true} />,
+            header: () => <AppBar back={true} title={'Perustiedot'} />,
           }}
         />
       </>
