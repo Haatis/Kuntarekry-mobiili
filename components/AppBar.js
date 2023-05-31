@@ -47,12 +47,23 @@ export default function AppBar({ back, title, underTitle }) {
                 </TouchableOpacity>
               ) : null}
               <View style={styles.textContainer}>
-                <Text style={{ ...theme.textVariants.uiM, color: 'white', textAlign: 'center' }}>
-                  {title}
-                </Text>
-                <Text style={{ ...theme.textVariants.uiAltS, color: 'white', textAlign: 'center' }}>
-                  {underTitle}
-                </Text>
+                {underTitle ? (
+                  <Text style={{ ...theme.textVariants.uiM, color: 'white', textAlign: 'center' }}>
+                    {title}
+                  </Text>
+                ) : (
+                  <Text style={{ ...theme.textVariants.uiL, color: 'white', textAlign: 'center' }}>
+                    {title}
+                  </Text>
+                )}
+
+                {underTitle ? (
+                  <Text
+                    style={{ ...theme.textVariants.uiAltS, color: 'white', textAlign: 'center' }}
+                  >
+                    {underTitle}
+                  </Text>
+                ) : null}
               </View>
               <View style={{ width: 45 }}></View>
             </View>
@@ -98,6 +109,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: 16,
-    paddingLeft: 16,
+    paddingHorizontal: 16,
   },
 });

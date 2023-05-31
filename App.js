@@ -31,6 +31,7 @@ import { FilteredJobsProvider } from './hooks/usejobfilters';
 import { PersonalisationProvider } from './hooks/usepersonalisation';
 import RegisterScreen from './Screens/OnboardingScreen/RegisterScreen';
 import { AuthProvider } from './hooks/useauth';
+import BasicInformation from './Screens/ProfileScreen/BasicInformation';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -152,10 +153,24 @@ function OnBoardingStackNavigator() {
         <Stack.Screen
           name="RegisterScreen"
           component={RegisterScreen}
-          options={{ headerShown: true }}
+          options={{
+            header: () => <AppBar back={true} title={'Rekisteröityminen'} />,
+          }}
         />
-        <Stack.Screen name="PersonalizationScreen" component={PersonalizationScreen} />
-        <Stack.Screen name="PersonalizationScreen2" component={PersonalizationScreen2} />
+        <Stack.Screen
+          name="PersonalizationScreen"
+          component={PersonalizationScreen}
+          options={{
+            header: () => <AppBar back={true} title={'Aloitus (1/2)'} />,
+          }}
+        />
+        <Stack.Screen
+          name="PersonalizationScreen2"
+          component={PersonalizationScreen2}
+          options={{
+            header: () => <AppBar back={true} title={'Aloitus (2/2)'} />,
+          }}
+        />
       </>
     </Stack.Navigator>
   );
@@ -190,6 +205,13 @@ function StackNavigator() {
         <Stack.Screen
           name="RegisterScreen"
           component={RegisterScreen}
+          options={{
+            header: () => <AppBar back={true} title={'Rekisteröityminen'} />,
+          }}
+        />
+        <Stack.Screen
+          name="BasicInformation"
+          component={BasicInformation}
           options={{
             header: () => <AppBar back={true} title={true} />,
           }}

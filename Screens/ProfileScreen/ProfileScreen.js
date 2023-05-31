@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 import { Image } from 'react-native';
+import BasicInformation from './BasicInformation';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
@@ -43,14 +44,17 @@ export default function ProfileScreen() {
             <View style={styles.container}>
               <View style={styles.row}>
                 <View style={styles.squareContainer}>
-                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate(BasicInformation)}
+                    style={[theme.outline, styles.square, theme.dropShadow]}
+                  >
                     <MaterialCommunityIcons
                       name="card-account-details"
                       size={40}
                       color={theme.colors.textPrimary}
                     />
                     <Text style={{ textAlign: 'center', marginTop: 8 }}>Perustiedot</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.squareContainer}>
                   <View style={[theme.outline, styles.square, theme.dropShadow]}>
