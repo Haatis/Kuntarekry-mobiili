@@ -1,4 +1,4 @@
-import { View, Image, ImageBackground, StyleSheet, Pressable, Text } from 'react-native';
+import { View, Image, ImageBackground, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -29,16 +29,38 @@ export default function AppBar({ back, title, underTitle }) {
           }}
         >
           {title ? (
-            <View style={styles.textContainer}>
-              <Text style={[theme.textVariants.uiM, { color: 'white' }]}>{title}</Text>
-              <Text style={[theme.textVariants.uiAltS, { color: 'white' }]}>{underTitle}</Text>
+            <View style={styles.titleContainer}>
+              {back ? (
+                <TouchableOpacity
+                  style={{
+                    ...styles.backButton,
+                    ...theme.outlineDark,
+                    ...theme.dropShadow,
+                  }}
+                  onPress={() => navigation.goBack()}
+                >
+                  <MaterialCommunityIcons
+                    name="chevron-left"
+                    size={36}
+                    color={theme.colors.textPrimary}
+                  />
+                </TouchableOpacity>
+              ) : null}
+              <View style={styles.textContainer}>
+                <Text style={{ ...theme.textVariants.uiM, color: 'white', textAlign: 'center' }}>
+                  {title}
+                </Text>
+                <Text style={{ ...theme.textVariants.uiAltS, color: 'white', textAlign: 'center' }}>
+                  {underTitle}
+                </Text>
+              </View>
+              <View style={{ width: 45 }}></View>
             </View>
           ) : (
             <Image
               source={Logo}
               resizeMode="contain"
               style={{
-                marginTop: Constants.statusBarHeight,
                 width: '100%',
                 height: 44,
               }}
@@ -46,14 +68,6 @@ export default function AppBar({ back, title, underTitle }) {
           )}
         </ImageBackground>
       </LinearGradient>
-      {back ? (
-        <Pressable
-          style={[styles.backButton, theme.outlineDark, theme.dropShadow]}
-          onPress={() => navigation.goBack()}
-        >
-          <MaterialCommunityIcons name="chevron-left" size={36} color={theme.colors.textPrimary} />
-        </Pressable>
-      ) : null}
     </View>
   );
 }
@@ -65,9 +79,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: 45,
     justifyContent: 'center',
-    left: 16,
-    position: 'absolute',
-    top: Constants.statusBarHeight,
     width: 45,
   },
   container: {
@@ -78,12 +89,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+    marginTop: Constants.statusBarHeight,
   },
   textContainer: {
-    alignItems: 'center',
     flex: 1,
-    justifyContent: 'center',
-    marginTop: Constants.statusBarHeight,
-    width: '100%',
+  },
+  titleContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 16,
+    paddingLeft: 16,
   },
 });

@@ -1,7 +1,6 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
 import TagRow from '../components/TagRow';
 import { useState } from 'react';
 
@@ -18,80 +17,97 @@ export default function JobScreen({ route }) {
   const [employmentWidth, setEmploymentWidth] = useState(0);
   const [detailWidth, setDetailWidth] = useState(0);
 
+  const now = new Date();
+  const elapsed = new Date(job.publicationEnds) - now;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const daysLeft = Math.floor(elapsed / oneDay);
+  console.log(daysLeft);
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <View style={{ ...theme.containerTop }}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: randomJobImage }}
-            resizeMode="cover"
-            style={[styles.image, theme.outlineDark]}
-          />
-          <View style={styles.dateTextContainer}>
-            <Text style={{ ...theme.textVariants.textS, color: theme.colors.button, flex: 1 }}>
-              Haku päättyy {publicationEnds}
-            </Text>
-            <Text style={[theme.textVariants.textS, { color: 'black' }]}>
-              Ilmoitettu {publicationStarts}
-            </Text>
-          </View>
-        </View>
-        <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 16, gap: 16 }}>
-          <TouchableOpacity style={[theme.outline, theme.dropShadow, styles.avatar]}>
-            <Image style={styles.avatarImage} source={{ uri: randomEmployerImage }} />
-          </TouchableOpacity>
-          <View
-            style={{
-              flex: 1,
-              gap: 4,
-            }}
-          >
-            <Text style={styles.title}>{job.title}</Text>
-            <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
-              {job.profitCenter}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.buttonRow}>
-          <TouchableOpacity style={{ ...styles.buttonRound, borderColor: theme.colors.danger }}>
-            <MaterialCommunityIcons name="close-thick" size={40} color={theme.colors.danger} />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ ...styles.buttonRound, borderColor: theme.colors.secondary }}>
-            <MaterialCommunityIcons name="share-variant" size={34} color={theme.colors.secondary} />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ ...styles.buttonRound, borderColor: theme.colors.secondary }}>
-            <MaterialCommunityIcons name="heart-outline" size={34} color={theme.colors.secondary} />
-          </TouchableOpacity>
-        </View>
-        <View style={{ width: '100%', paddingHorizontal: 16 }}>
-          <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
-            {job.jobDesc}
-          </Text>
-        </View>
-        <TouchableOpacity style={{ ...styles.buttonBig, ...theme.outlineDark }}>
-          <Text style={{ ...theme.textVariants.uiM, color: 'white' }}>Tutustu työnantajaan</Text>
-          <MaterialCommunityIcons
-            style={{ margin: -6 }}
-            name="chevron-right"
-            size={30}
-            color="white"
-          />
-        </TouchableOpacity>
-        <View style={{ width: '100%' }}>
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons name="family-tree" size={30} color={theme.colors.button} />
-            <Text>{job.organization}</Text>
-          </View>
-          <View
-            style={styles.detailRow}
-            onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
-          >
-            <MaterialCommunityIcons
-              name="file-multiple-outline"
-              size={30}
-              color={theme.colors.button}
+    <>
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ ...theme.containerTop }}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: randomJobImage }}
+              resizeMode="cover"
+              style={[styles.image, theme.outlineDark]}
             />
-            <View style={{ flexDirection: 'column' }}>
+            <View style={styles.dateTextContainer}>
+              <Text style={{ ...theme.textVariants.textS, color: theme.colors.button, flex: 1 }}>
+                Haku päättyy {publicationEnds}
+              </Text>
+              <Text style={[theme.textVariants.textS, { color: 'black' }]}>
+                Ilmoitettu {publicationStarts}
+              </Text>
+            </View>
+          </View>
+          <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 16, gap: 16 }}>
+            <TouchableOpacity style={[theme.outline, theme.dropShadow, styles.avatar]}>
+              <Image style={styles.avatarImage} source={{ uri: randomEmployerImage }} />
+            </TouchableOpacity>
+            <View
+              style={{
+                flex: 1,
+                gap: 4,
+              }}
+            >
+              <Text style={styles.title}>{job.title}</Text>
+              <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
+                {job.profitCenter}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.buttonRow}>
+            <TouchableOpacity style={{ ...styles.buttonRound, borderColor: theme.colors.danger }}>
+              <MaterialCommunityIcons name="close-thick" size={40} color={theme.colors.danger} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ ...styles.buttonRound, borderColor: theme.colors.secondary }}
+            >
+              <MaterialCommunityIcons
+                name="share-variant"
+                size={34}
+                color={theme.colors.secondary}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ ...styles.buttonRound, borderColor: theme.colors.secondary }}
+            >
+              <MaterialCommunityIcons
+                name="heart-outline"
+                size={34}
+                color={theme.colors.secondary}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: '100%', paddingHorizontal: 16 }}>
+            <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
+              {job.jobDesc}
+            </Text>
+          </View>
+          <TouchableOpacity style={{ ...styles.buttonBig, ...theme.outlineDark }}>
+            <Text style={{ ...theme.textVariants.uiM, color: 'white' }}>Tutustu työnantajaan</Text>
+            <MaterialCommunityIcons
+              style={{ margin: -6 }}
+              name="chevron-right"
+              size={30}
+              color="white"
+            />
+          </TouchableOpacity>
+          <View style={{ width: '100%' }}>
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons name="family-tree" size={30} color={theme.colors.button} />
+              <Text>{job.organization}</Text>
+            </View>
+            <View
+              style={styles.detailRow}
+              onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
+            >
+              <MaterialCommunityIcons
+                name="file-multiple-outline"
+                size={30}
+                color={theme.colors.button}
+              />
               <View
                 style={styles.tagRow}
                 onLayout={(event) => setEmploymentWidth(event.nativeEvent.layout.width)}
@@ -104,58 +120,76 @@ export default function JobScreen({ route }) {
                 />
               </View>
             </View>
-          </View>
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons name="key-variant" size={30} color={theme.colors.button} />
-            <Text style={{ ...theme.textVariants.uiM, color: theme.colors.textPrimary }}>
-              {job.id}
-            </Text>
-          </View>
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons
-              name="play-circle-outline"
-              size={30}
-              color={theme.colors.button}
-            />
-            <Text>{job.jobDuration}</Text>
-          </View>
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons name="currency-eur" size={30} color={theme.colors.button} />
-            <Text>{job.salary}</Text>
-          </View>
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons name="calendar-month" size={30} color={theme.colors.button} />
-            <Text>
-              {publicationStarts} - {publicationEnds}
-            </Text>
-          </View>
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons
-              name="tag-multiple-outline"
-              size={30}
-              color={theme.colors.button}
-            />
-            <View
-              style={styles.tagRow}
-              onLayout={(event) => setDetailWidth(event.nativeEvent.layout.width)}
-            >
-              <TagRow
-                contentWidth={detailWidth}
-                rowWidth={rowWidth}
-                job={job}
-                renderTypeTags={false}
-              />
-            </View>
-          </View>
-          <View>
             <View style={styles.detailRow}>
-              <MaterialCommunityIcons name="email" size={30} color={theme.colors.button} />
-              <Text style={{ ...theme.textVariants.textXL }}>Yhteystietomme</Text>
+              <MaterialCommunityIcons name="key-variant" size={30} color={theme.colors.button} />
+              <Text style={{ ...theme.textVariants.uiM, color: theme.colors.textPrimary }}>
+                {job.id}
+              </Text>
+            </View>
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons
+                name="play-circle-outline"
+                size={30}
+                color={theme.colors.button}
+              />
+              <Text>{job.jobDuration}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons name="currency-eur" size={30} color={theme.colors.button} />
+              <Text>{job.salary}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons name="calendar-month" size={30} color={theme.colors.button} />
+              <Text>
+                {publicationStarts} - {publicationEnds}
+              </Text>
+            </View>
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons
+                name="tag-multiple-outline"
+                size={30}
+                color={theme.colors.button}
+              />
+              <View
+                style={styles.tagRow}
+                onLayout={(event) => setDetailWidth(event.nativeEvent.layout.width)}
+              >
+                <TagRow
+                  contentWidth={detailWidth}
+                  rowWidth={rowWidth}
+                  job={job}
+                  renderTypeTags={false}
+                />
+              </View>
+            </View>
+            <View>
+              <View style={styles.detailRow}>
+                <MaterialCommunityIcons name="email" size={30} color={theme.colors.button} />
+                <Text style={{ ...theme.textVariants.textXL }}>Yhteystietomme</Text>
+              </View>
+              <Text style={{ ...theme.textVariants.textM, padding: 8 }}>{job.contacts}</Text>
+            </View>
+            <View>
+              <View style={styles.detailRow}>
+                <MaterialCommunityIcons name="briefcase" size={30} color={theme.colors.button} />
+                <Text style={{ ...theme.textVariants.textXL }}>Lisätietoja</Text>
+              </View>
+              <Text style={{ ...theme.textVariants.textM, padding: 8 }}>
+                {job.organization}
+                {'\n\n'}
+                {job.organizationDesc}
+              </Text>
+              <Text style={{ ...theme.textVariants.textM, padding: 8 }}>Osoite: {job.address}</Text>
             </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      <TouchableOpacity style={styles.buttonBottom}>
+        <Text style={{ ...theme.textVariants.uiM, color: 'white', textAlign: 'center' }}>
+          Hae työpaikkaa ({daysLeft} pv)
+        </Text>
+      </TouchableOpacity>
+    </>
   );
 }
 
@@ -178,6 +212,15 @@ const styles = StyleSheet.create({
     height: 48,
     paddingHorizontal: 16,
   },
+  buttonBottom: {
+    backgroundColor: theme.colors.secondary,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    justifyContent: 'center',
+    paddingVertical: 16,
+    width: '100%',
+  },
+
   buttonRound: {
     alignItems: 'center',
     backgroundColor: 'white',
@@ -187,7 +230,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 60,
   },
-
   buttonRow: {
     flexDirection: 'row',
     gap: 16,
@@ -201,6 +243,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.outline,
     borderTopWidth: 1,
     flexDirection: 'row',
+    flex: 1,
     gap: 16,
     padding: 8,
   },
@@ -214,7 +257,6 @@ const styles = StyleSheet.create({
   },
   tagRow: {
     flexDirection: 'row',
-    flex: 1,
     gap: 8,
   },
   title: {
