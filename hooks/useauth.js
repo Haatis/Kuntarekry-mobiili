@@ -6,6 +6,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state variable
 
   const fetchUserData = async () => {
     try {
@@ -13,6 +14,9 @@ export const AuthProvider = ({ children }) => {
       if (storedUserData) {
         const parsedUserData = JSON.parse(storedUserData);
         setUserData(parsedUserData);
+        setIsLoggedIn(true); // Set isLoggedIn to true if userData exists
+      } else {
+        setIsLoggedIn(false); // Set isLoggedIn to false if userData doesn't exist
       }
     } catch (error) {
       console.log('Error fetching user data:', error);
@@ -25,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ userData, loading, fetchUserData }}>
+    <AuthContext.Provider value={{ userData, loading, fetchUserData, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );

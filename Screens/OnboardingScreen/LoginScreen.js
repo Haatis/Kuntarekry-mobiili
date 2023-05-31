@@ -8,11 +8,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
+import { useOnboarding } from '../../hooks/useonboarding';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { onboardingDone } = useOnboarding();
   const { userData } = useContext(AuthContext);
   console.log(userData);
 
@@ -21,9 +23,16 @@ export default function LoginScreen() {
       alert('Käyttäjätunnus ja salasana ovat pakollisia');
       return;
     }
-    userData.username === username && userData.password === password
-      ? navigation.navigate('PersonalizationScreen')
-      : alert('Käyttäjätunnus tai salasana on väärin');
+
+    if (userData && userData.username === username && userData.password === password) {
+      if (!onboardingDone) {
+        navigation.navigate('PersonalizationScreen');
+      } else {
+        navigation.navigate('Home');
+      }
+    } else {
+      alert('Käyttäjätunnus tai salasana on väärin');
+    }
   };
 
   return (
@@ -149,7 +158,11 @@ export default function LoginScreen() {
                     Voit myös jatkaa kirjautumatta
                   </Text>
                   <Pressable
-                    onPress={() => navigation.navigate('PersonalizationScreen')}
+                    onPress={() =>
+                      onboardingDone
+                        ? navigation.navigate('Home')
+                        : navigation.navigate('PersonalizationScreen')
+                    }
                     style={styles.buttonSM}
                   >
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>

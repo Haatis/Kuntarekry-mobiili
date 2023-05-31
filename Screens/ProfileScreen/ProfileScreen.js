@@ -1,109 +1,129 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { theme } from '../../styles/theme';
 import { TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AuthContext from '../../hooks/useauth';
+import { useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 import { Image } from 'react-native';
 
 export default function ProfileScreen() {
+  const navigation = useNavigation();
   const ProfileImage = {
     uri: 'https://cdn.pixabay.com/photo/2016/09/24/03/20/man-1690965_960_720.jpg',
   };
-
-  return (
-    <>
-      <View style={theme.containerCenter}>
-        <View style={[theme.dropShadow, { borderRadius: 50 }]}>
-          <Image
-            source={ProfileImage}
-            style={[theme.outline, styles.imageStyle]}
-            resizeMode="cover"
-          />
-        </View>
-        <Text style={{ marginTop: 16, fontFamily: 'SourceSansPro', fontSize: 20 }}>
-          Pekka Virtanen
-        </Text>
-        <Text
-          style={[
-            theme.textVariants.textM,
-            {
-              color: theme.colors.textSecondary,
-              marginTop: 16,
-            },
-          ]}
-        >
-          Alan ammattilainen vuosien kokemuksella, etsin töitä sosiaali- ja terveysalalta.
-        </Text>
-        <View style={styles.container}>
-          <View style={styles.row}>
-            <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons
-                  name="card-account-details"
-                  size={40}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ textAlign: 'center', marginTop: 8 }}>Perustiedot</Text>
-              </View>
+  const { userData, isLoggedIn } = useContext(AuthContext);
+  const renderContent = () => {
+    if (isLoggedIn && userData) {
+      return (
+        <>
+          <View style={theme.containerCenter}>
+            <View style={[theme.dropShadow, { borderRadius: 50 }]}>
+              <Image
+                source={ProfileImage}
+                style={[theme.outline, styles.imageStyle]}
+                resizeMode="cover"
+              />
             </View>
-            <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons
-                  name="file-account"
-                  size={40}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ textAlign: 'center', marginTop: 8 }}>CV</Text>
+            <Text style={{ marginTop: 16, fontFamily: 'SourceSansPro', fontSize: 20 }}>
+              {userData.firstName} {userData.lastName}
+            </Text>
+            <Text
+              style={[
+                theme.textVariants.textM,
+                {
+                  color: theme.colors.textSecondary,
+                  marginTop: 16,
+                },
+              ]}
+            >
+              Alan ammattilainen vuosien kokemuksella, etsin töitä sosiaali- ja terveysalalta.
+            </Text>
+            <View style={styles.container}>
+              <View style={styles.row}>
+                <View style={styles.squareContainer}>
+                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                    <MaterialCommunityIcons
+                      name="card-account-details"
+                      size={40}
+                      color={theme.colors.textPrimary}
+                    />
+                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Perustiedot</Text>
+                  </View>
+                </View>
+                <View style={styles.squareContainer}>
+                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                    <MaterialCommunityIcons
+                      name="file-account"
+                      size={40}
+                      color={theme.colors.textPrimary}
+                    />
+                    <Text style={{ textAlign: 'center', marginTop: 8 }}>CV</Text>
+                  </View>
+                </View>
+                <View style={styles.squareContainer}>
+                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                    <MaterialCommunityIcons
+                      name="school"
+                      size={40}
+                      color={theme.colors.textPrimary}
+                    />
+                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Pätevyydet</Text>
+                  </View>
+                </View>
               </View>
-            </View>
-            <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons name="school" size={40} color={theme.colors.textPrimary} />
-                <Text style={{ textAlign: 'center', marginTop: 8 }}>Pätevyydet</Text>
+              <View style={styles.row}>
+                <View style={styles.squareContainer}>
+                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                    <MaterialCommunityIcons
+                      name="account-filter"
+                      size={40}
+                      color={theme.colors.textPrimary}
+                    />
+                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Työtoiveet</Text>
+                  </View>
+                </View>
+                <View style={styles.squareContainer}>
+                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                    <MaterialCommunityIcons
+                      name="file-image"
+                      size={40}
+                      color={theme.colors.textPrimary}
+                    />
+                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Portfolio</Text>
+                  </View>
+                </View>
+                <View style={styles.squareContainer}>
+                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                    <MaterialCommunityIcons
+                      name="dots-vertical"
+                      size={40}
+                      color={theme.colors.textPrimary}
+                    />
+                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Muut</Text>
+                  </View>
+                </View>
               </View>
             </View>
           </View>
-          <View style={styles.row}>
-            <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons
-                  name="account-filter"
-                  size={40}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ textAlign: 'center', marginTop: 8 }}>Työtoiveet</Text>
-              </View>
-            </View>
-            <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons
-                  name="file-image"
-                  size={40}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ textAlign: 'center', marginTop: 8 }}>Portfolio</Text>
-              </View>
-            </View>
-            <View style={styles.squareContainer}>
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={40}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ textAlign: 'center', marginTop: 8 }}>Muut</Text>
-              </View>
-            </View>
+          <View style={styles.bottomButton}>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Esikatsele profiilia</Text>
+            </TouchableOpacity>
           </View>
+        </>
+      );
+    } else {
+      return (
+        <View style={theme.containerCenter}>
+          <Text style={styles.loginText}>Kirjaudu sisään nähdäksesi profiilin</Text>
+          <Button title="Kirjaudu sisään" onPress={() => navigation.navigate('LoginScreen')} />
         </View>
-      </View>
-      <View style={styles.bottomButton}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Esikatsele profiilia</Text>
-        </TouchableOpacity>
-      </View>
-    </>
-  );
+      );
+    }
+  };
+  return <>{renderContent()}</>;
 }
 const styles = StyleSheet.create({
   bottomButton: {

@@ -186,6 +186,14 @@ function StackNavigator() {
             header: () => <AppBar back={true} title={true} />,
           }}
         />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="RegisterScreen"
+          component={RegisterScreen}
+          options={{
+            header: () => <AppBar back={true} title={true} />,
+          }}
+        />
       </>
     </Stack.Navigator>
   );
