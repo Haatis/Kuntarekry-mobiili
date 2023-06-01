@@ -3,6 +3,7 @@ import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import TagRow from '../components/TagRow';
 import { useEffect, useState } from 'react';
+import BottomButton from '../components/BottomButton';
 
 export default function JobScreen({ route }) {
   const { job } = route.params;
@@ -210,11 +211,7 @@ export default function JobScreen({ route }) {
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity style={styles.buttonBottom}>
-        <Text style={{ ...theme.textVariants.uiM, color: 'white', textAlign: 'center' }}>
-          Hae työpaikkaa {CountdownTimer()}
-        </Text>
-      </TouchableOpacity>
+      <BottomButton buttonText={`Hae työpaikkaa ${CountdownTimer()}`} />
     </>
   );
 }
@@ -237,14 +234,6 @@ const styles = StyleSheet.create({
     gap: 4,
     height: 48,
     paddingHorizontal: 16,
-  },
-  buttonBottom: {
-    backgroundColor: theme.colors.secondary,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    justifyContent: 'center',
-    paddingVertical: 16,
-    width: '100%',
   },
 
   buttonRound: {
