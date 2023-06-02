@@ -5,9 +5,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
-
 import { Image } from 'react-native';
 import BasicInformation from './BasicInformation';
+import BottomButton from '../../components/BottomButton';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
@@ -30,11 +30,7 @@ export default function ProfileScreen() {
               </TouchableOpacity>
               <View style={styles.cameraContainer}>
                 <TouchableOpacity style={styles.cameraButton}>
-                  <MaterialCommunityIcons
-                    name="camera"
-                    size={24}
-                    color={theme.colors.textPrimary}
-                  />
+                  <MaterialCommunityIcons name="camera" size={24} color="white" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -122,11 +118,7 @@ export default function ProfileScreen() {
               </View>
             </View>
           </View>
-          <View style={styles.bottomButton}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Esikatsele profiilia</Text>
-            </TouchableOpacity>
-          </View>
+          <BottomButton buttonText="Esikatsele profiilia" />
         </>
       );
     } else {
@@ -141,35 +133,15 @@ export default function ProfileScreen() {
   return <>{renderContent()}</>;
 }
 const styles = StyleSheet.create({
-  bottomButton: {
-    alignItems: 'center',
-    bottom: 0,
-    position: 'absolute',
-    width: '100%',
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.secondary,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    justifyContent: 'center',
-    paddingVertical: 16,
-    width: '100%',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 14,
-  },
   cameraButton: {
     padding: 4,
   },
   cameraContainer: {
-    backgroundColor: theme.colors.textSecondary + '90',
-    borderRadius: 50,
+    backgroundColor: theme.colors.textPrimary + '50',
+    borderRadius: 99,
+    bottom: 0,
     position: 'absolute',
     right: 0,
-    top: 0,
-    zIndex: 1,
   },
   container: {
     alignItems: 'center',

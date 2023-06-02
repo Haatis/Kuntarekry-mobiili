@@ -1,13 +1,12 @@
-import { View, StyleSheet, Text, FlatList, TextInput } from 'react-native';
+import { View, StyleSheet, Text, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useFilteredJobs } from '../../hooks/usejobfilters';
 import SwipeableRow from '../../components/SwipeableRow';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import useSearchJobs from '../../hooks/usejobsearch';
 import { useState, useRef } from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function SearchContent({ navigation }) {
   const filters = useFilteredJobs();
@@ -16,6 +15,16 @@ function SearchContent({ navigation }) {
   const searchInputRef = useRef(null);
   const searchJobs = useSearchJobs(filters.filteredJobs, lastSearch);
   const data = lastSearch ? searchJobs : filters.filteredJobs;
+  const [sortedData, setSortedData] = useState([]);
+  const [activeSortType, setActiveSortType] = useState('newest');
+  const [showSortSelector, setShowSortSelector] = useState(false);
+
+  const sortType = [
+    { label: 'Uusin ensin', value: 'newest' },
+    { label: 'Hakuaika päättyy', value: 'endTime' },
+    { label: 'Työnantaja', value: 'employer' },
+    { label: 'Sijainti', value: 'location' },
+  ];
 
   const handleSearch = () => {
     if (searchText === '') {
@@ -44,11 +53,44 @@ function SearchContent({ navigation }) {
     ),
     []
   );
+
+  useEffect(() => {
+    const jobs = [...data];
+    switch (activeSortType) {
+      case 'newest':
+        setSortedData(
+          jobs.slice().sort((a, b) => {
+            return b.jobAdvertisement.publicationStarts.localeCompare(
+              a.jobAdvertisement.publicationStarts
+            );
+          })
+        );
+        break;
+      case 'endTime':
+        setSortedData(
+          jobs.slice().sort((a, b) => {
+            return a.jobAdvertisement.publicationEnds.localeCompare(
+              b.jobAdvertisement.publicationEnds
+            );
+          })
+        );
+        break;
+      case 'employer':
+        setSortedData(
+          jobs.slice().sort((a, b) => {
+            return a.jobAdvertisement.profitCenter?.localeCompare(b.jobAdvertisement.profitCenter);
+          })
+        );
+        break;
+      case 'location':
+        alert('Sijainti ei ole käytössä');
+        break;
+    }
+  }, [data, activeSortType]);
+
   return (
     <>
       <FlatList
-        stickyHeaderIndices={[0]}
-        stickyHeaderHiddenOnScroll={true}
         ListHeaderComponent={
           <View style={{ width: '100%' }}>
             <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
@@ -88,19 +130,58 @@ function SearchContent({ navigation }) {
             </View>
           </View>
         }
+        stickyHeaderIndices={[0]}
+        stickyHeaderHiddenOnScroll={true}
         contentContainerStyle={{
           paddingHorizontal: 8,
           gap: 4,
         }}
         windowSize={11}
-        data={data}
+        data={sortedData}
         renderItem={renderItem}
       />
+      <TouchableOpacity
+        style={styles.orderButton}
+        onPress={() => setShowSortSelector(!showSortSelector)}
+      >
+        <MaterialCommunityIcons
+          name="swap-vertical-bold"
+          size={44}
+          color={theme.colors.textPrimary}
+        ></MaterialCommunityIcons>
+      </TouchableOpacity>
+      {showSortSelector && (
+        <View style={styles.sortSelector}>
+          <Text style={styles.sortHeader}>Lajittele</Text>
+          {sortType.map((sortType) => (
+            <TouchableOpacity
+              key={sortType.value}
+              onPress={() => {
+                setActiveSortType(sortType.value);
+                setShowSortSelector(false);
+              }}
+            >
+              <Text
+                style={[
+                  styles.sortItem,
+                  sortType.value === activeSortType ? styles.activeSortItem : null,
+                ]}
+              >
+                {sortType.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  activeSortItem: {
+    backgroundColor: theme.colors.secondary,
+    color: 'white',
+  },
   createButton: {
     alignItems: 'center',
     borderBottomLeftRadius: 30,
@@ -130,6 +211,47 @@ const styles = StyleSheet.create({
   filterCount: {
     color: 'white',
     fontSize: 12,
+  },
+  orderButton: {
+    ...theme.dropShadow,
+    ...theme.outlineDark,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 99,
+    bottom: 16,
+    height: 60,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 16,
+    width: 60,
+  },
+  sortHeader: {
+    ...theme.textVariants.uiS,
+    borderBottomColor: theme.colors.outline,
+    borderBottomWidth: 1,
+    color: theme.colors.textPrimary,
+    flex: 1,
+    padding: 8,
+    textAlign: 'center',
+  },
+  sortItem: {
+    ...theme.textVariants.uiAltS,
+    borderBottomColor: theme.colors.outline,
+    borderBottomWidth: 1,
+    color: theme.colors.textPrimary,
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  sortSelector: {
+    ...theme.outline,
+    ...theme.dropShadow,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    bottom: 80,
+    position: 'absolute',
+    right: 8,
+    width: 240,
   },
 });
 

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { theme } from '../../styles/theme';
 import { useState } from 'react';
 import TagLarge from '../../components/Tags/TagLarge';
@@ -6,6 +6,7 @@ import DropDown from '../../components/DropDown';
 import { useNavigation } from '@react-navigation/native';
 import { useJobTasks } from '../../hooks/usejobtasks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BottomButton from '../../components/BottomButton';
 export default function PersonalizationScreen() {
   const [selectedJobs, setSelectedJobs] = useState([]);
   const navigation = useNavigation();
@@ -77,33 +78,14 @@ export default function PersonalizationScreen() {
           </View>
         </View>
       </ScrollView>
-
       {selectedJobs.length > 0 && (
-        <TouchableOpacity
-          onPress={() => saveAndContinue()}
-          style={[styles.button, { position: 'absolute', bottom: 0 }]}
-        >
-          <Text style={styles.buttonText}>Tallenna ja jatka</Text>
-        </TouchableOpacity>
+        <BottomButton buttonText="Tallenna ja jatka" buttonAction={() => saveAndContinue()} />
       )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.secondary,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    justifyContent: 'center',
-    paddingVertical: 16,
-    width: '100%',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 14,
-  },
   containerTop: {
     alignItems: 'center',
     backgroundColor: 'white',

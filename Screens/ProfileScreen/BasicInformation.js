@@ -9,6 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
+import BottomButton from '../../components/BottomButton';
 import { Keyboard } from 'react-native';
 
 export default function BasicInformation() {
@@ -44,7 +45,7 @@ export default function BasicInformation() {
 
   return (
     <>
-      <ScrollView style={{ marginBottom: 50 }}>
+      <ScrollView>
         <View style={theme.containerTop}>
           <Text style={theme.textVariants.uiM}>Henkilötiedot</Text>
           <View
@@ -154,35 +155,11 @@ export default function BasicInformation() {
           </View>
         </View>
       </ScrollView>
-      <View style={styles.bottomButton}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Tallenna</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomButton buttonText="Tallenna" />
     </>
   );
 }
 const styles = StyleSheet.create({
-  bottomButton: {
-    alignItems: 'center',
-    bottom: 0,
-    position: 'absolute',
-    width: '100%',
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.secondary,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    justifyContent: 'center',
-    paddingVertical: 16,
-    width: '100%',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 14,
-  },
-
   createButton: {
     alignItems: 'center',
     borderRadius: 8,

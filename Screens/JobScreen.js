@@ -2,7 +2,8 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import TagRow from '../components/TagRow';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import BottomButton from '../components/BottomButton';
 
 export default function JobScreen({ route }) {
   const { job } = route.params;
@@ -17,11 +18,37 @@ export default function JobScreen({ route }) {
   const [employmentWidth, setEmploymentWidth] = useState(0);
   const [detailWidth, setDetailWidth] = useState(0);
 
-  const now = new Date();
-  const elapsed = new Date(job.publicationEnds) - now;
-  const oneDay = 1000 * 60 * 60 * 24;
-  const daysLeft = Math.floor(elapsed / oneDay);
-  console.log(daysLeft);
+  const CountdownTimer = () => {
+    const [timeLeft, setTimeLeft] = useState('');
+    const MINUTE_MS = 60000;
+    useEffect(() => {
+      const calcNewYear = setInterval(() => {
+        const dateEnding = new Date(job.publicationEnds);
+        const dateNow = new Date();
+
+        let minutes = Math.floor((dateEnding - dateNow) / MINUTE_MS);
+        let hours = Math.floor(minutes / 60);
+        let days = Math.floor(hours / 24);
+
+        hours = hours - days * 24;
+        minutes = minutes - days * 24 * 60 - hours * 60;
+
+        if (days > 2) {
+          setTimeLeft(`(${days} pv)`);
+        } else if (days > 0) {
+          setTimeLeft(`(${days} pv ${hours} h)`);
+        } else {
+          setTimeLeft(`(${hours} h ${minutes} min)`);
+        }
+      }, 1000);
+
+      return () => {
+        clearInterval(calcNewYear);
+      };
+    }, []);
+    return timeLeft;
+  };
+
   return (
     <>
       <ScrollView style={{ flex: 1 }}>
@@ -184,11 +211,7 @@ export default function JobScreen({ route }) {
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity style={styles.buttonBottom}>
-        <Text style={{ ...theme.textVariants.uiM, color: 'white', textAlign: 'center' }}>
-          Hae työpaikkaa ({daysLeft} pv)
-        </Text>
-      </TouchableOpacity>
+      <BottomButton buttonText={`Hae työpaikkaa ${CountdownTimer()}`} />
     </>
   );
 }
@@ -211,14 +234,6 @@ const styles = StyleSheet.create({
     gap: 4,
     height: 48,
     paddingHorizontal: 16,
-  },
-  buttonBottom: {
-    backgroundColor: theme.colors.secondary,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    justifyContent: 'center',
-    paddingVertical: 16,
-    width: '100%',
   },
 
   buttonRound: {
