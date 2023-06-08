@@ -10,6 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
 import BottomButton from '../../components/BottomButton';
+import { Keyboard } from 'react-native';
 
 export default function BasicInformation() {
   const { locations } = useJobLocations();
@@ -17,6 +18,7 @@ export default function BasicInformation() {
   const personalisationItems = usePersonalisation();
   const locationNumber = personalisationItems[LOCATION_KEY];
   const { userData } = useContext(AuthContext);
+  const [textHeight, setTextHeight] = useState(57);
 
   useEffect(() => {
     if (locationNumber) {
@@ -40,7 +42,7 @@ export default function BasicInformation() {
       });
     }
   }, [locationNumber, locations]);
-  console.log(locationData);
+
   return (
     <>
       <ScrollView>
@@ -122,32 +124,33 @@ export default function BasicInformation() {
             </TouchableOpacity>
           </View>
           <Text style={theme.textVariants.uiM}>Profiilin tiedot</Text>
+
           <View
             style={[
-              { borderWidth: 1, borderColor: theme.colors.outlineDark },
+              { borderWidth: 1, borderColor: theme.colors.outlineDark, height: textHeight },
               styles.createButton2,
             ]}
           >
             <TextInput
               style={[theme.textVariants.textL, { color: theme.colors.textPrimary, flex: 1 }]}
               placeholder="Kerro tilanteesi muutamalla lauseella"
-              multiline={true} // Enable multiline
-              numberOfLines={4} // Set the initial number of lines
-              maxLength={150} // Set the maximum character limit
+              multiline={true}
+              numberOfLines={4}
+              maxLength={150}
             />
           </View>
           <View
             style={[
-              { borderWidth: 1, borderColor: theme.colors.outlineDark },
+              { borderWidth: 1, borderColor: theme.colors.outlineDark, height: textHeight },
               styles.createButton2,
             ]}
           >
             <TextInput
               style={[theme.textVariants.textL, { color: theme.colors.textPrimary, flex: 1 }]}
               placeholder="Esittele itsesi lyhyesti"
-              multiline={true} // Enable multiline
-              numberOfLines={4} // Set the initial number of lines
-              maxLength={300} // Set the maximum character limit
+              multiline={true}
+              numberOfLines={4}
+              maxLength={300}
             />
           </View>
         </View>
@@ -171,7 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     flexDirection: 'row',
-    height: 57,
+
     justifyContent: 'space-between',
     marginVertical: 4,
     paddingHorizontal: 16,

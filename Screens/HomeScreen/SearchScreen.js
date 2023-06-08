@@ -1,4 +1,12 @@
-import { View, StyleSheet, Text, FlatList, TextInput, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
@@ -7,18 +15,20 @@ import SwipeableRow from '../../components/SwipeableRow';
 import { useCallback, useEffect } from 'react';
 import useSearchJobs from '../../hooks/usejobsearch';
 import { useState, useRef } from 'react';
+import { useDrawerStatus } from '../../hooks/usedrawerstatus';
+import { useMemo } from 'react';
 
 function SearchContent({ navigation }) {
+  const status = useDrawerStatus();
   const filters = useFilteredJobs();
   const [searchText, setSearchText] = useState('');
   const [lastSearch, setLastSearch] = useState('');
   const searchInputRef = useRef(null);
   const searchJobs = useSearchJobs(filters.filteredJobs, lastSearch);
-  const data = lastSearch ? searchJobs : filters.filteredJobs;
   const [sortedData, setSortedData] = useState([]);
   const [activeSortType, setActiveSortType] = useState('newest');
   const [showSortSelector, setShowSortSelector] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const sortType = [
     { label: 'Uusin ensin', value: 'newest' },
     { label: 'Hakuaika päättyy', value: 'endTime' },
@@ -53,43 +63,53 @@ function SearchContent({ navigation }) {
     ),
     []
   );
+  const memoizedRenderItem = useMemo(() => {
+    return renderItem;
+  }, []);
 
   useEffect(() => {
-    const jobs = [...data];
-    switch (activeSortType) {
-      case 'newest':
-        setSortedData(
-          jobs.slice().sort((a, b) => {
-            return b.jobAdvertisement.publicationStarts.localeCompare(
-              a.jobAdvertisement.publicationStarts
-            );
-          })
-        );
-        break;
-      case 'endTime':
-        setSortedData(
-          jobs.slice().sort((a, b) => {
-            return a.jobAdvertisement.publicationEnds.localeCompare(
-              b.jobAdvertisement.publicationEnds
-            );
-          })
-        );
-        break;
-      case 'employer':
-        setSortedData(
-          jobs.slice().sort((a, b) => {
-            return a.jobAdvertisement.profitCenter?.localeCompare(b.jobAdvertisement.profitCenter);
-          })
-        );
-        break;
-      case 'location':
-        alert('Sijainti ei ole käytössä');
-        break;
+    if (!status) {
+      let jobs = lastSearch ? searchJobs : filters.filteredJobs;
+      switch (activeSortType) {
+        case 'newest':
+          setSortedData(
+            jobs.slice().sort((a, b) => {
+              return b.jobAdvertisement.publicationStarts.localeCompare(
+                a.jobAdvertisement.publicationStarts
+              );
+            })
+          );
+
+          break;
+        case 'endTime':
+          setSortedData(
+            jobs.slice().sort((a, b) => {
+              return a.jobAdvertisement.publicationEnds.localeCompare(
+                b.jobAdvertisement.publicationEnds
+              );
+            })
+          );
+
+          break;
+        case 'employer':
+          setSortedData(
+            jobs.slice().sort((a, b) => {
+              return a.jobAdvertisement.profitCenter?.localeCompare(
+                b.jobAdvertisement.profitCenter
+              );
+            })
+          );
+
+          break;
+        case 'location':
+          alert('Sijainti ei ole käytössä');
+          break;
+      }
     }
-  }, [data, activeSortType]);
+  }, [lastSearch, activeSortType, filters.filteredJobs, status]);
 
   return (
-    <>
+    <View style={{ backgroundColor: 'white' }}>
       <FlatList
         ListHeaderComponent={
           <View style={{ width: '100%' }}>
@@ -138,7 +158,10 @@ function SearchContent({ navigation }) {
         }}
         windowSize={11}
         data={sortedData}
-        renderItem={renderItem}
+        keyExtractor={(item) => item.id} // Provide a unique key extractor function
+        renderItem={memoizedRenderItem} // Wrap renderItem with React.memo
+        initialNumToRender={10} // Adjust the initial number of items rendered
+        removeClippedSubviews={true} // Optimize memory usage
       />
       <TouchableOpacity
         style={styles.orderButton}
@@ -173,7 +196,7 @@ function SearchContent({ navigation }) {
           ))}
         </View>
       )}
-    </>
+    </View>
   );
 }
 
