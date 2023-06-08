@@ -16,7 +16,6 @@ import { useCallback, useEffect } from 'react';
 import useSearchJobs from '../../hooks/usejobsearch';
 import { useState, useRef } from 'react';
 import { useDrawerStatus } from '../../hooks/usedrawerstatus';
-import { useMemo } from 'react';
 
 function SearchContent({ navigation }) {
   const status = useDrawerStatus();
@@ -28,7 +27,8 @@ function SearchContent({ navigation }) {
   const [sortedData, setSortedData] = useState([]);
   const [activeSortType, setActiveSortType] = useState('newest');
   const [showSortSelector, setShowSortSelector] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  let jobs = lastSearch ? searchJobs : filters.filteredJobs;
   const sortType = [
     { label: 'Uusin ensin', value: 'newest' },
     { label: 'Hakuaika päättyy', value: 'endTime' },
@@ -64,46 +64,50 @@ function SearchContent({ navigation }) {
     []
   );
 
-  useEffect(() => {
-    if (!status) {
-      let jobs = lastSearch ? searchJobs : filters.filteredJobs;
-      switch (activeSortType) {
-        case 'newest':
-          setSortedData(
-            jobs.slice().sort((a, b) => {
-              return b.jobAdvertisement.publicationStarts.localeCompare(
-                a.jobAdvertisement.publicationStarts
-              );
-            })
-          );
-
-          break;
-        case 'endTime':
-          setSortedData(
-            jobs.slice().sort((a, b) => {
-              return a.jobAdvertisement.publicationEnds.localeCompare(
-                b.jobAdvertisement.publicationEnds
-              );
-            })
-          );
-
-          break;
-        case 'employer':
-          setSortedData(
-            jobs.slice().sort((a, b) => {
-              return a.jobAdvertisement.profitCenter?.localeCompare(
-                b.jobAdvertisement.profitCenter
-              );
-            })
-          );
-
-          break;
-        case 'location':
-          alert('Sijainti ei ole käytössä');
-          break;
-      }
+  const sortJobs = () => {
+    switch (activeSortType) {
+      case 'newest':
+        setSortedData(
+          jobs.slice().sort((a, b) => {
+            return b.jobAdvertisement.publicationStarts.localeCompare(
+              a.jobAdvertisement.publicationStarts
+            );
+          })
+        );
+        break;
+      case 'endTime':
+        setSortedData(
+          jobs.slice().sort((a, b) => {
+            return a.jobAdvertisement.publicationEnds.localeCompare(
+              b.jobAdvertisement.publicationEnds
+            );
+          })
+        );
+        break;
+      case 'employer':
+        setSortedData(
+          jobs.slice().sort((a, b) => {
+            return a.jobAdvertisement.profitCenter?.localeCompare(b.jobAdvertisement.profitCenter);
+          })
+        );
+        break;
+      case 'location':
+        alert('Sijainti ei ole käytössä');
+        break;
     }
-  }, [lastSearch, activeSortType, filters.filteredJobs, status]);
+  };
+
+  useEffect(() => {
+    sortJobs();
+  }, [filters.selectedFilters, lastSearch, activeSortType]);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View style={{ backgroundColor: 'white' }}>
@@ -157,6 +161,7 @@ function SearchContent({ navigation }) {
         data={sortedData}
         renderItem={renderItem}
       />
+
       <TouchableOpacity
         style={styles.orderButton}
         onPress={() => setShowSortSelector(!showSortSelector)}
