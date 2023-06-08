@@ -63,9 +63,6 @@ function SearchContent({ navigation }) {
     ),
     []
   );
-  const memoizedRenderItem = useMemo(() => {
-    return renderItem;
-  }, []);
 
   useEffect(() => {
     if (!status) {
@@ -158,10 +155,7 @@ function SearchContent({ navigation }) {
         }}
         windowSize={11}
         data={sortedData}
-        keyExtractor={(item) => item.id} // Provide a unique key extractor function
-        renderItem={memoizedRenderItem} // Wrap renderItem with React.memo
-        initialNumToRender={10} // Adjust the initial number of items rendered
-        removeClippedSubviews={true} // Optimize memory usage
+        renderItem={renderItem}
       />
       <TouchableOpacity
         style={styles.orderButton}
