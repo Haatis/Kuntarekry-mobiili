@@ -5,7 +5,7 @@ import TopTabNavigator from '../../components/TopTabNav';
 
 const tabs = [
   {
-    name: 'Suosikitt',
+    name: 'Suosikit',
     component: FavoritesTab,
   },
   {

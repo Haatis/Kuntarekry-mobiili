@@ -33,6 +33,7 @@ import RegisterScreen from './Screens/OnboardingScreen/RegisterScreen';
 import { AuthProvider } from './hooks/useauth';
 import BasicInformation from './Screens/ProfileScreen/BasicInformation';
 import { DrawerStatusProvider } from './hooks/usedrawerstatus';
+import SubstitutionsScreen from './Screens/ProfileScreen/SubstitutionsScreen/SubstitutionsScreen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -217,6 +218,13 @@ function StackNavigator() {
           component={BasicInformation}
           options={{
             header: () => <AppBar back={true} title={'Perustiedot'} />,
+          }}
+        />
+        <Stack.Screen
+          name="SubstitutionsScreen"
+          component={SubstitutionsScreen}
+          options={{
+            header: () => <AppBar back={true} title={'Keikat'} />,
           }}
         />
       </>
