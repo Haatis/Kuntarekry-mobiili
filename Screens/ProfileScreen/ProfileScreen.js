@@ -50,72 +50,71 @@ export default function ProfileScreen() {
             </Text>
             <View style={styles.container}>
               <View style={styles.row}>
-                <View style={styles.squareContainer}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate(BasicInformation)}
-                    style={[theme.outline, styles.square, theme.dropShadow]}
-                  >
-                    <MaterialCommunityIcons
-                      name="card-account-details"
-                      size={40}
-                      color={theme.colors.textPrimary}
-                    />
-                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Perustiedot</Text>
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate(BasicInformation)}
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                >
+                  <MaterialCommunityIcons
+                    name="card-account-details"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Perustiedot</Text>
+                </TouchableOpacity>
+                <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <MaterialCommunityIcons
+                    name="file-account"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>CV</Text>
                 </View>
-                <View style={styles.squareContainer}>
-                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                    <MaterialCommunityIcons
-                      name="file-account"
-                      size={40}
-                      color={theme.colors.textPrimary}
-                    />
-                    <Text style={{ textAlign: 'center', marginTop: 8 }}>CV</Text>
-                  </View>
-                </View>
-                <View style={styles.squareContainer}>
-                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                    <MaterialCommunityIcons
-                      name="school"
-                      size={40}
-                      color={theme.colors.textPrimary}
-                    />
-                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Pätevyydet</Text>
-                  </View>
+                <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <MaterialCommunityIcons
+                    name="school"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Pätevyydet</Text>
                 </View>
               </View>
-              <View style={styles.row}>
-                <View style={styles.squareContainer}>
-                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                    <MaterialCommunityIcons
-                      name="account-filter"
-                      size={40}
-                      color={theme.colors.textPrimary}
-                    />
-                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Työtoiveet</Text>
-                  </View>
+              <View style={{ ...styles.row, marginVertical: 16 }}>
+                <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <MaterialCommunityIcons
+                    name="account-filter"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Työtoiveet</Text>
                 </View>
-                <View style={styles.squareContainer}>
-                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                    <MaterialCommunityIcons
-                      name="file-image"
-                      size={40}
-                      color={theme.colors.textPrimary}
-                    />
-                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Portfolio</Text>
-                  </View>
+                <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <MaterialCommunityIcons
+                    name="file-image"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Portfolio</Text>
                 </View>
-                <View style={styles.squareContainer}>
-                  <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                    <MaterialCommunityIcons
-                      name="dots-vertical"
-                      size={40}
-                      color={theme.colors.textPrimary}
-                    />
-                    <Text style={{ textAlign: 'center', marginTop: 8 }}>Muut</Text>
-                  </View>
+                <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <MaterialCommunityIcons
+                    name="dots-vertical"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Muut</Text>
                 </View>
               </View>
+              <TouchableOpacity
+                style={[theme.outline, styles.square, theme.dropShadow]}
+                onPress={() => navigation.navigate('SubstitutionsScreen')}
+              >
+                <MaterialCommunityIcons
+                  name="calendar-month"
+                  size={50}
+                  color={theme.colors.textPrimary}
+                />
+                <Text style={{ ...theme.textVariants.textL }}>Keikat</Text>
+              </TouchableOpacity>
             </View>
           </View>
           <BottomButton buttonText="Esikatsele profiilia" />
@@ -144,16 +143,12 @@ const styles = StyleSheet.create({
     right: 0,
   },
   container: {
-    alignItems: 'center',
     flex: 1,
-    flexDirection: 'column',
     marginTop: 32,
+    width: '100%',
   },
   imageStyle: {
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+    borderRadius: 99,
     height: 100,
     width: 100,
   },
@@ -164,6 +159,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    gap: 16,
   },
   square: {
     alignItems: 'center',
@@ -171,12 +167,9 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
+    flex: 1,
+    gap: 8,
     height: 100,
     justifyContent: 'center',
-    width: 100,
-  },
-  squareContainer: {
-    marginBottom: 16,
-    marginHorizontal: 8,
   },
 });
