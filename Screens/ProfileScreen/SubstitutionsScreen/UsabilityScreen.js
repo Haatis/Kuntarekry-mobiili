@@ -4,22 +4,49 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable } from 'react-native';
 
-const DAYS = [
-  { name: 'MA', number: 26.7 },
-  { name: 'TI', number: 27.7 },
-  { name: 'KE', number: 28.7 },
-  { name: 'TO', number: 29.7 },
-  { name: 'PE', number: 30.7 },
-  { name: 'LA', number: 1.8 },
-  { name: 'SU', number: 2.8 },
-];
+const DAYS = ['MA', 'TI', 'KE', 'TO', 'PE', 'LA', 'SU'];
 
 export default function UsabilityScreen() {
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedMorning, setSelectedMorning] = useState([]);
   const [selectedAfternoon, setSelectedAfternoon] = useState([]);
   const [selectedEvening, setSelectedEvening] = useState([]);
-  console.log(selectedEvening);
+
+  const getCurrentWeek = () => {
+    const currentDate = new Date();
+    const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
+    const weekNumber = Math.ceil(
+      ((currentDate - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7
+    );
+    return weekNumber;
+  };
+
+  const [currentWeek, setCurrentWeek] = useState(getCurrentWeek());
+
+  const getWeekDates = (weekNumber) => {
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    startDate.setDate(startDate.getDate() + (1 - startDate.getDay()) + (weekNumber - 1) * 7); // Calculate start date of the week
+
+    const dates = [];
+    for (let i = 0; i < 7; i++) {
+      const currentDate = new Date(startDate);
+      currentDate.setDate(currentDate.getDate() + i);
+      dates.push(currentDate);
+    }
+    return dates;
+  };
+
+  const weekDates = getWeekDates(currentWeek);
+
+  const handlePreviousWeek = () => {
+    setCurrentWeek((prevWeek) => prevWeek - 1);
+  };
+
+  const handleNextWeek = () => {
+    setCurrentWeek((prevWeek) => prevWeek + 1);
+  };
+
   return (
     <View style={theme.containerTop}>
       <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
@@ -30,7 +57,12 @@ export default function UsabilityScreen() {
         <Text style={{ ...theme.textVariants.uiS, color: theme.colors.textPrimary }}>Ohjeet</Text>
       </View>
       <View style={{ flexDirection: 'row', gap: 16, alignItems: 'center' }}>
-        <MaterialCommunityIcons name="chevron-double-left" size={32} color="black" />
+        <MaterialCommunityIcons
+          name="chevron-double-left"
+          size={32}
+          color="black"
+          onPress={handlePreviousWeek}
+        />
         <Text
           style={{
             ...theme.textVariants.uiM,
@@ -40,20 +72,25 @@ export default function UsabilityScreen() {
             borderRadius: 8,
           }}
         >
-          Viikko 26
+          Viikko {currentWeek}
         </Text>
-        <MaterialCommunityIcons name="chevron-double-right" size={32} color="black" />
+        <MaterialCommunityIcons
+          name="chevron-double-right"
+          size={32}
+          color="black"
+          onPress={handleNextWeek}
+        />
       </View>
       <View style={styles.calendar}>
         <View style={styles.column}>
           <Text style={{ ...styles.rectangle, backgroundColor: 'transparent' }}></Text>
-          {DAYS.map((day, index) => {
+          {weekDates.map((date, index) => {
+            const formattedDate = date.getDate() + '.' + (date.getMonth() + 1);
             const isDaySelected = selectedDays.includes(index);
-            const isFullySelected =
-              isDaySelected &&
-              selectedMorning.includes(index) &&
-              selectedAfternoon.includes(index) &&
-              selectedEvening.includes(index);
+            const isMorningSelected = selectedMorning.includes(index);
+            const isAfternoonSelected = selectedAfternoon.includes(index);
+            const isEveningSelected = selectedEvening.includes(index);
+            const isFullySelected = isMorningSelected && isAfternoonSelected && isEveningSelected;
 
             return (
               <Pressable
@@ -72,16 +109,22 @@ export default function UsabilityScreen() {
                       selectedEvening.filter((selectedItem) => selectedItem !== index)
                     );
                   } else {
-                    // Select the day
-                    setSelectedDays([...selectedDays, index]);
-                    // Select AAMU, ILTA, and YÖ if they are not already selected
-                    if (!selectedMorning.includes(index)) {
+                    // Toggle the day selection
+                    if (isDaySelected) {
+                      setSelectedDays(selectedDays.filter((selectedDay) => selectedDay !== index));
+                    } else {
+                      setSelectedDays([...selectedDays, index]);
+                    }
+                    // Select AAMU if it is not already selected
+                    if (!isMorningSelected) {
                       setSelectedMorning([...selectedMorning, index]);
                     }
-                    if (!selectedAfternoon.includes(index)) {
+                    // Select ILTA if it is not already selected
+                    if (!isAfternoonSelected) {
                       setSelectedAfternoon([...selectedAfternoon, index]);
                     }
-                    if (!selectedEvening.includes(index)) {
+                    // Select YÖ if it is not already selected
+                    if (!isEveningSelected) {
                       setSelectedEvening([...selectedEvening, index]);
                     }
                   }
@@ -92,16 +135,16 @@ export default function UsabilityScreen() {
                   borderBottomLeftRadius: 8,
                   flex: 1,
                   justifyContent: 'center',
-                  backgroundColor: isFullySelected ? theme.colors.tag2 : theme.colors.button,
+                  backgroundColor: isFullySelected ? theme.colors.danger : theme.colors.button,
                 }}
               >
-                <Text style={{ textAlign: 'center', color: 'white' }}>
-                  {day.name} {day.number}
-                </Text>
+                <Text style={{ textAlign: 'center', color: 'white' }}>{DAYS[index]}</Text>
+                <Text style={{ textAlign: 'center', color: 'white' }}>{formattedDate}</Text>
               </Pressable>
             );
           })}
         </View>
+
         <View style={styles.column}>
           <Text
             onPress={() => {
@@ -116,7 +159,7 @@ export default function UsabilityScreen() {
               borderTopLeftRadius: 8,
               borderTopRightRadius: 8,
               backgroundColor:
-                selectedMorning.length === 7 ? theme.colors.tag2 : theme.colors.button,
+                selectedMorning.length === 7 ? theme.colors.danger : theme.colors.button,
             }}
           >
             AAMU
@@ -135,9 +178,9 @@ export default function UsabilityScreen() {
               }}
               style={{
                 ...styles.rectangle,
-                color: theme.colors.textPrimary,
+                color: selectedMorning.includes(item) ? 'white' : theme.colors.textPrimary,
                 backgroundColor: selectedMorning.includes(item)
-                  ? theme.colors.tag2
+                  ? theme.colors.danger
                   : theme.colors.tag4,
               }}
             >
@@ -159,7 +202,7 @@ export default function UsabilityScreen() {
               borderTopLeftRadius: 8,
               borderTopRightRadius: 8,
               backgroundColor:
-                selectedAfternoon.length === 7 ? theme.colors.tag2 : theme.colors.button,
+                selectedAfternoon.length === 7 ? theme.colors.danger : theme.colors.button,
             }}
           >
             ILTA
@@ -178,9 +221,9 @@ export default function UsabilityScreen() {
               }}
               style={{
                 ...styles.rectangle,
-                color: theme.colors.textPrimary,
+                color: selectedAfternoon.includes(item) ? 'white' : theme.colors.textPrimary,
                 backgroundColor: selectedAfternoon.includes(item)
-                  ? theme.colors.tag2
+                  ? theme.colors.danger
                   : theme.colors.tag4,
               }}
             >
@@ -202,7 +245,7 @@ export default function UsabilityScreen() {
               borderTopLeftRadius: 8,
               borderTopRightRadius: 8,
               backgroundColor:
-                selectedEvening.length === 7 ? theme.colors.tag2 : theme.colors.button,
+                selectedEvening.length === 7 ? theme.colors.danger : theme.colors.button,
             }}
           >
             YÖ
@@ -221,9 +264,9 @@ export default function UsabilityScreen() {
               }}
               style={{
                 ...styles.rectangle,
-                color: theme.colors.textPrimary,
+                color: selectedEvening.includes(item) ? 'white' : theme.colors.textPrimary,
                 backgroundColor: selectedEvening.includes(item)
-                  ? theme.colors.tag2
+                  ? theme.colors.danger
                   : theme.colors.tag4,
               }}
             >
