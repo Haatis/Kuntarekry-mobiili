@@ -16,7 +16,7 @@ import { useCallback, useEffect } from 'react';
 import useSearchJobs from '../../hooks/usejobsearch';
 import { useState, useRef } from 'react';
 import { useDrawerStatus } from '../../hooks/usedrawerstatus';
-
+import { useMemo } from 'react';
 function SearchContent({ navigation }) {
   const status = useDrawerStatus();
   const filters = useFilteredJobs();
@@ -24,7 +24,6 @@ function SearchContent({ navigation }) {
   const [lastSearch, setLastSearch] = useState('');
   const searchInputRef = useRef(null);
   const searchJobs = useSearchJobs(filters.filteredJobs, lastSearch);
-  const [sortedData, setSortedData] = useState([]);
   const [activeSortType, setActiveSortType] = useState('newest');
   const [showSortSelector, setShowSortSelector] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,42 +63,27 @@ function SearchContent({ navigation }) {
     []
   );
 
-  const sortJobs = () => {
+  const sortedData = useMemo(() => {
     switch (activeSortType) {
       case 'newest':
-        setSortedData(
-          jobs.slice().sort((a, b) => {
-            return b.jobAdvertisement.publicationStarts.localeCompare(
-              a.jobAdvertisement.publicationStarts
-            );
-          })
+        return jobs.sort((a, b) =>
+          b.jobAdvertisement.publicationStarts.localeCompare(a.jobAdvertisement.publicationStarts)
         );
-        break;
       case 'endTime':
-        setSortedData(
-          jobs.slice().sort((a, b) => {
-            return a.jobAdvertisement.publicationEnds.localeCompare(
-              b.jobAdvertisement.publicationEnds
-            );
-          })
+        return jobs.sort((a, b) =>
+          a.jobAdvertisement.publicationEnds.localeCompare(b.jobAdvertisement.publicationEnds)
         );
-        break;
       case 'employer':
-        setSortedData(
-          jobs.slice().sort((a, b) => {
-            return a.jobAdvertisement.profitCenter?.localeCompare(b.jobAdvertisement.profitCenter);
-          })
+        return jobs.sort((a, b) =>
+          a.jobAdvertisement.profitCenter?.localeCompare(b.jobAdvertisement.profitCenter)
         );
-        break;
       case 'location':
         alert('Sijainti ei ole käytössä');
-        break;
+        return jobs; // or return sorted data without any changes
+      default:
+        return jobs;
     }
-  };
-
-  useEffect(() => {
-    sortJobs();
-  }, [filters.selectedFilters, lastSearch, activeSortType]);
+  }, [jobs, activeSortType]);
 
   if (isLoading) {
     return (
@@ -160,6 +144,8 @@ function SearchContent({ navigation }) {
         windowSize={11}
         data={sortedData}
         renderItem={renderItem}
+        initialNumToRender={5}
+        maxToRenderPerBatch={10}
       />
 
       <TouchableOpacity
