@@ -104,17 +104,19 @@ export default function ProfileScreen() {
                   <Text style={{ ...theme.textVariants.textL }}>Muut</Text>
                 </View>
               </View>
-              <TouchableOpacity
-                style={[theme.outline, styles.square, theme.dropShadow]}
-                onPress={() => navigation.navigate('SubstitutionsScreen')}
-              >
-                <MaterialCommunityIcons
-                  name="calendar-month"
-                  size={50}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ ...theme.textVariants.textL }}>Keikat</Text>
-              </TouchableOpacity>
+              <View style={styles.row}>
+                <TouchableOpacity
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                  onPress={() => navigation.navigate('SubstitutionsScreen')}
+                >
+                  <MaterialCommunityIcons
+                    name="calendar-month"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Keikat</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           <BottomButton buttonText="Esikatsele profiilia" />
@@ -159,6 +161,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    flex: 1,
     gap: 16,
   },
   square: {
@@ -169,7 +172,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     flex: 1,
     gap: 8,
-    height: 100,
     justifyContent: 'center',
   },
 });
