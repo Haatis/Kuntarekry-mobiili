@@ -2,7 +2,15 @@ import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const DAY_NAMES = ['MA', 'TI', 'KE', 'TO', 'PE', 'LA', 'SU'];
+const DAYS = [
+  { name: 'MA', number: 26.7 },
+  { name: 'TI', number: 27.7 },
+  { name: 'KE', number: 28.7 },
+  { name: 'TO', number: 29.7 },
+  { name: 'PE', number: 30.7 },
+  { name: 'LA', number: 1.8 },
+  { name: 'SU', number: 2.8 },
+];
 
 export default function UsabilityScreen() {
   return (
@@ -31,19 +39,85 @@ export default function UsabilityScreen() {
       </View>
       <View style={styles.calendar}>
         <View style={styles.column}>
-          {DAY_NAMES.map((day) => (
+          <Text style={{ ...styles.rectangle, backgroundColor: 'transparent' }}></Text>
+          {DAYS.map((day) => (
             <Text
-              key={day}
+              key={day.name}
               style={{
-                color: 'white',
-                backgroundColor: theme.colors.button,
-                paddingVertical: 8,
-                width: '100%',
+                ...styles.rectangle,
                 borderTopLeftRadius: 8,
                 borderBottomLeftRadius: 8,
               }}
             >
-              {day}
+              {day.name} {day.number}
+            </Text>
+          ))}
+        </View>
+        <View style={styles.column}>
+          <Text style={{ ...styles.rectangle, borderTopLeftRadius: 8, borderTopRightRadius: 8 }}>
+            AAMU
+          </Text>
+          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
+            <Text
+              key={item}
+              style={{
+                ...styles.rectangle,
+                color: theme.colors.textPrimary,
+                backgroundColor: theme.colors.tag4,
+              }}
+            >
+              AAMU
+            </Text>
+          ))}
+        </View>
+        <View style={styles.column}>
+          <Text style={{ ...styles.rectangle, borderTopLeftRadius: 8, borderTopRightRadius: 8 }}>
+            ILTA
+          </Text>
+          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
+            <Text
+              key={item}
+              style={{
+                ...styles.rectangle,
+                color: theme.colors.textPrimary,
+                backgroundColor: theme.colors.tag4,
+              }}
+            >
+              ILTA
+            </Text>
+          ))}
+        </View>
+        <View style={styles.column}>
+          <Text style={{ ...styles.rectangle, borderTopLeftRadius: 8, borderTopRightRadius: 8 }}>
+            YÖ
+          </Text>
+          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
+            <Text
+              key={item}
+              style={{
+                ...styles.rectangle,
+                color: theme.colors.textPrimary,
+                backgroundColor: theme.colors.tag4,
+              }}
+            >
+              YÖ
+            </Text>
+          ))}
+        </View>
+        <View style={styles.column}>
+          <Text style={{ ...styles.rectangle, borderTopLeftRadius: 8, borderTopRightRadius: 8 }}>
+            KEIKAT
+          </Text>
+          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
+            <Text
+              key={item}
+              style={{
+                ...styles.rectangle,
+                color: theme.colors.textPrimary,
+                backgroundColor: theme.colors.tag1,
+              }}
+            >
+              -
             </Text>
           ))}
         </View>
@@ -53,6 +127,20 @@ export default function UsabilityScreen() {
 }
 
 const styles = StyleSheet.create({
-  calendar: { flex: 1 },
-  column: { flex: 1, gap: 8 },
+  calendar: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  column: {
+    flex: 1,
+    gap: 8,
+  },
+  rectangle: {
+    ...theme.textVariants.uiS,
+    backgroundColor: theme.colors.button,
+    color: 'white',
+    paddingVertical: 8,
+    textAlign: 'center',
+    width: '100%',
+  },
 });
