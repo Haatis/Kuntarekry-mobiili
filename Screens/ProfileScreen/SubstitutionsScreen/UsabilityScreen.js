@@ -3,15 +3,16 @@ import { theme } from '../../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable } from 'react-native';
+import moment from 'moment';
 
 const DAYS = [
-  { name: 'MA', number: 26.7 },
-  { name: 'TI', number: 27.7 },
-  { name: 'KE', number: 28.7 },
-  { name: 'TO', number: 29.7 },
-  { name: 'PE', number: 30.7 },
-  { name: 'LA', number: 1.8 },
-  { name: 'SU', number: 2.8 },
+  { name: 'MA' },
+  { name: 'TI' },
+  { name: 'KE' },
+  { name: 'TO' },
+  { name: 'PE' },
+  { name: 'LA' },
+  { name: 'SU' },
 ];
 
 export default function UsabilityScreen() {
@@ -19,7 +20,20 @@ export default function UsabilityScreen() {
   const [selectedMorning, setSelectedMorning] = useState([]);
   const [selectedAfternoon, setSelectedAfternoon] = useState([]);
   const [selectedEvening, setSelectedEvening] = useState([]);
-  console.log(selectedEvening);
+
+  const currentWeek = moment().isoWeek();
+
+  // Get the dates for the current week from Monday to Sunday
+  const currentWeekDates = [];
+  const startOfWeek = moment().isoWeekday(1); // Monday
+  for (let i = 0; i < 7; i++) {
+    const date = startOfWeek.clone().add(i, 'days');
+    const dayName = DAYS[i].name;
+    const formattedDate = date.format('D.M');
+    const dayObject = { dayName, formattedDate };
+    currentWeekDates.push(dayObject);
+  }
+
   return (
     <View style={theme.containerTop}>
       <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
@@ -40,20 +54,19 @@ export default function UsabilityScreen() {
             borderRadius: 8,
           }}
         >
-          Viikko 26
+          Viikko {currentWeek}
         </Text>
         <MaterialCommunityIcons name="chevron-double-right" size={32} color="black" />
       </View>
       <View style={styles.calendar}>
         <View style={styles.column}>
           <Text style={{ ...styles.rectangle, backgroundColor: 'transparent' }}></Text>
-          {DAYS.map((day, index) => {
+          {currentWeekDates.map((day, index) => {
             const isDaySelected = selectedDays.includes(index);
-            const isFullySelected =
-              isDaySelected &&
-              selectedMorning.includes(index) &&
-              selectedAfternoon.includes(index) &&
-              selectedEvening.includes(index);
+            const isMorningSelected = selectedMorning.includes(index);
+            const isAfternoonSelected = selectedAfternoon.includes(index);
+            const isEveningSelected = selectedEvening.includes(index);
+            const isFullySelected = isMorningSelected && isAfternoonSelected && isEveningSelected;
 
             return (
               <Pressable
@@ -72,16 +85,22 @@ export default function UsabilityScreen() {
                       selectedEvening.filter((selectedItem) => selectedItem !== index)
                     );
                   } else {
-                    // Select the day
-                    setSelectedDays([...selectedDays, index]);
-                    // Select AAMU, ILTA, and YÖ if they are not already selected
-                    if (!selectedMorning.includes(index)) {
+                    // Toggle the day selection
+                    if (isDaySelected) {
+                      setSelectedDays(selectedDays.filter((selectedDay) => selectedDay !== index));
+                    } else {
+                      setSelectedDays([...selectedDays, index]);
+                    }
+                    // Select AAMU if it is not already selected
+                    if (!isMorningSelected) {
                       setSelectedMorning([...selectedMorning, index]);
                     }
-                    if (!selectedAfternoon.includes(index)) {
+                    // Select ILTA if it is not already selected
+                    if (!isAfternoonSelected) {
                       setSelectedAfternoon([...selectedAfternoon, index]);
                     }
-                    if (!selectedEvening.includes(index)) {
+                    // Select YÖ if it is not already selected
+                    if (!isEveningSelected) {
                       setSelectedEvening([...selectedEvening, index]);
                     }
                   }
@@ -96,7 +115,7 @@ export default function UsabilityScreen() {
                 }}
               >
                 <Text style={{ textAlign: 'center', color: 'white' }}>
-                  {day.name} {day.number}
+                  {day.dayName} {day.formattedDate}{' '}
                 </Text>
               </Pressable>
             );
