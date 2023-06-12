@@ -1,95 +1,179 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import { useState } from 'react';
-import { useJobLocations } from '../../hooks/uselocations';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { theme } from '../../styles/theme';
-import { useOnboarding } from '../../hooks/useonboarding';
-import { TextInput } from 'react-native-gesture-handler';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useState } from 'react';
+import TagLarge from '../../components/Tags/TagLarge';
+import DropDown from '../../components/DropDown';
+import { useJobLocations } from '../../hooks/uselocations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomButton from '../../components/BottomButton';
+import { useEffect } from 'react';
+import * as Location from 'expo-location';
+import { useOnboarding } from '../../hooks/useonboarding';
+import { API_GEOKEY } from '@env';
 
 export default function PersonalizationScreen2() {
-  const { finishOnboarding } = useOnboarding();
+  const [selectedJobs, setSelectedJobs] = useState([]);
   const { locations } = useJobLocations();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [permissionsGranted, setPermissionsGranted] = useState(false);
+  const { finishOnboarding } = useOnboarding();
+  const [loading, setLoading] = useState(true);
 
-  const handleLocationSelect = (location) => {
-    setSelectedLocation(location);
-    setSearchQuery(location.name);
-    setSearchResults([]);
-  };
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permission to access location was denied');
+        return;
+      }
+      setPermissionsGranted(true);
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      setLoading(false);
+    })();
+  }, []);
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
+  useEffect(() => {
+    if (location) {
+      fetchLocation(location);
+    }
+  }, [location]);
 
-    // Filter the locations based on the search query
-    const filteredResults = locations.filter((location) =>
-      location.name.toLowerCase().includes(query.toLowerCase())
-    );
-
-    setSearchResults(filteredResults);
-  };
-
-  const saveAndContinue = async () => {
+  const fetchLocation = async (location) => {
     try {
-      // Save the selectedLocation.id into AsyncStorage
-      await AsyncStorage.setItem('location', selectedLocation.id.toString());
-      finishOnboarding();
+      const latitude = location.coords.latitude;
+      const longitude = location.coords.longitude;
+
+      const response = await fetch(
+        `https://www.mapquestapi.com/geocoding/v1/reverse?key=${API_GEOKEY}&location=${latitude},${longitude}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const adminArea5 = data.results[0].locations[0].adminArea5;
+        const adminArea4 = data.results[0].locations[0].adminArea4;
+
+        await handleLocationSelections(adminArea5, adminArea4);
+      } else {
+        console.error('Error fetching location:', response.status);
+      }
     } catch (error) {
-      console.log('Error saving selected location ID:', error);
+      console.error('Error fetching location:', error);
     }
   };
 
+  const handleLocationSelections = async (adminArea5, adminArea4) => {
+    if (!selectedJobs.includes(adminArea5)) {
+      setSelectedJobs((prevSelectedJobs) => [...prevSelectedJobs, adminArea5]);
+    }
+    if (!selectedJobs.includes(adminArea4)) {
+      setSelectedJobs((prevSelectedJobs) => [...prevSelectedJobs, adminArea4]);
+    }
+  };
+
+  const handleJobSelection = (job) => {
+    if (selectedJobs.includes(job)) {
+      setSelectedJobs(selectedJobs.filter((selectedJob) => selectedJob !== job));
+    } else {
+      setSelectedJobs([...selectedJobs, job]);
+    }
+  };
+  const handleTagClose = (job) => {
+    const updatedJobs = selectedJobs.filter((selectedJob) => selectedJob !== job);
+    setSelectedJobs(updatedJobs);
+  };
+
+  const saveAndContinue = async () => {
+    const jobIds = selectedJobs.map((job) => {
+      const selectedTask = locations.find((task) => task.name === job);
+      return selectedTask ? selectedTask.id : null;
+    });
+    const filteredJobIds = jobIds.filter((id) => id !== null);
+    console.log(filteredJobIds);
+    try {
+      await AsyncStorage.setItem('location', JSON.stringify(filteredJobIds));
+      finishOnboarding();
+    } catch (error) {
+      console.log('Error saving location IDs:', error);
+    }
+  };
+
+  const jobCategories = locations
+    .filter((task) => !task.parent)
+    .map((task) => ({
+      name: task.name,
+      jobs: locations
+        .filter((subTask) => subTask.parent === task.id)
+        .map((subTask) => ({ name: subTask.name })),
+    }));
+
   return (
     <>
-      <View style={styles.containerTop}>
-        <Text style={theme.textVariants.uiM}>Valitse sijainti </Text>
-        <View style={styles.createButton}>
-          {selectedLocation ? (
-            <TouchableOpacity
-              style={styles.selectedLocationTag}
-              onPress={() => {
-                setSelectedLocation(null);
-                setSearchQuery('');
-              }}
-            >
-              <Text style={theme.textVariants.uiM}>{selectedLocation.name}</Text>
-              <MaterialCommunityIcons name="close" size={16} color={theme.colors.textPrimary} />
-            </TouchableOpacity>
-          ) : (
-            <TextInput
-              placeholder="Sijainti"
-              style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, flex: 1 }]}
-              value={searchQuery}
-              onChangeText={handleSearch}
-            />
-          )}
-          <MaterialCommunityIcons name="map-marker" size={30} color={theme.colors.textPrimary} />
-        </View>
-        <View
-          style={[
-            { flex: 1, width: '100%' },
-            searchResults.length > 0 && { height: Math.min(searchResults.length * 50, 200) },
-          ]}
-        >
-          <FlatList
-            data={searchResults}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={{ flexGrow: 1 }}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => handleLocationSelect(item)}
-                style={styles.suggestionItem}
-              >
-                <Text style={[theme.textVariants.uiM, styles.suggestionItemText]}>{item.name}</Text>
-              </TouchableOpacity>
-            )}
+      <ScrollView style={{ backgroundColor: 'white' }}>
+        <View style={styles.containerTop}>
+          <Text style={theme.textVariants.uiM}>Valitse tehtäväalue</Text>
+          <Text style={[theme.textVariants.uiS, { marginBottom: 8 }]}>
+            Valitse vähintään yksi, voit valita useampia
+          </Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8 }}>
+            {selectedJobs.map((job) => (
+              <TagLarge
+                key={job}
+                tagColor={theme.colors.tag1}
+                tagText={job}
+                tagClose={true}
+                onPressClose={() => handleTagClose(job)}
+              />
+            ))}
+          </View>
+
+          <DropDown
+            category={'Käytä omaa sijaintiasi'}
+            options="location"
+            handleOptionSelection={async () => {
+              if (loading) return;
+              if (permissionsGranted) {
+                let location = await Location.getCurrentPositionAsync({});
+                fetchLocation(location);
+              } else {
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                  alert('Permission to access location was denied');
+                  return;
+                }
+
+                let location = await Location.getCurrentPositionAsync({});
+                fetchLocation(location);
+              }
+            }}
           />
+
+          {jobCategories.map((category) => (
+            <View key={category.name} style={{ width: '100%' }}>
+              <DropDown
+                category={category.name}
+                options={category.jobs}
+                selectedOptions={selectedJobs}
+                handleOptionSelection={handleJobSelection}
+              />
+            </View>
+          ))}
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8 }}>
+            {selectedJobs.map((job) => (
+              <TagLarge
+                key={job}
+                tagColor={theme.colors.tag1}
+                tagText={job}
+                tagClose={true}
+                onPressClose={() => handleTagClose(job)}
+              />
+            ))}
+          </View>
         </View>
-      </View>
-      <BottomButton buttonText="Tallenna ja jatka" buttonAction={() => saveAndContinue()} />
+      </ScrollView>
+      {selectedJobs.length > 0 && (
+        <BottomButton buttonText="Tallenna ja jatka" buttonAction={() => saveAndContinue()} />
+      )}
     </>
   );
 }
@@ -98,36 +182,10 @@ const styles = StyleSheet.create({
   containerTop: {
     alignItems: 'center',
     backgroundColor: 'white',
-    flex: 1,
     gap: 8,
+    height: '100%',
     paddingHorizontal: 8,
-    paddingTop: 16,
-  },
-  createButton: {
-    ...theme.outline,
-    ...theme.dropShadow,
-    alignItems: 'center',
-    borderRadius: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 16,
     width: '100%',
-  },
-
-  selectedLocationTag: {
-    flexDirection: 'row',
-  },
-  suggestionItem: {
-    borderBottomWidth: 1,
-    borderColor: theme.colors.outlineDark,
-    paddingVertical: 8,
-    width: '100%',
-  },
-  suggestionItemText: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    textAlign: 'left',
   },
 });

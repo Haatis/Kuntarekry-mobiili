@@ -10,6 +10,45 @@ export default function DropDown({ category, options, selectedOptions, handleOpt
     setIsDropdownOpen((prevState) => !prevState);
   };
 
+  if (options === 'location') {
+    return (
+      <View style={{ width: '100%' }}>
+        <TouchableOpacity
+          onPress={() => handleOptionSelection()}
+          style={[
+            theme.outlineDark,
+            theme.dropShadow,
+            styles.createButton,
+            { backgroundColor: 'white' },
+            { textColor: theme.colors.textPrimary },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+                style={[
+                  theme.textVariants.textM,
+
+                  {
+                    marginTop: 4,
+                    color: theme.colors.textPrimary,
+                  },
+                ]}
+              >
+                {category}
+              </Text>
+              <MaterialCommunityIcons name={'map-marker'} size={24} color={'blue'} />
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
   return (
     <View style={{ width: '100%' }}>
       <TouchableOpacity

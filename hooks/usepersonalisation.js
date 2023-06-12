@@ -43,10 +43,8 @@ function parseValues(values) {
   return values.map(([key, value]) => {
     if (key === LANGUAGE_KEY) {
       return [key, value];
-    } else if (key === TASK_KEY) {
-      return [key, parseTaskNumbers(value)];
     } else {
-      return [key, Number(value)];
+      return [key, parseTaskNumbers(value)];
     }
   });
 }

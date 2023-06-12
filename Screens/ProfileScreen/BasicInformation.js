@@ -10,39 +10,46 @@ import { ScrollView } from 'react-native-gesture-handler';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
 import BottomButton from '../../components/BottomButton';
-import { Keyboard } from 'react-native';
 
 export default function BasicInformation() {
   const { locations } = useJobLocations();
   const [locationData, setLocationData] = useState(null);
   const personalisationItems = usePersonalisation();
-  const locationNumber = personalisationItems[LOCATION_KEY];
+  const locationNumbers = personalisationItems[LOCATION_KEY];
   const { userData } = useContext(AuthContext);
   const [textHeight, setTextHeight] = useState(57);
 
   useEffect(() => {
-    if (locationNumber) {
-      const locationObject = locations.find((location) => location.id === parseInt(locationNumber));
-      const name = locationObject ? locationObject.name : null;
-      const parentObject =
+    if (locationNumbers && Array.isArray(locationNumbers)) {
+      const locationObjects = locationNumbers.map((number) =>
+        locations.find((location) => location.id === parseInt(number))
+      );
+      const names = locationObjects.map((locationObject) =>
+        locationObject ? locationObject.name : null
+      );
+      const parentObjects = locationObjects.map((locationObject) =>
         locationObject && locationObject.parent
           ? locations.find((location) => location.id === locationObject.parent)
-          : null;
-      const parentName = parentObject ? parentObject.name : null;
-      const children = locations
-        .filter((location) => location.parent === name)
-        .map((location) => ({
-          name: location.name,
-          parent: location.parent,
-        }));
+          : null
+      );
+      const parentNames = parentObjects.map((parentObject) =>
+        parentObject ? parentObject.name : null
+      );
+      const children = locationObjects.map((locationObject) =>
+        locations
+          .filter((location) => location.parent === locationObject.name)
+          .map((location) => ({
+            name: location.name,
+            parent: location.parent,
+          }))
+      );
       setLocationData({
-        name,
+        names,
         children,
-        parent: parentName,
+        parents: parentNames,
       });
     }
-  }, [locationNumber, locations]);
-
+  }, [locationNumbers, locations]);
   return (
     <>
       <ScrollView>
@@ -105,9 +112,11 @@ export default function BasicInformation() {
             }}
           >
             {locationData ? (
-              <Text style={[theme.textVariants.uiM, { marginHorizontal: 8 }]}>
-                {locationData.name}
-              </Text>
+              locationData.names.map((name, index) => (
+                <Text key={index} style={[theme.textVariants.uiM, { marginHorizontal: 8 }]}>
+                  {name}
+                </Text>
+              ))
             ) : (
               <Text>Et ole valinnut sijaintia</Text>
             )}
