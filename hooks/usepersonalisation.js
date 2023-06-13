@@ -15,7 +15,6 @@ export function PersonalisationProvider({ children }) {
   useEffect(() => {
     (async () => {
       if (!onboardingDone) return;
-
       try {
         const values = await AsyncStorage.multiGet([LANGUAGE_KEY, LOCATION_KEY, TASK_KEY]);
         const personalisationItems = Object.fromEntries(parseValues([...values])); // Convert values to an array
@@ -26,8 +25,21 @@ export function PersonalisationProvider({ children }) {
     })();
   }, [onboardingDone]);
 
+  const updateItems = async () => {
+    (async () => {
+      if (!onboardingDone) return;
+      try {
+        const values = await AsyncStorage.multiGet([LANGUAGE_KEY, LOCATION_KEY, TASK_KEY]);
+        const personalisationItems = Object.fromEntries(parseValues([...values])); // Convert values to an array
+        setItems(personalisationItems);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  };
+  const value = { items, updateItems };
   return (
-    <PersonalisationContext.Provider value={items}>{children}</PersonalisationContext.Provider>
+    <PersonalisationContext.Provider value={value}>{children}</PersonalisationContext.Provider>
   );
 }
 

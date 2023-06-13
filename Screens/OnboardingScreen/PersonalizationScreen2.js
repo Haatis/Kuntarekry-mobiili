@@ -11,6 +11,8 @@ import { useEffect } from 'react';
 import * as Location from 'expo-location';
 import { useOnboarding } from '../../hooks/useonboarding';
 import { API_GEOKEY } from '@env';
+import { useNavigation } from '@react-navigation/native';
+import { usePersonalisation } from '../../hooks/usepersonalisation';
 
 export default function PersonalizationScreen2() {
   const [selectedJobs, setSelectedJobs] = useState([]);
@@ -18,7 +20,10 @@ export default function PersonalizationScreen2() {
   const [location, setLocation] = useState(null);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const { finishOnboarding } = useOnboarding();
+  const { updateItems } = usePersonalisation();
   const [loading, setLoading] = useState(true);
+  const { onboardingDone } = useOnboarding();
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -28,9 +33,9 @@ export default function PersonalizationScreen2() {
         return;
       }
       setPermissionsGranted(true);
+      setLoading(false);
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
-      setLoading(false);
     })();
   }, []);
 
@@ -116,9 +121,14 @@ export default function PersonalizationScreen2() {
       return selectedTask ? selectedTask.id : null;
     });
     const filteredJobIds = jobIds.filter((id) => id !== null);
-    console.log(filteredJobIds);
+
     try {
       await AsyncStorage.setItem('location', JSON.stringify(filteredJobIds));
+      if (onboardingDone) {
+        updateItems();
+        navigation.navigate('Home');
+        return;
+      }
       finishOnboarding();
     } catch (error) {
       console.log('Error saving location IDs:', error);

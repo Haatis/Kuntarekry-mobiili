@@ -214,6 +214,13 @@ function StackNavigator() {
           }}
         />
         <Stack.Screen
+          name="PersonalizationScreen2"
+          component={PersonalizationScreen2}
+          options={{
+            header: () => <AppBar back={true} title={'Sijainti'} />,
+          }}
+        />
+        <Stack.Screen
           name="BasicInformation"
           component={BasicInformation}
           options={{
