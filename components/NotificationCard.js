@@ -12,7 +12,6 @@ export default function Notification({ job, cardType }) {
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
 
   const [rowWidth, setRowWidth] = useState(0);
-  const [contentWidth, setContentWidth] = useState(0);
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
@@ -54,11 +53,8 @@ export default function Notification({ job, cardType }) {
         style={styles.cardBottom}
         onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
       >
-        <View
-          style={styles.tagRow}
-          onLayout={(event) => setContentWidth(event.nativeEvent.layout.width)}
-        >
-          <TagRow contentWidth={contentWidth} rowWidth={rowWidth} job={job} />
+        <View style={styles.tagRow}>
+          <TagRow rowWidth={rowWidth} job={job} />
         </View>
         <View style={styles.dateTextContainer}>
           <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>

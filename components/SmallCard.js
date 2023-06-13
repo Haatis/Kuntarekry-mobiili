@@ -6,16 +6,12 @@ import { memo, useState } from 'react';
 import TagRow from './TagRow';
 
 export default memo(SmallCard);
-function SmallCard({ job, cardType }) {
+function SmallCard({ job, cardType = 'default' }) {
   const imgNumber = job.organization?.length;
   const navigation = useNavigation();
   const imageURL = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
   const [rowWidth, setRowWidth] = useState(0);
-  const [contentWidth, setContentWidth] = useState(0);
 
-  if (cardType == null) {
-    cardType = 'default';
-  }
   const trimmedDesc = job.jobDesc?.trim().replace(/\s+/g, ' ');
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
 
@@ -57,11 +53,8 @@ function SmallCard({ job, cardType }) {
         style={styles.cardBottom}
         onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
       >
-        <View
-          style={styles.tagRow}
-          onLayout={(event) => setContentWidth(event.nativeEvent.layout.width)}
-        >
-          <TagRow contentWidth={contentWidth} rowWidth={rowWidth} job={job} />
+        <View style={styles.tagRow}>
+          <TagRow rowWidth={rowWidth} job={job} />
         </View>
         <Text numberOfLines={4} style={[theme.textVariants.textM, styles.description]}>
           {trimmedDesc}

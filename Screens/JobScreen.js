@@ -15,8 +15,6 @@ export default function JobScreen({ route }) {
   const publicationStarts = new Date(job.publicationStarts)?.toLocaleDateString('fi-FI');
 
   const [rowWidth, setRowWidth] = useState(0);
-  const [employmentWidth, setEmploymentWidth] = useState(0);
-  const [detailWidth, setDetailWidth] = useState(0);
 
   const CountdownTimer = () => {
     const [timeLeft, setTimeLeft] = useState('');
@@ -135,16 +133,8 @@ export default function JobScreen({ route }) {
                 size={30}
                 color={theme.colors.button}
               />
-              <View
-                style={styles.tagRow}
-                onLayout={(event) => setEmploymentWidth(event.nativeEvent.layout.width)}
-              >
-                <TagRow
-                  contentWidth={employmentWidth}
-                  rowWidth={rowWidth}
-                  job={job}
-                  renderDetailTags={false}
-                />
+              <View style={styles.tagRow}>
+                <TagRow rowWidth={rowWidth} job={job} renderDetailTags={false} />
               </View>
             </View>
             <View style={styles.detailRow}>
@@ -177,16 +167,8 @@ export default function JobScreen({ route }) {
                 size={30}
                 color={theme.colors.button}
               />
-              <View
-                style={styles.tagRow}
-                onLayout={(event) => setDetailWidth(event.nativeEvent.layout.width)}
-              >
-                <TagRow
-                  contentWidth={detailWidth}
-                  rowWidth={rowWidth}
-                  job={job}
-                  renderTypeTags={false}
-                />
+              <View style={styles.tagRow}>
+                <TagRow rowWidth={rowWidth} job={job} renderTypeTags={false} />
               </View>
             </View>
             <View>
@@ -272,7 +254,9 @@ const styles = StyleSheet.create({
   },
   tagRow: {
     flexDirection: 'row',
+    flex: 1,
     gap: 8,
+    paddingRight: 32,
   },
   title: {
     color: 'black',

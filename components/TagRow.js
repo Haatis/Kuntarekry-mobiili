@@ -4,14 +4,34 @@ import Tag from './Tags/Tag';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-export default function TagRow({
-  contentWidth,
-  rowWidth,
-  job,
-  renderDetailTags = true,
-  renderTypeTags = true,
-}) {
+export default function TagRow({ rowWidth, job, renderDetailTags = true, renderTypeTags = true }) {
   const [showAllTags, setShowAllTags] = useState(false);
+  const [contentWidth, setContentWidth] = useState(null);
+
+  const checkContentWidth = (event) => setContentWidth(event.nativeEvent.layout.width);
+
+  // Check content width and while checking the opacity of the component is 0 to reduce flickering effect
+  if (contentWidth === null) {
+    return (
+      <View style={{ ...styles.tagsShort, opacity: 0 }} onLayout={checkContentWidth}>
+        {renderTypeTags && (
+          <>
+            <Tag tagText={job.employmentType} />
+            <Tag tagText={job.employmentCategory} />
+            <Tag tagText={job.employment} />
+          </>
+        )}
+        {renderDetailTags && (
+          <>
+            <Tag tagText={job.location} />
+            <Tag tagText={job.region} />
+            <Tag tagText={job.taskArea} />
+          </>
+        )}
+      </View>
+    );
+  }
+
   if (showAllTags) {
     return (
       <>

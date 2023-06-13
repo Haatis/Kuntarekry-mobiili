@@ -12,7 +12,7 @@ import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useFilteredJobs } from '../../hooks/usejobfilters';
 import SwipeableRow from '../../components/SwipeableRow';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import useSearchJobs from '../../hooks/usejobsearch';
 import { useState, useRef } from 'react';
 import { useDrawerStatus } from '../../hooks/usedrawerstatus';
@@ -57,7 +57,7 @@ function SearchContent({ navigation }) {
   const renderItem = useCallback(
     ({ item, index }) => (
       <SwipeableRow>
-        <SmallCard key={index} index={index} job={item.jobAdvertisement} />
+        <SmallCard key={index} job={item.jobAdvertisement} />
       </SwipeableRow>
     ),
     []
