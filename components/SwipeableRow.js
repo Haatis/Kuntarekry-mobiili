@@ -1,10 +1,13 @@
 import { useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../styles/theme';
+import { updateStoredList, useFavoriteList } from '../hooks/usefavoritelist';
+import { Swipeable } from 'react-native-gesture-handler';
 
-export default function SwipeableRow({ children }) {
+export default function SwipeableRow({ job, children }) {
+  const { updateFavorites } = useFavoriteList();
+
   const swipeableRowRef = useRef(null);
 
   const renderLeftActions = (progress) => {
@@ -51,10 +54,16 @@ export default function SwipeableRow({ children }) {
     if (direction === 'right') {
       console.log('right');
     } else if (direction === 'left') {
-      console.log('left');
+      handleLike();
     }
     swipeableRowRef.current.close();
   };
+
+  const handleLike = async () => {
+    await updateStoredList('job', job);
+    updateFavorites();
+  };
+
   return (
     <Swipeable
       ref={swipeableRowRef}

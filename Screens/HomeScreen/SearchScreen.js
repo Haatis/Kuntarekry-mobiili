@@ -56,7 +56,7 @@ function SearchContent({ navigation }) {
   };
   const renderItem = useCallback(
     ({ item, index }) => (
-      <SwipeableRow>
+      <SwipeableRow job={item.jobAdvertisement}>
         <SmallCard key={index} job={item.jobAdvertisement} />
       </SwipeableRow>
     ),

@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { memo, useState } from 'react';
 import TagRow from './TagRow';
+import FavoriteButton from './FavoriteButton';
 
 export default memo(SmallCard);
 function SmallCard({ job, cardType = 'default' }) {
@@ -35,15 +36,7 @@ function SmallCard({ job, cardType = 'default' }) {
         </View>
         {
           {
-            default: (
-              <View style={[styles.button, { borderColor: theme.colors.secondary }]}>
-                <MaterialCommunityIcons
-                  name="heart-outline"
-                  size={24}
-                  color={theme.colors.secondary}
-                />
-              </View>
-            ),
+            default: <FavoriteButton job={job} />,
             hidden: <MaterialCommunityIcons name="close-thick" size={16} color="black" />,
             applied: null,
           }[cardType]
@@ -85,14 +78,6 @@ const styles = StyleSheet.create({
   avatarImage: {
     borderRadius: 30,
     flex: 1,
-  },
-  button: {
-    alignItems: 'center',
-    borderRadius: 100,
-    borderWidth: 2,
-    height: 40,
-    justifyContent: 'center',
-    width: 40,
   },
   card: {
     backgroundColor: 'white',
