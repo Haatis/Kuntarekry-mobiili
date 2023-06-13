@@ -106,7 +106,7 @@ export default function ProfileScreen() {
                   />
                 )}
               </TouchableOpacity>
-              <Modal visible={modalVisible} animationType="fade">
+              <Modal transparent={true} visible={modalVisible} animationType="fade">
                 <View style={styles.modalContainer}>
                   <TouchableOpacity style={styles.optionButton} onPress={takePhoto}>
                     <Text style={styles.optionText}>Take Photo</Text>
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: theme.colors.darkBackground,
     flex: 1,
     justifyContent: 'center',
     width: '100%',
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     flex: 1,
-    gap: 8,
+    gap: 4,
     justifyContent: 'center',
   },
 });
