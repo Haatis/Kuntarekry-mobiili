@@ -34,6 +34,7 @@ import { AuthProvider } from './hooks/useauth';
 import BasicInformation from './Screens/ProfileScreen/BasicInformation';
 import { DrawerStatusProvider } from './hooks/usedrawerstatus';
 import SubstitutionsScreen from './Screens/ProfileScreen/SubstitutionsScreen/SubstitutionsScreen';
+import { FavoriteListProvider } from './hooks/usefavoritelist';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -96,45 +97,47 @@ function AppWrapper() {
           <JobOrganisationProvider>
             <PersonalisationProvider>
               <FilteredJobsProvider filteredJobs={filteredJobs} selectedFilters={selectedFilters}>
-                <DrawerStatusProvider drawerStatus={isDrawerOpen}>
-                  <NavigationContainer>
-                    <StatusBar style="inverted" />
-                    <Drawer.Navigator
-                      screenOptions={() => ({
-                        drawerStyle: {
-                          backgroundColor: theme.colors.primary,
-                          borderBottomLeftRadius: 8,
-                          borderTopLeftRadius: 8,
-                        },
+                <FavoriteListProvider>
+                  <DrawerStatusProvider drawerStatus={isDrawerOpen}>
+                    <NavigationContainer>
+                      <StatusBar style="inverted" />
+                      <Drawer.Navigator
+                        screenOptions={() => ({
+                          drawerStyle: {
+                            backgroundColor: theme.colors.primary,
+                            borderBottomLeftRadius: 8,
+                            borderTopLeftRadius: 8,
+                          },
 
-                        drawerPosition: 'right',
-                        gestureEnabled: false,
-                        swipeEnabled: isDrawerOpen, // enable swipe only when drawer is open
-                      })}
-                      drawerContent={(props) => (
-                        <DrawerContent
-                          {...props}
-                          setIsDrawerOpen={setIsDrawerOpen}
-                          onStatusChange={handleDrawerStatusChange}
-                        />
-                      )}
-                    >
-                      {onboardingDone ? (
-                        <Drawer.Screen
-                          name="Search"
-                          component={StackNavigator}
-                          options={{ headerShown: false }}
-                        />
-                      ) : (
-                        <Drawer.Screen
-                          name="Onboarding"
-                          component={OnBoardingStackNavigator}
-                          options={{ headerShown: false }}
-                        />
-                      )}
-                    </Drawer.Navigator>
-                  </NavigationContainer>
-                </DrawerStatusProvider>
+                          drawerPosition: 'right',
+                          gestureEnabled: false,
+                          swipeEnabled: isDrawerOpen, // enable swipe only when drawer is open
+                        })}
+                        drawerContent={(props) => (
+                          <DrawerContent
+                            {...props}
+                            setIsDrawerOpen={setIsDrawerOpen}
+                            onStatusChange={handleDrawerStatusChange}
+                          />
+                        )}
+                      >
+                        {onboardingDone ? (
+                          <Drawer.Screen
+                            name="Search"
+                            component={StackNavigator}
+                            options={{ headerShown: false }}
+                          />
+                        ) : (
+                          <Drawer.Screen
+                            name="Onboarding"
+                            component={OnBoardingStackNavigator}
+                            options={{ headerShown: false }}
+                          />
+                        )}
+                      </Drawer.Navigator>
+                    </NavigationContainer>
+                  </DrawerStatusProvider>
+                </FavoriteListProvider>
               </FilteredJobsProvider>
             </PersonalisationProvider>
           </JobOrganisationProvider>
