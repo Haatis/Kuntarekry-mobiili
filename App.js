@@ -34,7 +34,7 @@ import { AuthProvider } from './hooks/useauth';
 import BasicInformation from './Screens/ProfileScreen/BasicInformation';
 import { DrawerStatusProvider } from './hooks/usedrawerstatus';
 import SubstitutionsScreen from './Screens/ProfileScreen/SubstitutionsScreen/SubstitutionsScreen';
-import { FavoriteListProvider } from './hooks/usefavoritelist';
+import { FavoriteListProvider, useFavoriteList } from './hooks/usefavoritelist';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -184,6 +184,8 @@ function OnBoardingStackNavigator() {
 }
 
 function StackNavigator() {
+  const { favorites } = useFavoriteList();
+
   return (
     <Stack.Navigator screenOptions={{ header: (props) => <AppBar {...props} /> }}>
       <>
@@ -205,7 +207,9 @@ function StackNavigator() {
           name="FavoriteFolder"
           component={FavoriteFolder}
           options={{
-            header: () => <AppBar back={true} title={true} />,
+            header: () => (
+              <AppBar back={true} title={`Kaikki suosikit (${favorites.jobs.length})`} />
+            ),
           }}
         />
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />

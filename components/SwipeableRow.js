@@ -66,6 +66,7 @@ export default function SwipeableRow({ job, children }) {
 
   return (
     <Swipeable
+      containerStyle={{ overflow: 'visible' }}
       ref={swipeableRowRef}
       friction={2}
       leftThreshold={30}
