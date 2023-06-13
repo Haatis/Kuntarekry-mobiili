@@ -41,25 +41,28 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const taskNumber = personalisationItems[TASK_KEY];
 
   useEffect(() => {
-    if (locationNumber) {
-      const locationObject = locations.find((location) => location.id === parseInt(locationNumber));
-      const name = locationObject ? locationObject.name : null;
-      const parentObject =
-        locationObject && locationObject.parent
-          ? locations.find((location) => location.id === locationObject.parent)
-          : null;
-      const parentName = parentObject ? parentObject.name : null;
-      const children = locations
-        .filter((location) => location.parent === name)
-        .map((location) => ({
-          name: location.name,
-          parent: location.parent,
-        }));
-      setLocationData({
-        name,
-        children,
-        parent: parentName,
+    if (locationNumber && locationNumber.length > 0) {
+      const locationData = locationNumber.map((number) => {
+        const locationObject = locations.find((location) => location.id === number);
+        const name = locationObject ? locationObject.name : null;
+        const parentObject =
+          locationObject && locationObject.parent
+            ? locations.find((location) => location.id === locationObject.parent)
+            : null;
+        const parentName = parentObject ? parentObject.name : null;
+        const children = locations
+          .filter((location) => location.parent === name)
+          .map((location) => ({
+            name: location.name,
+            parent: location.parent,
+          }));
+        return {
+          name,
+          children,
+          parent: parentName,
+        };
       });
+      setLocationData(locationData);
     }
   }, [locationNumber, locations]);
 

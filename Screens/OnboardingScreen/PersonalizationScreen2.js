@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { theme } from '../../styles/theme';
 import { useState } from 'react';
@@ -40,6 +41,7 @@ export default function PersonalizationScreen2() {
   }, [location]);
 
   const fetchLocation = async (location) => {
+    setLoading(true);
     try {
       const latitude = location.coords.latitude;
       const longitude = location.coords.longitude;
@@ -53,16 +55,41 @@ export default function PersonalizationScreen2() {
         const adminArea5 = data.results[0].locations[0].adminArea5;
         const adminArea4 = data.results[0].locations[0].adminArea4;
 
-        await handleLocationSelections(adminArea5, adminArea4);
+        const foundAdminArea5 = locations.some((location) => location.name === adminArea5);
+        const foundAdminArea4 = locations.some((location) => location.name === adminArea4);
+
+        if (foundAdminArea5 && foundAdminArea4) {
+          await handleLocationSelections(adminArea5, adminArea4);
+        } else if (foundAdminArea5) {
+          await handleLocationSelections(adminArea5);
+        } else if (foundAdminArea4) {
+          await handleLocationSelections(adminArea4);
+        } else {
+          // If neither adminArea5 nor adminArea4 is found, find 'Ulkomaat' in the locations list and send it to the function
+          const ulkomaatLocation = locations.find((location) => location.name === 'Ulkomaat');
+          if (ulkomaatLocation) {
+            await handleLocationSelections(ulkomaatLocation.name);
+          } else {
+            // 'Ulkomaat' not found in the locations list
+            // Handle the error or perform a fallback action
+          }
+        }
       } else {
         console.error('Error fetching location:', response.status);
       }
     } catch (error) {
       console.error('Error fetching location:', error);
     }
+    setLoading(false);
   };
 
   const handleLocationSelections = async (adminArea5, adminArea4) => {
+    if (adminArea5 === 'Ulkomaat') {
+      if (!selectedJobs.includes(adminArea5)) {
+        setSelectedJobs((prevSelectedJobs) => [...prevSelectedJobs, adminArea5]);
+      }
+      return;
+    }
     if (!selectedJobs.includes(adminArea5)) {
       setSelectedJobs((prevSelectedJobs) => [...prevSelectedJobs, adminArea5]);
     }
