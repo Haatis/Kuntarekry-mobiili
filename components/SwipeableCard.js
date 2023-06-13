@@ -15,7 +15,6 @@ export default function SwipeableCard({ job }) {
   const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job`;
 
   const [rowWidth, setRowWidth] = useState(0);
-  const [contentWidth, setContentWidth] = useState(0);
 
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
@@ -62,11 +61,8 @@ export default function SwipeableCard({ job }) {
         <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
           Haku päättyy: {publicationEnds}
         </Text>
-        <View
-          style={styles.tagRow}
-          onLayout={(event) => setContentWidth(event.nativeEvent.layout.width)}
-        >
-          <TagRow contentWidth={contentWidth} rowWidth={rowWidth} job={job} />
+        <View style={styles.tagRow}>
+          <TagRow rowWidth={rowWidth} job={job} />
         </View>
         <Text
           numberOfLines={7}
