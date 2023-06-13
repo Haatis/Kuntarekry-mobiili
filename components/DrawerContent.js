@@ -36,9 +36,9 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const [locationData, setLocationData] = useState(null);
   const [taskData, setTaskData] = useState([]);
 
-  const personalisationItems = usePersonalisation();
-  const locationNumber = personalisationItems[LOCATION_KEY];
-  const taskNumber = personalisationItems[TASK_KEY];
+  const { items } = usePersonalisation();
+  const locationNumber = items[LOCATION_KEY];
+  const taskNumber = items[TASK_KEY];
 
   useEffect(() => {
     if (locationNumber && locationNumber.length > 0) {

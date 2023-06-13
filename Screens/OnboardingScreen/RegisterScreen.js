@@ -9,6 +9,7 @@ import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
 import AuthContext from '../../hooks/useauth';
+import { useOnboarding } from '../../hooks/useonboarding';
 
 export default function RegisterScreen() {
   const [isChecked, setChecked] = useState(false);
@@ -20,6 +21,7 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
   const { fetchUserData } = useContext(AuthContext);
+  const { onboardingDone } = useOnboarding();
 
   const createUser = async () => {
     if (!isChecked) {
@@ -56,7 +58,12 @@ export default function RegisterScreen() {
       await AsyncStorage.setItem('userData', JSON.stringify(userData));
       alert('Käyttäjä luotu');
       fetchUserData();
-      navigation.navigate('LoginScreen');
+
+      if (onboardingDone) {
+        navigation.navigate('Home');
+      } else {
+        navigation.navigate('PersonalizationScreen');
+      }
     } catch (error) {
       alert('Tapahtui virhe käyttäjän tallentamisessa');
     }

@@ -10,15 +10,16 @@ import { ScrollView } from 'react-native-gesture-handler';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
 import BottomButton from '../../components/BottomButton';
+import { useNavigation } from '@react-navigation/native';
 
 export default function BasicInformation() {
   const { locations } = useJobLocations();
   const [locationData, setLocationData] = useState(null);
-  const personalisationItems = usePersonalisation();
-  const locationNumbers = personalisationItems[LOCATION_KEY];
+  const { items } = usePersonalisation();
+  const locationNumbers = items[LOCATION_KEY];
   const { userData } = useContext(AuthContext);
   const [textHeight, setTextHeight] = useState(57);
-
+  const navigation = useNavigation();
   useEffect(() => {
     if (locationNumbers && Array.isArray(locationNumbers)) {
       const locationObjects = locationNumbers.map((number) =>
@@ -120,7 +121,10 @@ export default function BasicInformation() {
             ) : (
               <Text>Et ole valinnut sijaintia</Text>
             )}
-            <TouchableOpacity style={styles.editButton}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('PersonalizationScreen2')}
+              style={styles.editButton}
+            >
               <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
                 Muokkaa
               </Text>
