@@ -59,24 +59,34 @@ const DrawerRecommended = ({
               ))}
           </View>
           <View style={styles.tagRow}>
-            <View style={styles.tagRow}>
-              <Tag
-                tagColor={theme.colors.tag1}
-                tagText={data2.name}
-                onPress={() => selectChildFilter(data2.name, data2.parent, 'Sijainti')}
-                selected={selectedFilters.some(
-                  (selectedFilter) => selectedFilter.filter === data2.name
-                )}
-              />
-              <Tag
-                tagColor={theme.colors.tag1}
-                tagText={data2.parent}
-                onPress={() => selectParentFilter(data2.parent, '', 'Sijainti')}
-                selected={selectedFilters.some(
-                  (selectedFilter) => selectedFilter.filter === data2.parent
-                )}
-              />
-            </View>
+            {data2.map((type, index) => (
+              <View style={styles.tagRow} key={index}>
+                <Tag
+                  tagColor={theme.colors.tag1}
+                  tagText={type.name}
+                  onPress={() => selectChildFilter(type.name, type.parent, 'Sijainti')}
+                  selected={selectedFilters.some(
+                    (selectedFilter) => selectedFilter.filter === type.name
+                  )}
+                />
+              </View>
+            ))}
+            {data2
+              .filter(
+                (type, index, array) => array.findIndex((t) => t.parent === type.parent) === index
+              )
+              .map((type, index) => (
+                <View style={styles.tagRow} key={index}>
+                  <Tag
+                    tagColor={theme.colors.tag1}
+                    tagText={type.parent}
+                    onPress={() => selectParentFilter(type.parent, '', 'Sijainti')}
+                    selected={selectedFilters.some(
+                      (selectedFilter) => selectedFilter.filter === type.parent
+                    )}
+                  />
+                </View>
+              ))}
           </View>
         </>
       )}
