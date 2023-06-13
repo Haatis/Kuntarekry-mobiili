@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { theme } from '../../styles/theme';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
@@ -8,28 +8,122 @@ import { useNavigation } from '@react-navigation/native';
 import { Image } from 'react-native';
 import BasicInformation from './BasicInformation';
 import BottomButton from '../../components/BottomButton';
+import * as ImagePicker from 'expo-image-picker';
+import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
+  const { userData, isLoggedIn, fetchUserData } = useContext(AuthContext);
+  const [image, setImage] = useState(userData ? userData.image : '');
+  const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+
   const ProfileImage = {
     uri: 'https://cdn.pixabay.com/photo/2016/09/24/03/20/man-1690965_960_720.jpg',
   };
-  const { userData, isLoggedIn } = useContext(AuthContext);
+
+  const pickImage = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      console.log('Permission to access media library denied');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+    saveUserData(result.assets[0].uri);
+    setModalVisible(false);
+  };
+
+  const takePhoto = async () => {
+    let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      console.log('Permission to access camera denied');
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+
+    saveUserData(result.assets[0].uri);
+    setModalVisible(false);
+  };
+
+  const saveUserData = async (img) => {
+    const updatedUserData = {
+      ...userData,
+      image: img, // Add the image URI to the userData object
+    };
+
+    await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
+
+    fetchUserData();
+  };
+
   const renderContent = () => {
     if (isLoggedIn && userData) {
       return (
         <>
           <View style={theme.containerCenter}>
             <View style={styles.profileContainer}>
-              <TouchableOpacity style={[theme.dropShadow, { borderRadius: 50 }]}>
-                <Image
-                  source={ProfileImage}
-                  style={[theme.outline, styles.imageStyle]}
-                  resizeMode="cover"
-                />
+              <TouchableOpacity
+                onPress={() => setModalVisible(true)}
+                style={[theme.dropShadow, { borderRadius: 50 }]}
+              >
+                {image ? (
+                  <Image
+                    source={{ uri: image }}
+                    style={[theme.outline, styles.imageStyle]}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <Image
+                    source={ProfileImage}
+                    style={[theme.outline, styles.imageStyle]}
+                    resizeMode="cover"
+                  />
+                )}
               </TouchableOpacity>
+              <Modal visible={modalVisible} animationType="fade">
+                <View style={styles.modalContainer}>
+                  <TouchableOpacity style={styles.optionButton} onPress={takePhoto}>
+                    <Text style={styles.optionText}>Take Photo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.optionButton} onPress={pickImage}>
+                    <Text style={styles.optionText}>Choose from Library</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => setModalVisible(false)}
+                  >
+                    <Text style={styles.cancelText}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+              </Modal>
               <View style={styles.cameraContainer}>
-                <TouchableOpacity style={styles.cameraButton}>
+                <TouchableOpacity style={styles.cameraButton} onPress={() => setModalVisible(true)}>
                   <MaterialCommunityIcons name="camera" size={24} color="white" />
                 </TouchableOpacity>
               </View>
@@ -146,6 +240,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
   },
+  cancelButton: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginVertical: 8,
+    padding: 16,
+  },
   container: {
     flex: 1,
     marginTop: 32,
@@ -155,6 +255,23 @@ const styles = StyleSheet.create({
     borderRadius: 99,
     height: 100,
     width: 100,
+  },
+  modalContainer: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flex: 1,
+    justifyContent: 'center',
+    width: '100%',
+  },
+  optionButton: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginVertical: 8,
+    padding: 16,
+  },
+  optionText: {
+    color: '#000',
+    fontSize: 18,
   },
   profileContainer: {
     alignItems: 'center',
