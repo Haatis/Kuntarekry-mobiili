@@ -11,6 +11,9 @@ import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
 import BottomButton from '../../components/BottomButton';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment/moment';
 
 export default function BasicInformation() {
   const { locations } = useJobLocations();
@@ -20,6 +23,35 @@ export default function BasicInformation() {
   const { userData } = useContext(AuthContext);
   const [textHeight, setTextHeight] = useState(57);
   const navigation = useNavigation();
+  const [firstName, setFirstName] = useState(userData ? userData.firstName : '');
+  const [lastName, setLastName] = useState(userData ? userData.lastName : '');
+  const [email, setEmail] = useState(userData ? userData.email : '');
+  const [birthday, setBirthday] = useState(userData ? userData.birthday : '');
+  const [phoneNumber, setPhoneNumber] = useState(userData ? userData.phoneNumber : '');
+  const [employment, setEmployment] = useState(userData ? userData.employment : '');
+  const [introduction, setIntroduction] = useState(userData ? userData.introduction : '');
+  const { fetchUserData } = useContext(AuthContext);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const saveUserData = async () => {
+    const updatedUserData = {
+      ...userData,
+      //save new data
+      firstName,
+      lastName,
+      email,
+      birthday,
+      phoneNumber,
+      employment,
+      introduction,
+    };
+
+    await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
+
+    alert('Tiedot tallennettu');
+    fetchUserData();
+  };
+
   useEffect(() => {
     if (locationNumbers && Array.isArray(locationNumbers)) {
       const locationObjects = locationNumbers.map((number) =>
@@ -62,6 +94,7 @@ export default function BasicInformation() {
             <TextInput
               style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
               defaultValue={userData ? userData.firstName : ''}
+              onChangeText={(text) => setFirstName(text)}
             />
             <Text style={[theme.textVariants.uiS, styles.labelText]}>Etunimi</Text>
           </View>
@@ -71,25 +104,44 @@ export default function BasicInformation() {
             <TextInput
               style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
               defaultValue={userData ? userData.lastName : ''}
+              onChangeText={(text) => setLastName(text)}
             />
             <Text style={[theme.textVariants.uiS, styles.labelText]}>Sukunimi</Text>
           </View>
           <View
             style={[{ borderWidth: 1, borderColor: theme.colors.outlineDark }, styles.createButton]}
           >
-            <TextInput
-              style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
-              defaultValue=""
-            />
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <Text
+                style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
+              >
+                {birthday ? moment(birthday).format('DD.MM.YYYY') : 'pp.kk.vvvv'}
+              </Text>
+            </TouchableOpacity>
             <Text style={[theme.textVariants.uiS, styles.labelText]}>Syntymäaika</Text>
           </View>
+          {showDatePicker && (
+            <DateTimePicker
+              value={birthday ? new Date(birthday) : new Date()}
+              mode="date"
+              display="spinner"
+              onChange={(event, date) => {
+                setShowDatePicker(false);
+                if (date) {
+                  setBirthday(date.toISOString());
+                }
+              }}
+            />
+          )}
+
           <Text style={theme.textVariants.uiM}>Yhteystiedot</Text>
           <View
             style={[{ borderWidth: 1, borderColor: theme.colors.outlineDark }, styles.createButton]}
           >
             <TextInput
               style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
-              defaultValue=""
+              defaultValue={userData ? userData.phoneNumber : ''}
+              onChangeText={(text) => setPhoneNumber(text)}
             />
             <Text style={[theme.textVariants.uiS, styles.labelText]}>Puhelinnumero</Text>
           </View>
@@ -98,11 +150,11 @@ export default function BasicInformation() {
           >
             <TextInput
               style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
-              defaultValue=""
+              defaultValue={userData ? userData.email : ''}
+              onChangeText={(text) => setEmail(text)}
             />
             <Text style={[theme.textVariants.uiS, styles.labelText]}>Sähköposti</Text>
           </View>
-
           <Text style={theme.textVariants.uiM}>Sijainti</Text>
           <View
             style={{
@@ -137,7 +189,6 @@ export default function BasicInformation() {
             </TouchableOpacity>
           </View>
           <Text style={theme.textVariants.uiM}>Profiilin tiedot</Text>
-
           <View
             style={[
               { borderWidth: 1, borderColor: theme.colors.outlineDark, height: textHeight },
@@ -147,6 +198,8 @@ export default function BasicInformation() {
             <TextInput
               style={[theme.textVariants.textL, { color: theme.colors.textPrimary, flex: 1 }]}
               placeholder="Kerro tilanteesi muutamalla lauseella"
+              defaultValue={userData ? userData.employment : ''}
+              onChangeText={(text) => setEmployment(text)}
               multiline={true}
               numberOfLines={4}
               maxLength={150}
@@ -161,6 +214,8 @@ export default function BasicInformation() {
             <TextInput
               style={[theme.textVariants.textL, { color: theme.colors.textPrimary, flex: 1 }]}
               placeholder="Esittele itsesi lyhyesti"
+              defaultValue={userData ? userData.introduction : ''}
+              onChangeText={(text) => setIntroduction(text)}
               multiline={true}
               numberOfLines={4}
               maxLength={300}
@@ -168,7 +223,7 @@ export default function BasicInformation() {
           </View>
         </View>
       </ScrollView>
-      <BottomButton buttonText="Tallenna" />
+      <BottomButton buttonText="Tallenna" buttonAction={() => saveUserData()} />
     </>
   );
 }

@@ -46,7 +46,9 @@ export default function ProfileScreen() {
                 },
               ]}
             >
-              Alan ammattilainen vuosien kokemuksella, etsin töitä sosiaali- ja terveysalalta.
+              {userData.introduction
+                ? userData.introduction
+                : 'Esittelytekstiä ei ole vielä lisätty'}
             </Text>
             <View style={styles.container}>
               <View style={styles.row}>
