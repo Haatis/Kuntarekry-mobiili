@@ -70,14 +70,6 @@ export default function SwipeableCard({ job }) {
         >
           {job.jobDesc}
         </Text>
-        <View style={styles.buttonRow}>
-          <View style={[styles.button, { borderColor: theme.colors.danger }]}>
-            <MaterialCommunityIcons name="close-thick" size={44} color={theme.colors.danger} />
-          </View>
-          <View style={[styles.button, { borderColor: theme.colors.secondary }]}>
-            <MaterialCommunityIcons name="heart" size={40} color={theme.colors.secondary} />
-          </View>
-        </View>
       </View>
     </View>
   );
@@ -92,20 +84,6 @@ const styles = StyleSheet.create({
   avatarImage: {
     borderRadius: 30,
     flex: 1,
-  },
-  button: {
-    alignItems: 'center',
-    borderRadius: 100,
-    borderWidth: 2,
-    height: 70,
-    justifyContent: 'center',
-    width: 70,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: 32,
-    marginTop: 'auto',
-    padding: 8,
   },
   card: {
     backgroundColor: 'white',
