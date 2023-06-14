@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Modal,
+  Pressable,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
@@ -17,6 +19,7 @@ import useSearchJobs from '../../hooks/usejobsearch';
 import { useState, useRef } from 'react';
 import { useDrawerStatus } from '../../hooks/usedrawerstatus';
 import { useMemo } from 'react';
+
 function SearchContent({ navigation }) {
   const status = useDrawerStatus();
   const filters = useFilteredJobs();
@@ -157,31 +160,40 @@ function SearchContent({ navigation }) {
           name="swap-vertical-bold"
           size={44}
           color={theme.colors.textPrimary}
-        ></MaterialCommunityIcons>
+        />
       </TouchableOpacity>
-      {showSortSelector && (
-        <View style={styles.sortSelector}>
-          <Text style={styles.sortHeader}>Lajittele</Text>
-          {sortType.map((sortType) => (
-            <TouchableOpacity
-              key={sortType.value}
-              onPress={() => {
-                setActiveSortType(sortType.value);
-                setShowSortSelector(false);
-              }}
-            >
-              <Text
-                style={[
-                  styles.sortItem,
-                  sortType.value === activeSortType ? styles.activeSortItem : null,
-                ]}
+      <Modal transparent={true} visible={showSortSelector} animationType="fade">
+        <Pressable
+          onPress={() => {
+            setShowSortSelector(false);
+          }}
+          style={{ flex: 1 }}
+        >
+          <View style={styles.sortSelector}>
+            <Pressable>
+              <Text style={styles.sortHeader}>Lajittele</Text>
+            </Pressable>
+            {sortType.map((sortType) => (
+              <TouchableOpacity
+                key={sortType.value}
+                onPress={() => {
+                  setActiveSortType(sortType.value);
+                  setShowSortSelector(false);
+                }}
               >
-                {sortType.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
+                <Text
+                  style={[
+                    styles.sortItem,
+                    sortType.value === activeSortType ? styles.activeSortItem : null,
+                  ]}
+                >
+                  {sortType.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </Pressable>
+      </Modal>
     </>
   );
 }
@@ -257,7 +269,7 @@ const styles = StyleSheet.create({
     ...theme.dropShadow,
     backgroundColor: 'white',
     borderRadius: 8,
-    bottom: 80,
+    bottom: 140,
     position: 'absolute',
     right: 8,
     width: 240,
