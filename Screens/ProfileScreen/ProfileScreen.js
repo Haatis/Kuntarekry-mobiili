@@ -11,6 +11,8 @@ import BottomButton from '../../components/BottomButton';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StatusBar } from 'expo-status-bar';
+import { Pressable } from 'react-native';
 
 export default function ProfileScreen() {
   const { userData, isLoggedIn, fetchUserData } = useContext(AuthContext);
@@ -86,6 +88,7 @@ export default function ProfileScreen() {
     if (isLoggedIn && userData) {
       return (
         <>
+          {modalVisible && <StatusBar style="dark" backgroundColor="rgba(0, 0, 0, 0.5)" />}
           <View style={theme.containerCenter}>
             <View style={styles.profileContainer}>
               <TouchableOpacity
@@ -106,21 +109,27 @@ export default function ProfileScreen() {
                   />
                 )}
               </TouchableOpacity>
-              <Modal visible={modalVisible} animationType="fade">
-                <View style={styles.modalContainer}>
-                  <TouchableOpacity style={styles.optionButton} onPress={takePhoto}>
-                    <Text style={styles.optionText}>Take Photo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.optionButton} onPress={pickImage}>
-                    <Text style={styles.optionText}>Choose from Library</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.cancelButton}
-                    onPress={() => setModalVisible(false)}
-                  >
-                    <Text style={styles.cancelText}>Cancel</Text>
-                  </TouchableOpacity>
-                </View>
+              <Modal transparent={true} visible={modalVisible}>
+                <TouchableOpacity
+                  style={styles.modalContainer}
+                  activeOpacity={1}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Pressable style={styles.modalButtonContainer} onPress={() => console.log('asd')}>
+                    <TouchableOpacity style={styles.optionButton} onPress={takePhoto}>
+                      <Text style={styles.optionText}>Take Photo</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.optionButton} onPress={pickImage}>
+                      <Text style={styles.optionText}>Choose from Library</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.cancelButton}
+                      onPress={() => setModalVisible(false)}
+                    >
+                      <Text style={styles.cancelText}>Cancel</Text>
+                    </TouchableOpacity>
+                  </Pressable>
+                </TouchableOpacity>
               </Modal>
               <View style={styles.cameraContainer}>
                 <TouchableOpacity style={styles.cameraButton} onPress={() => setModalVisible(true)}>
@@ -256,12 +265,20 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
   },
+  modalButtonContainer: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    height: '35%',
+    justifyContent: 'center',
+    marginBottom: 64,
+    paddingHorizontal: 42,
+    paddingVertical: 16,
+  },
   modalContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     flex: 1,
     justifyContent: 'center',
-    width: '100%',
   },
   optionButton: {
     backgroundColor: '#fff',
