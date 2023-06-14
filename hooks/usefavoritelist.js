@@ -6,7 +6,6 @@ const FavoriteListContext = createContext({
   updateFavorites: () => {},
 });
 
-console.log(FavoriteListContext);
 export function FavoriteListProvider({ children }) {
   const [favorites, setFavorites] = useState({ jobs: [], employers: [] });
 
@@ -19,7 +18,6 @@ export function FavoriteListProvider({ children }) {
     (async () => {
       const list = await getStoredList();
       setFavorites(list);
-      console.log(list.id);
     })();
   }, []);
   const value = { favorites: favorites, updateFavorites };

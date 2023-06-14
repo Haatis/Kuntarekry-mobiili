@@ -94,7 +94,7 @@ function SearchContent({ navigation }) {
   }
 
   return (
-    <View style={{ backgroundColor: 'white' }}>
+    <>
       <FlatList
         ListHeaderComponent={
           <View style={{ width: '100%' }}>
@@ -139,7 +139,8 @@ function SearchContent({ navigation }) {
         stickyHeaderHiddenOnScroll={true}
         contentContainerStyle={{
           paddingHorizontal: 8,
-          gap: 4,
+          gap: 8,
+          backgroundColor: 'white',
         }}
         windowSize={11}
         data={sortedData}
@@ -181,7 +182,7 @@ function SearchContent({ navigation }) {
           ))}
         </View>
       )}
-    </View>
+    </>
   );
 }
 
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 50,
     justifyContent: 'space-between',
-    marginTop: 8,
+    marginTop: 16,
     paddingHorizontal: 16,
     paddingVertical: 8,
     width: '100%',

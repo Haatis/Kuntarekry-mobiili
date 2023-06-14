@@ -3,10 +3,7 @@ import { theme } from '../styles/theme';
 
 import { useNavigation } from '@react-navigation/native';
 
-export default function FolderCard({ title, amount, type }) {
-  const image = {
-    uri: 'https://cdn.pixabay.com/photo/2015/12/07/10/58/architect-1080592_960_720.jpg',
-  };
+export default function FolderCard({ title, amount, type, image }) {
   const navigation = useNavigation();
 
   return (
@@ -17,7 +14,7 @@ export default function FolderCard({ title, amount, type }) {
             <ImageBackground
               imageStyle={[theme.outline, styles.image]}
               style={styles.imageContainer}
-              source={image}
+              source={{ uri: image }}
               resizeMode="stretch"
             ></ImageBackground>
             <View style={styles.textCol}>
