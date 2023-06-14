@@ -6,7 +6,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state variable
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const fetchUserData = async () => {
     try {
@@ -14,9 +14,6 @@ export const AuthProvider = ({ children }) => {
       if (storedUserData) {
         const parsedUserData = JSON.parse(storedUserData);
         setUserData(parsedUserData);
-        setIsLoggedIn(true); // Set isLoggedIn to true if userData exists
-      } else {
-        setIsLoggedIn(false); // Set isLoggedIn to false if userData doesn't exist
       }
     } catch (error) {
       console.log('Error fetching user data:', error);
@@ -28,8 +25,34 @@ export const AuthProvider = ({ children }) => {
     fetchUserData();
   }, []);
 
+  useEffect(() => {
+    const saveIsLoggedIn = async () => {
+      try {
+        console.log('isLoggedIn', isLoggedIn ? 'true' : 'false');
+        await AsyncStorage.setItem('isLoggedIn', isLoggedIn ? 'true' : 'false');
+      } catch (error) {
+        console.log('Error saving isLoggedIn:', error);
+      }
+    };
+    if (isLoggedIn === true) saveIsLoggedIn();
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    const fetchIsLoggedIn = async () => {
+      try {
+        const storedIsLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+        if (storedIsLoggedIn) {
+          setIsLoggedIn(storedIsLoggedIn === 'true');
+        }
+      } catch (error) {
+        console.log('Error fetching isLoggedIn:', error);
+      }
+    };
+    fetchIsLoggedIn();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ userData, loading, fetchUserData, isLoggedIn }}>
+    <AuthContext.Provider value={{ userData, loading, fetchUserData, isLoggedIn, setIsLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );

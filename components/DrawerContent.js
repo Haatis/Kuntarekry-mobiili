@@ -15,6 +15,8 @@ import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 import DrawerRecommended from './DrawerRecommended';
 import { LOCATION_KEY, TASK_KEY } from '../hooks/usepersonalisation';
 import { usePersonalisation } from '../hooks/usepersonalisation';
+import AuthContext from '../hooks/useauth';
+import { useContext } from 'react';
 
 export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const drawerStatus = useDrawerStatus();
@@ -32,39 +34,38 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const [selectedLanguageCount, setSelectedLanguageCount] = useState(0);
   const [selectedTypeCount, setSelectedTypeCount] = useState(0);
   const { jobs } = useJobAdvertisements();
-
+  const { userData } = useContext(AuthContext);
   const [locationData, setLocationData] = useState(null);
   const [taskData, setTaskData] = useState([]);
 
   const { items } = usePersonalisation();
-  const locationNumber = items[LOCATION_KEY];
+
   const taskNumber = items[TASK_KEY];
 
   useEffect(() => {
-    if (locationNumber && locationNumber.length > 0) {
-      const locationData = locationNumber.map((number) => {
-        const locationObject = locations.find((location) => location.id === number);
-        const name = locationObject ? locationObject.name : null;
+    if (locations && userData && userData.locationNames) {
+      const locationData = userData.locationNames.map((locationName) => {
+        const locationObject = locations.find((location) => location.name === locationName);
         const parentObject =
           locationObject && locationObject.parent
             ? locations.find((location) => location.id === locationObject.parent)
             : null;
         const parentName = parentObject ? parentObject.name : null;
         const children = locations
-          .filter((location) => location.parent === name)
+          .filter((location) => location.parent === locationObject.id)
           .map((location) => ({
             name: location.name,
             parent: location.parent,
           }));
         return {
-          name,
+          name: locationName,
           children,
           parent: parentName,
         };
       });
       setLocationData(locationData);
     }
-  }, [locationNumber, locations]);
+  }, [locations, userData]);
 
   useEffect(() => {
     if (taskNumber && taskNumber.length > 0) {

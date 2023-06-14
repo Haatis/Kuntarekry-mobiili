@@ -12,7 +12,8 @@ import * as Location from 'expo-location';
 import { useOnboarding } from '../../hooks/useonboarding';
 import { API_GEOKEY } from '@env';
 import { useNavigation } from '@react-navigation/native';
-import { usePersonalisation } from '../../hooks/usepersonalisation';
+import AuthContext from '../../hooks/useauth';
+import { useContext } from 'react';
 
 export default function PersonalizationScreen2() {
   const [selectedJobs, setSelectedJobs] = useState([]);
@@ -20,10 +21,11 @@ export default function PersonalizationScreen2() {
   const [location, setLocation] = useState(null);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const { finishOnboarding } = useOnboarding();
-  const { updateItems } = usePersonalisation();
   const [loading, setLoading] = useState(true);
   const { onboardingDone } = useOnboarding();
   const navigation = useNavigation();
+  const { userData } = useContext(AuthContext);
+  const { fetchUserData } = useContext(AuthContext);
 
   useEffect(() => {
     (async () => {
@@ -125,10 +127,25 @@ export default function PersonalizationScreen2() {
     try {
       await AsyncStorage.setItem('location', JSON.stringify(filteredJobIds));
       if (onboardingDone) {
-        updateItems();
-        navigation.navigate('Home');
+        const updatedUserData = {
+          ...userData,
+          locationNames: selectedJobs,
+        };
+
+        await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
+
+        fetchUserData();
+        navigation.navigate('BasicInformation');
         return;
       }
+      const updatedUserData = {
+        ...userData,
+        locationNames: selectedJobs,
+      };
+
+      await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
+
+      fetchUserData();
       finishOnboarding();
     } catch (error) {
       console.log('Error saving location IDs:', error);

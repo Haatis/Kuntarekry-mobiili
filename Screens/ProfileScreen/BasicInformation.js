@@ -1,10 +1,6 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { theme } from '../../styles/theme';
-import { useJobLocations } from '../../hooks/uselocations';
 import { useState } from 'react';
-import { LOCATION_KEY } from '../../hooks/usepersonalisation';
-import { useEffect } from 'react';
-import { usePersonalisation } from '../../hooks/usepersonalisation';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import AuthContext from '../../hooks/useauth';
@@ -16,10 +12,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';
 
 export default function BasicInformation() {
-  const { locations } = useJobLocations();
-  const [locationData, setLocationData] = useState(null);
-  const { items } = usePersonalisation();
-  const locationNumbers = items[LOCATION_KEY];
   const { userData } = useContext(AuthContext);
   const [textHeight, setTextHeight] = useState(57);
   const navigation = useNavigation();
@@ -52,37 +44,25 @@ export default function BasicInformation() {
     fetchUserData();
   };
 
-  useEffect(() => {
-    if (locationNumbers && Array.isArray(locationNumbers)) {
-      const locationObjects = locationNumbers.map((number) =>
-        locations.find((location) => location.id === parseInt(number))
-      );
-      const names = locationObjects.map((locationObject) =>
-        locationObject ? locationObject.name : null
-      );
-      const parentObjects = locationObjects.map((locationObject) =>
-        locationObject && locationObject.parent
-          ? locations.find((location) => location.id === locationObject.parent)
-          : null
-      );
-      const parentNames = parentObjects.map((parentObject) =>
-        parentObject ? parentObject.name : null
-      );
-      const children = locationObjects.map((locationObject) =>
-        locations
-          .filter((location) => location.parent === locationObject.name)
-          .map((location) => ({
-            name: location.name,
-            parent: location.parent,
-          }))
-      );
-      setLocationData({
-        names,
-        children,
-        parents: parentNames,
-      });
-    }
-  }, [locationNumbers, locations]);
+  const saveUserDataAndNavigate = async () => {
+    const updatedUserData = {
+      ...userData,
+      //save new data
+      firstName,
+      lastName,
+      email,
+      birthday,
+      phoneNumber,
+      employment,
+      introduction,
+    };
+
+    await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
+
+    fetchUserData();
+    navigation.navigate('PersonalizationScreen2');
+  };
+
   return (
     <>
       <ScrollView>
@@ -164,8 +144,8 @@ export default function BasicInformation() {
               width: '100%',
             }}
           >
-            {locationData ? (
-              locationData.names.map((name, index) => (
+            {userData.locationNames ? (
+              userData.locationNames.map((name, index) => (
                 <Text key={index} style={[theme.textVariants.uiM, { marginHorizontal: 8 }]}>
                   {name}
                 </Text>
@@ -174,7 +154,9 @@ export default function BasicInformation() {
               <Text>Et ole valinnut sijaintia</Text>
             )}
             <TouchableOpacity
-              onPress={() => navigation.navigate('PersonalizationScreen2')}
+              onPress={() => {
+                saveUserDataAndNavigate();
+              }}
               style={styles.editButton}
             >
               <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>

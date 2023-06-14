@@ -230,7 +230,10 @@ export default function ProfileScreen() {
               </View>
             </View>
           </View>
-          <BottomButton buttonText="Esikatsele profiilia" />
+          <BottomButton
+            buttonText="Esikatsele profiilia"
+            buttonAction={() => navigation.navigate('PreviewProfileScreen')}
+          />
         </>
       );
     } else {

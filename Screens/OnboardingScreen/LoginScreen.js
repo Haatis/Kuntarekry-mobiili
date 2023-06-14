@@ -15,8 +15,8 @@ export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { onboardingDone } = useOnboarding();
+  const { setIsLoggedIn } = useContext(AuthContext);
   const { userData } = useContext(AuthContext);
-  console.log(userData);
 
   const handleLogin = () => {
     if (username.trim() === '' || password.trim() === '') {
@@ -26,8 +26,10 @@ export default function LoginScreen() {
 
     if (userData && userData.username === username && userData.password === password) {
       if (!onboardingDone) {
+        setIsLoggedIn(true);
         navigation.navigate('PersonalizationScreen');
       } else {
+        setIsLoggedIn(true);
         navigation.navigate('Home');
       }
     } else {

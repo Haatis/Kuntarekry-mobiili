@@ -22,6 +22,8 @@ export default function RegisterScreen() {
   const navigation = useNavigation();
   const { fetchUserData } = useContext(AuthContext);
   const { onboardingDone } = useOnboarding();
+  const { userData } = useContext(AuthContext);
+  const { setIsLoggedIn } = useContext(AuthContext);
 
   const createUser = async () => {
     if (!isChecked) {
@@ -46,7 +48,8 @@ export default function RegisterScreen() {
       return;
     }
 
-    const userData = {
+    const updatedUserData = {
+      ...userData,
       firstName,
       lastName,
       email,
@@ -55,13 +58,15 @@ export default function RegisterScreen() {
     };
 
     try {
-      await AsyncStorage.setItem('userData', JSON.stringify(userData));
+      await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
       alert('Käyttäjä luotu');
       fetchUserData();
 
       if (onboardingDone) {
+        setIsLoggedIn(true);
         navigation.navigate('Home');
       } else {
+        setIsLoggedIn(true);
         navigation.navigate('PersonalizationScreen');
       }
     } catch (error) {

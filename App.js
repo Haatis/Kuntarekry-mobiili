@@ -35,6 +35,7 @@ import BasicInformation from './Screens/ProfileScreen/BasicInformation';
 import { DrawerStatusProvider } from './hooks/usedrawerstatus';
 import SubstitutionsScreen from './Screens/ProfileScreen/SubstitutionsScreen/SubstitutionsScreen';
 import { FavoriteListProvider, useFavoriteList } from './hooks/usefavoritelist';
+import PreviewProfileScreen from './Screens/ProfileScreen/PreviewProfileScreen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -239,6 +240,13 @@ function StackNavigator() {
           component={SubstitutionsScreen}
           options={{
             header: () => <AppBar back={true} title={'Keikat'} />,
+          }}
+        />
+        <Stack.Screen
+          name="PreviewProfileScreen"
+          component={PreviewProfileScreen}
+          options={{
+            header: () => <AppBar back={true} title={'Esikatselu'} />,
           }}
         />
       </>
