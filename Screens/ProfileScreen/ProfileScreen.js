@@ -33,7 +33,7 @@ export default function ProfileScreen() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 0.5,
     });
 
@@ -57,7 +57,7 @@ export default function ProfileScreen() {
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 0.5,
     });
 
@@ -106,7 +106,7 @@ export default function ProfileScreen() {
                   />
                 )}
               </TouchableOpacity>
-              <Modal transparent={true} visible={modalVisible} animationType="fade">
+              <Modal visible={modalVisible} animationType="fade">
                 <View style={styles.modalContainer}>
                   <TouchableOpacity style={styles.optionButton} onPress={takePhoto}>
                     <Text style={styles.optionText}>Take Photo</Text>
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     alignItems: 'center',
-    backgroundColor: theme.colors.darkBackground,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     flex: 1,
     justifyContent: 'center',
     width: '100%',
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     flex: 1,
-    gap: 4,
+    gap: 8,
     justifyContent: 'center',
   },
 });
