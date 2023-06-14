@@ -88,7 +88,7 @@ export default function ProfileScreen() {
     if (isLoggedIn && userData) {
       return (
         <>
-          {modalVisible && <StatusBar style="dark" backgroundColor="rgba(0, 0, 0, 0.5)" />}
+          {modalVisible && <StatusBar style="dark" backgroundColor={theme.colors.darkBackground} />}
           <View style={theme.containerCenter}>
             <View style={styles.profileContainer}>
               <TouchableOpacity
@@ -110,26 +110,32 @@ export default function ProfileScreen() {
                 )}
               </TouchableOpacity>
               <Modal transparent={true} visible={modalVisible}>
-                <TouchableOpacity
+                <Pressable
                   style={styles.modalContainer}
                   activeOpacity={1}
                   onPress={() => setModalVisible(false)}
                 >
-                  <Pressable style={styles.modalButtonContainer} onPress={() => console.log('asd')}>
-                    <TouchableOpacity style={styles.optionButton} onPress={takePhoto}>
-                      <Text style={styles.optionText}>Take Photo</Text>
+                  <Pressable style={styles.modalButtonContainer}>
+                    <TouchableOpacity style={styles.editButton} onPress={takePhoto}>
+                      <Text style={[theme.textVariants.uiL, { color: theme.colors.textPrimary }]}>
+                        Ota kuva
+                      </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.optionButton} onPress={pickImage}>
-                      <Text style={styles.optionText}>Choose from Library</Text>
+                    <TouchableOpacity style={styles.editButton} onPress={pickImage}>
+                      <Text style={[theme.textVariants.uiL, { color: theme.colors.textPrimary }]}>
+                        Valitse kuva
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      style={styles.cancelButton}
+                      style={styles.editButton}
                       onPress={() => setModalVisible(false)}
                     >
-                      <Text style={styles.cancelText}>Cancel</Text>
+                      <Text style={[theme.textVariants.uiL, { color: theme.colors.textPrimary }]}>
+                        Peruuta
+                      </Text>
                     </TouchableOpacity>
                   </Pressable>
-                </TouchableOpacity>
+                </Pressable>
               </Modal>
               <View style={styles.cameraContainer}>
                 <TouchableOpacity style={styles.cameraButton} onPress={() => setModalVisible(true)}>
@@ -249,16 +255,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
   },
-  cancelButton: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    marginVertical: 8,
-    padding: 16,
-  },
   container: {
     flex: 1,
     marginTop: 32,
     width: '100%',
+  },
+  editButton: {
+    alignItems: 'center',
+    borderColor: theme.colors.outlineDark,
+    borderRadius: 30,
+    borderWidth: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 8,
+    marginVertical: 8,
+    paddingHorizontal: 32,
+    paddingVertical: 8,
   },
   imageStyle: {
     borderRadius: 99,
@@ -268,28 +280,20 @@ const styles = StyleSheet.create({
   modalButtonContainer: {
     alignItems: 'center',
     backgroundColor: '#fff',
-    height: '35%',
+    borderRadius: 8,
+
     justifyContent: 'center',
     marginBottom: 64,
-    paddingHorizontal: 42,
-    paddingVertical: 16,
+    paddingHorizontal: 48,
+    paddingVertical: 32,
   },
   modalContainer: {
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: theme.colors.darkBackground,
     flex: 1,
     justifyContent: 'center',
   },
-  optionButton: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    marginVertical: 8,
-    padding: 16,
-  },
-  optionText: {
-    color: '#000',
-    fontSize: 18,
-  },
+
   profileContainer: {
     alignItems: 'center',
     flexDirection: 'row',
