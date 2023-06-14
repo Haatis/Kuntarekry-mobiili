@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import TagRow from '../components/TagRow';
 import { useEffect, useState } from 'react';
 import BottomButton from '../components/BottomButton';
+import FavoriteButton from '../components/FavoriteButton';
 
 export default function JobScreen({ route }) {
   const { job } = route.params;
@@ -83,27 +84,17 @@ export default function JobScreen({ route }) {
             </View>
           </View>
           <View style={styles.buttonRow}>
-            <TouchableOpacity style={{ ...styles.buttonRound, borderColor: theme.colors.danger }}>
+            <View style={{ ...styles.buttonRound, borderColor: theme.colors.danger }}>
               <MaterialCommunityIcons name="close-thick" size={40} color={theme.colors.danger} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ ...styles.buttonRound, borderColor: theme.colors.secondary }}
-            >
+            </View>
+            <View style={{ ...styles.buttonRound, borderColor: theme.colors.secondary }}>
               <MaterialCommunityIcons
                 name="share-variant"
                 size={34}
                 color={theme.colors.secondary}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ ...styles.buttonRound, borderColor: theme.colors.secondary }}
-            >
-              <MaterialCommunityIcons
-                name="heart-outline"
-                size={34}
-                color={theme.colors.secondary}
-              />
-            </TouchableOpacity>
+            </View>
+            <FavoriteButton job={job} size={36} />
           </View>
           <View style={{ width: '100%', paddingHorizontal: 16 }}>
             <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>

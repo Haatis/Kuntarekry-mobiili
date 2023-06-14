@@ -1,5 +1,14 @@
 import { useRef, useState } from 'react';
-import { View, StyleSheet, Animated, PanResponder, Dimensions, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Animated,
+  PanResponder,
+  Dimensions,
+  Text,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import SwipeableCard from '../../components/SwipeableCard';
 import { theme } from '../../styles/theme';
 import { Pressable } from 'react-native';
@@ -49,34 +58,21 @@ export default function CardScreen() {
     extrapolate: 'clamp',
   });
 
-  const modalY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
-
   const openModal = () => {
     setShowModal(true);
-    Animated.spring(modalY, {
-      toValue: 0,
-      useNativeDriver: true,
-    }).start();
   };
 
   const closeModal = () => {
     updateIndex();
-    Animated.spring(modalY, {
-      toValue: SCREEN_HEIGHT,
-      useNativeDriver: true,
-    }).start(() => {
-      setShowModal(false);
-    });
+    setShowModal(false);
   };
 
   const updateIndex = () => {
     setTopCardIndex((currentValue) => {
       if (currentValue == 2) {
-        console.log('get new cards');
         updateStack();
         return 0;
       } else {
-        console.log('update index');
         return currentValue + 1;
       }
     });
@@ -115,8 +111,8 @@ export default function CardScreen() {
     })
   ).current;
   return (
-    <>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <View style={{ flex: 1, width: '100%' }}>
         {currentItems
           .map((job, i) => {
             if (i < topCardIndex || i > topCardIndex + 1) {
@@ -170,16 +166,12 @@ export default function CardScreen() {
           })
           .reverse()}
       </View>
-      {showModal && (
-        <Animated.View
+      <Modal transparent={true} visible={showModal} animationType="fade">
+        <View
           style={{
-            alignContent: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
             height: '100%',
-            width: '100%',
             backgroundColor: theme.colors.darkBackground,
-            transform: [{ translateY: modalY }],
+            justifyContent: 'center',
           }}
         >
           <View style={styles.likedCard}>
@@ -197,7 +189,7 @@ export default function CardScreen() {
                 name="heart"
                 size={40}
                 color={theme.colors.secondary}
-                style={{ padding: 16, backgroundColor: 'white', borderRadius: 999 }}
+                style={{ padding: 16, backgroundColor: 'white', borderRadius: 99 }}
               />
             </View>
             <DropDown category="Lisätty kansioon: Kaikki Suosikit" />
@@ -223,9 +215,34 @@ export default function CardScreen() {
               </Text>
             </Pressable>
           </View>
-        </Animated.View>
-      )}
-    </>
+        </View>
+      </Modal>
+      <View style={styles.buttonRow}>
+        <View style={{ gap: 16, flexDirection: 'row' }}>
+          <View
+            style={{ ...styles.buttonCircle, borderColor: theme.colors.textPrimary, width: 50 }}
+          >
+            <MaterialCommunityIcons name="arrow-left" size={32} color={theme.colors.textPrimary} />
+          </View>
+          <View style={{ ...styles.buttonCircle, borderColor: theme.colors.danger }}>
+            <MaterialCommunityIcons name="close-thick" size={44} color={theme.colors.danger} />
+          </View>
+        </View>
+        <View style={{ gap: 16, flexDirection: 'row' }}>
+          <TouchableOpacity
+            onPress={console.log('test')}
+            style={{ ...styles.buttonCircle, borderColor: theme.colors.secondary }}
+          >
+            <MaterialCommunityIcons name="heart" size={40} color={theme.colors.secondary} />
+          </TouchableOpacity>
+          <View
+            style={{ ...styles.buttonCircle, borderColor: theme.colors.textPrimary, width: 50 }}
+          >
+            <MaterialCommunityIcons name="arrow-right" size={32} color={theme.colors.textPrimary} />
+          </View>
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -252,21 +269,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 16,
   },
+  buttonCircle: {
+    alignItems: 'center',
+    aspectRatio: 1,
+    borderRadius: 99,
+    borderWidth: 2,
+    justifyContent: 'center',
+    width: 70,
+  },
+  buttonRow: {
+    ...theme.outlineDark,
+    ...theme.dropShadow,
+    backgroundColor: 'white',
+    borderRadius: 32,
+    flexDirection: 'row',
+    gap: 32,
+    justifyContent: 'center',
+    paddingVertical: 8,
+    width: '100%',
+  },
   container: {
     alignItems: 'center',
     backgroundColor: 'white',
     flex: 1,
+    gap: 8,
     justifyContent: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 32,
+    paddingHorizontal: 8,
+    paddingVertical: 16,
   },
   likedCard: {
     backgroundColor: theme.colors.secondary,
     borderRadius: 8,
-    flex: 1,
     gap: 16,
-    marginHorizontal: 16,
-    marginVertical: 32,
+    height: '70%',
+    marginHorizontal: 8,
     paddingHorizontal: 8,
   },
 });
