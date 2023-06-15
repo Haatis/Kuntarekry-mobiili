@@ -7,6 +7,8 @@ import BottomButton from '../../components/BottomButton';
 import * as FileSystem from 'expo-file-system';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
+import { manipulateAsync } from 'expo-image-manipulator';
+
 export default function PreviewProfileScreen() {
   const { userData } = useContext(AuthContext);
   const [image, setImage] = useState(userData ? userData.image : '');
@@ -15,36 +17,9 @@ export default function PreviewProfileScreen() {
   };
 
   const generatePdf = async () => {
-    try {
-      const { uri } = await Print.printToFileAsync({ html });
+    const image = await manipulateAsync(userData.image, [], { base64: true });
 
-      if (uri) {
-        const currentDate = new Date();
-        const day = currentDate.getDate().toString().padStart(2, '0');
-        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        const year = currentDate.getFullYear().toString();
-
-        const fileName = `KuntarekryCV_${day}${month}${year}.pdf`;
-        const newPath = `${FileSystem.documentDirectory}${fileName}`;
-
-        await FileSystem.moveAsync({ from: uri, to: newPath });
-        await Sharing.shareAsync(newPath);
-      }
-    } catch (error) {
-      console.error('Failed to generate or share PDF', error);
-    }
-  };
-
-  const formatDate = (birthday) => {
-    const date = new Date(birthday);
-    const day = date.getDate(); // Get the day (1-31)
-    const month = date.getMonth() + 1; // Get the month (0-11), adding 1 to adjust for 0-index
-    const year = date.getFullYear(); // Get the year in 4-digit format
-
-    return `${day}/${month}/${year}`;
-  };
-
-  const html = `
+    const html = `
   <html>
     <head>
       <style>
@@ -75,7 +50,7 @@ export default function PreviewProfileScreen() {
       </style>
     </head>
     <body>
-    <img src="${userData.image}" alt="profilepic">
+    <img src="data:image/jpeg;base64,${image.base64}" alt="profilepic">
       <h1>${userData.firstName} ${userData.lastName}</h1>
       <p style="color: ${theme.colors.textPrimary}; font-size: 20px;">${userData.employment}</p>
       <p style="color: ${theme.colors.textPrimary}; font-size: 18px;">${userData.introduction}</p>
@@ -90,6 +65,35 @@ export default function PreviewProfileScreen() {
     </body>
   </html>
 `;
+
+    try {
+      const { uri } = await Print.printToFileAsync({ html });
+
+      if (uri) {
+        const currentDate = new Date();
+        const day = currentDate.getDate().toString().padStart(2, '0');
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        const year = currentDate.getFullYear().toString();
+
+        const fileName = `KuntarekryCV_${day}${month}${year}.pdf`;
+        const newPath = `${FileSystem.documentDirectory}${fileName}`;
+
+        await FileSystem.moveAsync({ from: uri, to: newPath });
+        await Sharing.shareAsync(newPath);
+      }
+    } catch (error) {
+      console.error('Failed to generate or share PDF', error);
+    }
+  };
+
+  const formatDate = (birthday) => {
+    const date = new Date(birthday);
+    const day = date.getDate(); // Get the day (1-31)
+    const month = date.getMonth() + 1; // Get the month (0-11), adding 1 to adjust for 0-index
+    const year = date.getFullYear(); // Get the year in 4-digit format
+
+    return `${day}/${month}/${year}`;
+  };
 
   return (
     <>
