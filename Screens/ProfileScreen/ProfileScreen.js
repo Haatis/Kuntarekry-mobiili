@@ -19,7 +19,7 @@ export default function ProfileScreen() {
   const [image, setImage] = useState(userData ? userData.image : '');
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-
+  console.log(userData);
   const ProfileImage = {
     uri: 'https://cdn.pixabay.com/photo/2016/09/24/03/20/man-1690965_960_720.jpg',
   };
@@ -155,9 +155,7 @@ export default function ProfileScreen() {
                 },
               ]}
             >
-              {userData.introduction
-                ? userData.introduction
-                : 'Esittelytekstiä ei ole vielä lisätty'}
+              {userData.employment ? userData.employment : 'Esittelytekstiä ei ole vielä lisätty'}
             </Text>
             <View style={styles.container}>
               <View style={styles.row}>

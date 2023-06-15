@@ -177,13 +177,13 @@ export default function CardScreen() {
           <View style={styles.likedCard}>
             <View style={{ alignItems: 'center' }}>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {currentItems[topCardIndex].jobAdvertisement.title}
+                {currentItems[topCardIndex]?.jobAdvertisement.title}
               </Text>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {currentItems[topCardIndex].jobAdvertisement.profitCenter}
+                {currentItems[topCardIndex]?.jobAdvertisement.profitCenter}
               </Text>
               <Text numberOfLines={8} style={{ padding: 16, color: 'white' }}>
-                {currentItems[topCardIndex].jobAdvertisement.jobDesc}
+                {currentItems[topCardIndex]?.jobAdvertisement.jobDesc}
               </Text>
               <MaterialCommunityIcons
                 name="heart"
