@@ -15,7 +15,7 @@ export const theme = {
     tag4: '#d0f5dc',
     tag5: '#faeee3',
     inactiveNav: '#F8F8F8',
-    darkBackground: 'rgba(0, 0, 0, 0.25)',
+    darkBackground: 'rgba(0, 0, 0, 0.5)',
   },
   textVariants: {
     uiS: {

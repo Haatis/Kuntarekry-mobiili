@@ -8,8 +8,6 @@ export default function FavoriteButton({ job, employer, size = 24 }) {
 
   const containerLength = Math.round(size * 1.66);
 
-  console.log(containerLength);
-
   const handlePress = async () => {
     if (job != null) {
       await updateStoredList('job', job);

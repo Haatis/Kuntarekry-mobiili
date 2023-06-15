@@ -20,13 +20,14 @@ export default function CardScreen() {
   const { jobs } = useJobAdvertisements();
   const { currentItems, updateStack } = UpdateCardStack(jobs);
 
+  const [index, setIndex] = useState(0);
   const [topCardIndex, setTopCardIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
-  const pan = useRef(new Animated.ValueXY()).current;
-
   const SCREEN_WIDTH = Dimensions.get('screen').width;
   const SCREEN_HEIGHT = Dimensions.get('screen').height;
+
+  const pan = useRef(new Animated.ValueXY()).current;
 
   const rotate = pan.x.interpolate({
     inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
@@ -58,22 +59,41 @@ export default function CardScreen() {
     extrapolate: 'clamp',
   });
 
-  const openModal = () => {
+  console.log('topCard ' + topCardIndex + ' index ' + index);
+
+  const handleLike = () => {
+    updateIndex();
     setShowModal(true);
   };
 
-  const closeModal = () => {
+  const handleHide = () => {
     updateIndex();
+  };
+
+  const closeModal = () => {
     setShowModal(false);
   };
 
   const updateIndex = () => {
+    setIndex(index + 1);
     setTopCardIndex((currentValue) => {
-      if (currentValue == 2) {
-        updateStack();
-        return 0;
+      if (currentValue == 3) {
+        updateStack(true);
+        return 1;
       } else {
         return currentValue + 1;
+      }
+    });
+  };
+
+  const reduceIndex = () => {
+    setIndex(index - 1);
+    setTopCardIndex((currentValue) => {
+      if (currentValue == 1 && index > 1) {
+        updateStack(false);
+        return 3;
+      } else {
+        return currentValue - 1;
       }
     });
   };
@@ -86,19 +106,21 @@ export default function CardScreen() {
       }),
       onPanResponderRelease: (e, gestureState) => {
         if (gestureState.dx > 120) {
+          // Swipe right = like
           Animated.spring(pan, {
             toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
             useNativeDriver: false,
           }).start(() => {
-            openModal();
+            handleLike();
             pan.setValue({ x: 0, y: 0 });
           });
         } else if (gestureState.dx < -120) {
+          // Swipe left = hide
           Animated.spring(pan, {
             toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
             useNativeDriver: false,
           }).start(() => {
-            updateIndex();
+            handleHide();
             pan.setValue({ x: 0, y: 0 });
           });
         } else {
@@ -177,13 +199,13 @@ export default function CardScreen() {
           <View style={styles.likedCard}>
             <View style={{ alignItems: 'center' }}>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {currentItems[topCardIndex].jobAdvertisement.title}
+                {currentItems[topCardIndex - 1]?.jobAdvertisement.title}
               </Text>
               <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {currentItems[topCardIndex].jobAdvertisement.profitCenter}
+                {currentItems[topCardIndex - 1]?.jobAdvertisement.profitCenter}
               </Text>
               <Text numberOfLines={8} style={{ padding: 16, color: 'white' }}>
-                {currentItems[topCardIndex].jobAdvertisement.jobDesc}
+                {currentItems[topCardIndex - 1]?.jobAdvertisement.jobDesc}
               </Text>
               <MaterialCommunityIcons
                 name="heart"
@@ -219,27 +241,53 @@ export default function CardScreen() {
       </Modal>
       <View style={styles.buttonRow}>
         <View style={{ gap: 16, flexDirection: 'row' }}>
-          <View
-            style={{ ...styles.buttonCircle, borderColor: theme.colors.textPrimary, width: 50 }}
+          {index === 0 ? (
+            <View
+              style={{
+                ...styles.buttonCircle,
+                borderColor: theme.colors.textPrimary,
+                width: 50,
+                opacity: 0.5,
+              }}
+            >
+              <MaterialCommunityIcons
+                name="arrow-left"
+                size={32}
+                color={theme.colors.textPrimary}
+              />
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={reduceIndex}
+              style={{ ...styles.buttonCircle, borderColor: theme.colors.textPrimary, width: 50 }}
+            >
+              <MaterialCommunityIcons
+                name="arrow-left"
+                size={32}
+                color={theme.colors.textPrimary}
+              />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={handleHide}
+            style={{ ...styles.buttonCircle, borderColor: theme.colors.danger }}
           >
-            <MaterialCommunityIcons name="arrow-left" size={32} color={theme.colors.textPrimary} />
-          </View>
-          <View style={{ ...styles.buttonCircle, borderColor: theme.colors.danger }}>
             <MaterialCommunityIcons name="close-thick" size={44} color={theme.colors.danger} />
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={{ gap: 16, flexDirection: 'row' }}>
           <TouchableOpacity
-            onPress={console.log('test')}
+            onPress={handleLike}
             style={{ ...styles.buttonCircle, borderColor: theme.colors.secondary }}
           >
             <MaterialCommunityIcons name="heart" size={40} color={theme.colors.secondary} />
           </TouchableOpacity>
-          <View
+          <TouchableOpacity
+            onPress={updateIndex}
             style={{ ...styles.buttonCircle, borderColor: theme.colors.textPrimary, width: 50 }}
           >
             <MaterialCommunityIcons name="arrow-right" size={32} color={theme.colors.textPrimary} />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -247,16 +295,22 @@ export default function CardScreen() {
 }
 
 export function UpdateCardStack(items) {
-  const STACK_SIZE = 5;
-  const SWIPES_BEFORE_UPDATE = 3;
+  const STACK_SIZE = 6;
+  const CARDS_ADDED = 3;
   const [startOffset, setStartOffset] = useState(0);
   const endOffset = startOffset + STACK_SIZE;
   const currentItems = items.slice(startOffset, endOffset);
 
-  const updateStack = () => {
-    setStartOffset((current) => current + SWIPES_BEFORE_UPDATE);
+  const updateStack = (getNewCards) => {
+    if (getNewCards) {
+      setStartOffset((current) => current + CARDS_ADDED);
+    } else {
+      setStartOffset((current) => current - CARDS_ADDED);
+    }
   };
 
+  let jobNames = currentItems.map((a) => a.jobAdvertisement.title);
+  console.log(currentItems.length, jobNames);
   return { currentItems, updateStack };
 }
 
