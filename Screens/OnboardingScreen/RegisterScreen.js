@@ -1,13 +1,11 @@
-import { View, Text, StyleSheet, ImageBackground, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TextInput, TouchableOpacity } from 'react-native';
 import CheckBox from 'expo-checkbox';
 import { theme } from '../../styles/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import BackgroundImage from '../../assets/substract.png';
-import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useContext } from 'react';
 import AuthContext from '../../hooks/useauth';
 import { useOnboarding } from '../../hooks/useonboarding';
 
@@ -182,20 +180,27 @@ export default function RegisterScreen() {
                 </View>
                 <View style={{ flexDirection: 'row', marginLeft: 4 }}>
                   <CheckBox
-                    style={styles.checkbox}
                     value={isChecked}
                     onValueChange={setChecked}
-                    color={isChecked ? '#4630EB' : undefined}
+                    color={isChecked ? theme.colors.secondary : theme.colors.textSecondary}
                   />
-                  <Text style={(styles.paragraph, { marginLeft: 4 })}>Hyväksyn käyttöehdot</Text>
+                  <Text
+                    style={{
+                      ...theme.textVariants.textM,
+                      marginLeft: 4,
+                      color: theme.colors.textPrimary,
+                    }}
+                  >
+                    Hyväksyn käyttöehdot
+                  </Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                  <Pressable onPress={() => createUser()} style={styles.button}>
+                  <TouchableOpacity onPress={() => createUser()} style={styles.button}>
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>Luo käyttäjä</Text>
-                  </Pressable>
-                  <Pressable style={styles.button}>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.button}>
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>Käyttöehdot</Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

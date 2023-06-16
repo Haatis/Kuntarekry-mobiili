@@ -1,13 +1,19 @@
-import { View, Text, Image, StyleSheet, ImageBackground, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ImageBackground,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import { theme } from '../../styles/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import Logo from '../../assets/logo.png';
 import BackgroundImage from '../../assets/substract.png';
-import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import AuthContext from '../../hooks/useauth';
-import { useContext } from 'react';
 import { useOnboarding } from '../../hooks/useonboarding';
 
 export default function LoginScreen() {
@@ -106,11 +112,11 @@ export default function LoginScreen() {
                   </Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                  <Pressable onPress={() => handleLogin()} style={styles.button}>
+                  <TouchableOpacity onPress={handleLogin} style={styles.button}>
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
                       Kirjaudu sisään
                     </Text>
-                  </Pressable>
+                  </TouchableOpacity>
                   <View style={styles.horizontalLine} />
                   <Text
                     style={
@@ -120,14 +126,14 @@ export default function LoginScreen() {
                   >
                     Jos olet uusi kuntarekryssä luo käyttäjä
                   </Text>
-                  <Pressable
+                  <TouchableOpacity
                     onPress={() => navigation.navigate('RegisterScreen')}
                     style={styles.buttonSM}
                   >
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
                       Luo uusi käyttäjä
                     </Text>
-                  </Pressable>
+                  </TouchableOpacity>
                   <View
                     style={[
                       styles.horizontalLine,
@@ -159,7 +165,7 @@ export default function LoginScreen() {
                   >
                     Voit myös jatkaa kirjautumatta
                   </Text>
-                  <Pressable
+                  <TouchableOpacity
                     onPress={() =>
                       onboardingDone
                         ? navigation.navigate('Home')
@@ -170,7 +176,7 @@ export default function LoginScreen() {
                     <Text style={[theme.textVariants.uiM, { color: 'white' }]}>
                       Jatka eteenpäin
                     </Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
