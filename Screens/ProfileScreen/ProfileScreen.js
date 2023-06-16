@@ -19,7 +19,7 @@ export default function ProfileScreen() {
   const [image, setImage] = useState(userData ? userData.image : '');
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-  console.log(userData);
+
   const ProfileImage = {
     uri: 'https://cdn.pixabay.com/photo/2016/09/24/03/20/man-1690965_960_720.jpg',
   };
@@ -38,8 +38,6 @@ export default function ProfileScreen() {
       aspect: [1, 1],
       quality: 0.5,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -62,8 +60,6 @@ export default function ProfileScreen() {
       aspect: [1, 1],
       quality: 0.5,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -188,14 +184,17 @@ export default function ProfileScreen() {
                 </View>
               </View>
               <View style={{ ...styles.row, marginVertical: 16 }}>
-                <View style={[theme.outline, styles.square, theme.dropShadow]}>
+                <TouchableOpacity
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                  onPress={() => navigation.navigate('WorkInformation')}
+                >
                   <MaterialCommunityIcons
                     name="account-filter"
                     size={50}
                     color={theme.colors.textPrimary}
                   />
                   <Text style={{ ...theme.textVariants.textL }}>Työtoiveet</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={[theme.outline, styles.square, theme.dropShadow]}>
                   <MaterialCommunityIcons
                     name="file-image"

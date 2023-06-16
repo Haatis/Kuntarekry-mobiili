@@ -1,10 +1,10 @@
-import { Pressable, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function TagLarge({ tagColor, tagText, tagClose, onPressClose }) {
   if (tagClose) {
     return (
-      <Pressable
+      <TouchableOpacity
         onPress={onPressClose}
         style={[
           styles.tag,
@@ -13,6 +13,7 @@ export default function TagLarge({ tagColor, tagText, tagClose, onPressClose }) 
             justifyContent: 'space-between',
             borderColor: theme.colors.outline,
             borderWidth: 1,
+            backgroundColor: tagColor,
           },
         ]}
       >
@@ -23,16 +24,16 @@ export default function TagLarge({ tagColor, tagText, tagClose, onPressClose }) 
           name="close-thick"
           size={16}
           color={theme.colors.textPrimary}
-          style={{ marginLeft: 8 }}
+          style={{ marginLeft: 8, marginTop: 1 }}
         />
-      </Pressable>
+      </TouchableOpacity>
     );
   }
 
   return (
-    <Pressable style={[styles.tag, { backgroundColor: tagColor }]}>
+    <TouchableOpacity style={[styles.tag, { backgroundColor: tagColor }]}>
       <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>{tagText}</Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 

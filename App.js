@@ -36,6 +36,7 @@ import { DrawerStatusProvider } from './hooks/usedrawerstatus';
 import SubstitutionsScreen from './Screens/ProfileScreen/SubstitutionsScreen/SubstitutionsScreen';
 import { FavoriteListProvider, useFavoriteList } from './hooks/usefavoritelist';
 import PreviewProfileScreen from './Screens/ProfileScreen/PreviewProfileScreen';
+import WorkInformation from './Screens/ProfileScreen/WorkInformation';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -229,10 +230,24 @@ function StackNavigator() {
           }}
         />
         <Stack.Screen
+          name="PersonalizationScreen"
+          component={PersonalizationScreen}
+          options={{
+            header: () => <AppBar back={true} title={'Toimiala'} />,
+          }}
+        />
+        <Stack.Screen
           name="BasicInformation"
           component={BasicInformation}
           options={{
             header: () => <AppBar back={true} title={'Perustiedot'} />,
+          }}
+        />
+        <Stack.Screen
+          name="WorkInformation"
+          component={WorkInformation}
+          options={{
+            header: () => <AppBar back={true} title={'Työtoiveet'} />,
           }}
         />
         <Stack.Screen
