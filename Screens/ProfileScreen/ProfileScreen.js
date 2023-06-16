@@ -1,28 +1,29 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Modal,
+  Pressable,
+  Image,
+} from 'react-native';
 import { theme } from '../../styles/theme';
-import { TouchableOpacity, Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AuthContext from '../../hooks/useauth';
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Image } from 'react-native';
 import BasicInformation from './BasicInformation';
 import BottomButton from '../../components/BottomButton';
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
-import { Pressable } from 'react-native';
 
 export default function ProfileScreen() {
   const { userData, isLoggedIn, fetchUserData } = useContext(AuthContext);
   const [image, setImage] = useState(userData ? userData.image : '');
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-
-  const ProfileImage = {
-    uri: 'https://cdn.pixabay.com/photo/2016/09/24/03/20/man-1690965_960_720.jpg',
-  };
 
   const pickImage = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -89,47 +90,97 @@ export default function ProfileScreen() {
             <View style={styles.profileContainer}>
               <TouchableOpacity
                 onPress={() => setModalVisible(true)}
-                style={[theme.dropShadow, { borderRadius: 50 }]}
+                style={{ ...theme.dropShadow, borderRadius: 99 }}
               >
                 {image ? (
-                  <Image
-                    source={{ uri: image }}
-                    style={[theme.outline, styles.imageStyle]}
-                    resizeMode="cover"
-                  />
+                  <Image source={{ uri: image }} style={styles.imageStyle} resizeMode="cover" />
                 ) : (
-                  <Image
-                    source={ProfileImage}
-                    style={[theme.outline, styles.imageStyle]}
-                    resizeMode="cover"
-                  />
+                  <View
+                    style={{
+                      ...styles.imageStyle,
+                      overflow: 'hidden',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <MaterialCommunityIcons
+                      name="account"
+                      size={90}
+                      color={theme.colors.inactive}
+                    />
+                  </View>
                 )}
               </TouchableOpacity>
-              <Modal transparent={true} visible={modalVisible}>
+              <Modal transparent={true} visible={modalVisible} style={{ width: '100%' }}>
                 <Pressable
                   style={styles.modalContainer}
                   activeOpacity={1}
                   onPress={() => setModalVisible(false)}
                 >
                   <Pressable style={styles.modalButtonContainer}>
-                    <TouchableOpacity style={styles.editButton} onPress={takePhoto}>
-                      <Text style={[theme.textVariants.uiL, { color: theme.colors.textPrimary }]}>
-                        Ota kuva
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.editButton} onPress={pickImage}>
+                    <Text style={{ ...theme.textVariants.uiM, color: 'black' }}>
+                      Valitse profiilikuva
+                    </Text>
+                    <TouchableOpacity style={styles.actionButton} onPress={takePhoto}>
                       <Text style={[theme.textVariants.uiL, { color: theme.colors.textPrimary }]}>
                         Valitse kuva
                       </Text>
+                      <MaterialCommunityIcons
+                        name="plus"
+                        size={40}
+                        color={theme.colors.textPrimary}
+                        style={{ marginVertical: -99, marginHorizontal: -4 }}
+                      />
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.editButton}
-                      onPress={() => setModalVisible(false)}
-                    >
+                    <TouchableOpacity style={styles.actionButton} onPress={pickImage}>
                       <Text style={[theme.textVariants.uiL, { color: theme.colors.textPrimary }]}>
-                        Peruuta
+                        Ota kuva
                       </Text>
+                      <MaterialCommunityIcons
+                        name="camera"
+                        size={32}
+                        color={theme.colors.textPrimary}
+                        style={{ marginVertical: -99 }}
+                      />
                     </TouchableOpacity>
+                    {image ? (
+                      <Image
+                        source={{ uri: image }}
+                        style={{ ...styles.imageStyle, ...theme.dropShadow }}
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          ...styles.imageStyle,
+                          ...theme.dropShadow,
+                          overflow: 'hidden',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <MaterialCommunityIcons
+                          name="account"
+                          size={90}
+                          color={theme.colors.inactive}
+                        />
+                      </View>
+                    )}
+                    <View style={{ flexDirection: 'row', gap: 16 }}>
+                      <View style={styles.confirmButton}>
+                        <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                          Tallenna
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        style={styles.confirmButton}
+                        onPress={() => setModalVisible(false)}
+                      >
+                        <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                          Peruuta
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </Pressable>
                 </Pressable>
               </Modal>
@@ -260,38 +311,44 @@ const styles = StyleSheet.create({
     marginTop: 32,
     width: '100%',
   },
-  editButton: {
-    alignItems: 'center',
-    borderColor: theme.colors.outlineDark,
-    borderRadius: 30,
-    borderWidth: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 8,
-    marginVertical: 8,
-    paddingHorizontal: 32,
+  confirmButton: {
+    ...theme.outlineDark,
+    borderRadius: 99,
+    paddingHorizontal: 16,
     paddingVertical: 8,
   },
+  actionButton: {
+    ...theme.outline,
+    ...theme.dropShadow,
+    alignItems: 'center',
+    borderRadius: 99,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    width: '100%',
+  },
   imageStyle: {
+    ...theme.outline,
     borderRadius: 99,
     height: 100,
     width: 100,
   },
   modalButtonContainer: {
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     borderRadius: 8,
-
-    justifyContent: 'center',
-    marginBottom: 64,
-    paddingHorizontal: 48,
-    paddingVertical: 32,
+    gap: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 16,
+    marginBottom: 128,
   },
   modalContainer: {
-    alignItems: 'center',
     backgroundColor: theme.colors.darkBackground,
     flex: 1,
     justifyContent: 'center',
+    paddingHorizontal: 8,
+    width: '100%',
   },
 
   profileContainer: {
