@@ -26,7 +26,6 @@ export default function PersonalizationScreen2() {
   const navigation = useNavigation();
   const { userData } = useContext(AuthContext);
   const { fetchUserData } = useContext(AuthContext);
-
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();

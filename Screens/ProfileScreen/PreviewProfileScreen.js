@@ -20,50 +20,60 @@ export default function PreviewProfileScreen() {
     const image = await manipulateAsync(userData.image, [], { base64: true });
 
     const html = `
-  <html>
-    <head>
-      <style>
-        body {
-          background-color: white;
-          font-family: 'SourceSansPro';
-          padding: 16px;
-        }
-        h1 {
-          font-size: 24px;
-          margin-bottom: 8px;
-        }
-        p {
-          font-size: 16px;
-          color: red;
-        }
-        .label {
-          color: ${theme.colors.textPrimary};
-          margin-left: 24px;
-          margin-right: 10px;
-          text-align: left;
-        }
-        .value {
-          color: ${theme.colors.textSecondary};
-          flex: 1;
-          text-align: left;
-        }
-      </style>
-    </head>
-    <body>
+<html>
+  <head>
+    <style>
+      h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+      p {
+        font-size: 16px;
+        color: red;
+      }
+      .label {
+        color: ${theme.colors.textPrimary};
+        margin-left: 24px;
+        margin-right: 10px;
+        text-align: left;
+      }
+      .value {
+        color: ${theme.colors.textSecondary};
+        flex: 1;
+        text-align: left;
+      }
+      .centered {
+        text-align: center;
+      }
+      img {
+        display: block;
+        margin: 0 auto; /* Add this line to center the image */
+        width: 150px;
+        height: 150px;
+        border-radius: 50px;
+      }
+    </style>
+  </head>
+  <body>
     <img src="data:image/jpeg;base64,${image.base64}" alt="profilepic">
-      <h1>${userData.firstName} ${userData.lastName}</h1>
-      <p style="color: ${theme.colors.textPrimary}; font-size: 20px;">${userData.employment}</p>
-      <p style="color: ${theme.colors.textPrimary}; font-size: 18px;">${userData.introduction}</p>
-      <p class="label">Syntymäaika:</p>
-      <p class="value">${userData.birthday && formatDate(userData.birthday)}</p>
-      <p class="label">Sähköposti:</p>
-      <p class="value">${userData.email}</p>
-      <p class="label">Puhelinnumero:</p>
-      <p class="value">${userData.phoneNumber}</p>
-      <p class="label">Sijainti:</p>
-      <p class="value">${userData.locationNames}</p>
-    </body>
-  </html>
+    <h1>${userData.firstName} ${userData.lastName}</h1>
+    <p class="centered" style="color: ${theme.colors.textPrimary}; font-size: 20px;">${
+      userData.employment
+    }</p>
+    <p class="centered" style="color: ${theme.colors.textPrimary}; font-size: 18px;">${
+      userData.introduction
+    }</p>
+    <p class="label">Syntymäaika:</p>
+    <p class="value">${userData.birthday && formatDate(userData.birthday)}</p>
+    <p class="label">Sähköposti:</p>
+    <p class="value">${userData.email}</p>
+    <p class="label">Puhelinnumero:</p>
+    <p class="value">${userData.phoneNumber}</p>
+    <p class="label">Sijainti:</p>
+    <p class="value">${userData.locationNames}</p>
+  </body>
+</html>
 `;
 
     try {

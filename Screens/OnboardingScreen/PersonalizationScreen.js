@@ -7,10 +7,14 @@ import { useNavigation } from '@react-navigation/native';
 import { useJobTasks } from '../../hooks/usejobtasks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomButton from '../../components/BottomButton';
+import AuthContext from '../../hooks/useauth';
+import { useContext } from 'react';
 export default function PersonalizationScreen() {
   const [selectedJobs, setSelectedJobs] = useState([]);
   const navigation = useNavigation();
   const { tasks } = useJobTasks();
+  const { userData } = useContext(AuthContext);
+  const { fetchUserData } = useContext(AuthContext);
 
   const handleJobSelection = (job) => {
     if (selectedJobs.includes(job)) {
@@ -25,13 +29,18 @@ export default function PersonalizationScreen() {
   };
 
   const saveAndContinue = async () => {
-    const jobIds = selectedJobs.map((job) => {
-      const selectedTask = tasks.find((task) => task.name === job);
-      return selectedTask ? selectedTask.id : null;
-    });
-    const filteredJobIds = jobIds.filter((id) => id !== null);
+    //const jobIds = selectedJobs.map((job) => {
+    // const selectedTask = tasks.find((task) => task.name === job);
+    // return selectedTask ? selectedTask.id : null;
+    //});
+    //const filteredJobIds = jobIds.filter((id) => id !== null);
     try {
-      await AsyncStorage.setItem('task', JSON.stringify(filteredJobIds));
+      const updatedUserData = {
+        ...userData,
+        taskNames: selectedJobs,
+      };
+      await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
+      fetchUserData();
       navigation.navigate('PersonalizationScreen2');
     } catch (error) {
       console.log('Error saving job IDs:', error);

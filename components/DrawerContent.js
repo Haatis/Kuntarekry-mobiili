@@ -13,7 +13,6 @@ import { useJobLocations } from '../hooks/uselocations';
 import FilterTab from './FilterTab';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 import DrawerRecommended from './DrawerRecommended';
-import { LOCATION_KEY, TASK_KEY } from '../hooks/usepersonalisation';
 import { usePersonalisation } from '../hooks/usepersonalisation';
 import AuthContext from '../hooks/useauth';
 import { useContext } from 'react';
@@ -39,8 +38,6 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const [taskData, setTaskData] = useState([]);
 
   const { items } = usePersonalisation();
-
-  const taskNumber = items[TASK_KEY];
 
   useEffect(() => {
     if (locations && userData && userData.locationNames) {
@@ -68,30 +65,29 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   }, [locations, userData]);
 
   useEffect(() => {
-    if (taskNumber && taskNumber.length > 0) {
-      const taskData = taskNumber.map((number) => {
-        const taskObject = tasks.find((task) => task.id === number);
-        const name = taskObject ? taskObject.name : null;
+    if (tasks && userData && userData.taskNames) {
+      const taskData = userData.taskNames.map((taskName) => {
+        const taskObject = tasks.find((task) => task.name === taskName);
         const parentObject =
           taskObject && taskObject.parent
             ? tasks.find((task) => task.id === taskObject.parent)
             : null;
         const parentName = parentObject ? parentObject.name : null;
         const children = tasks
-          .filter((task) => task.parent === name)
+          .filter((task) => task.parent === taskObject.id)
           .map((task) => ({
             name: task.name,
             parent: task.parent,
           }));
         return {
-          name,
+          name: taskName,
           children,
           parent: parentName,
         };
       });
       setTaskData(taskData);
     }
-  }, [taskNumber, tasks]);
+  }, [tasks, userData]);
 
   const filteredJobs = useMemo(() => {
     if (selectedFilters.length === 0) {
