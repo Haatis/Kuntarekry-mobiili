@@ -8,6 +8,7 @@ import { useJobTasks } from '../../hooks/usejobtasks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomButton from '../../components/BottomButton';
 import AuthContext from '../../hooks/useauth';
+import { useOnboarding } from '../../hooks/useonboarding';
 import { useContext } from 'react';
 export default function PersonalizationScreen() {
   const [selectedJobs, setSelectedJobs] = useState([]);
@@ -15,6 +16,7 @@ export default function PersonalizationScreen() {
   const { tasks } = useJobTasks();
   const { userData } = useContext(AuthContext);
   const { fetchUserData } = useContext(AuthContext);
+  const { onboardingDone } = useOnboarding();
 
   const handleJobSelection = (job) => {
     if (selectedJobs.includes(job)) {
@@ -41,6 +43,10 @@ export default function PersonalizationScreen() {
       };
       await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
       fetchUserData();
+      if (onboardingDone) {
+        navigation.navigate('WorkInformation');
+        return;
+      }
       navigation.navigate('PersonalizationScreen2');
     } catch (error) {
       console.log('Error saving job IDs:', error);

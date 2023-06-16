@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';
+import TagLarge from '../../components/Tags/TagLarge';
 
 export default function BasicInformation() {
   const { userData } = useContext(AuthContext);
@@ -61,6 +62,16 @@ export default function BasicInformation() {
 
     fetchUserData();
     navigation.navigate('PersonalizationScreen2');
+  };
+
+  const removeTag = (name) => {
+    const updatedUserData = {
+      ...userData,
+      locationNames: userData.locationNames.filter((locationName) => locationName !== name),
+    };
+
+    AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
+    fetchUserData();
   };
 
   return (
@@ -138,21 +149,29 @@ export default function BasicInformation() {
           <Text style={theme.textVariants.uiM}>Sijainti</Text>
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
               width: '100%',
+              gap: 16,
             }}
           >
-            {userData.locationNames ? (
-              userData.locationNames.map((name, index) => (
-                <Text key={index} style={[theme.textVariants.uiM, { marginHorizontal: 8 }]}>
-                  {name}
-                </Text>
-              ))
-            ) : (
-              <Text>Et ole valinnut sijaintia</Text>
-            )}
+            <View style={styles.tagRow}>
+              {userData.locationNames ? (
+                userData.locationNames.map((name, index) => (
+                  <TagLarge
+                    key={index}
+                    tagText={name}
+                    tagColor={theme.colors.tag3}
+                    tagClose={true}
+                    larger={true}
+                    onPressClose={() => removeTag(name)}
+                  />
+                ))
+              ) : (
+                <Text>Et ole valinnut sijaintia</Text>
+              )}
+            </View>
             <TouchableOpacity
               onPress={() => {
                 saveUserDataAndNavigate();
@@ -249,5 +268,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     position: 'absolute',
     top: -8,
+  },
+  tagRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    justifyContent: 'center',
+    marginTop: 8,
   },
 });
