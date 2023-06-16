@@ -24,7 +24,7 @@ export default function ProfileScreen() {
   const [image, setImage] = useState(userData ? userData.image : '');
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-
+  console.log(userData);
   const pickImage = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -296,6 +296,17 @@ export default function ProfileScreen() {
   return <>{renderContent()}</>;
 }
 const styles = StyleSheet.create({
+  actionButton: {
+    ...theme.outline,
+    ...theme.dropShadow,
+    alignItems: 'center',
+    borderRadius: 99,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    width: '100%',
+  },
   cameraButton: {
     padding: 4,
   },
@@ -306,26 +317,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
   },
-  container: {
-    flex: 1,
-    marginTop: 32,
-    width: '100%',
-  },
   confirmButton: {
     ...theme.outlineDark,
     borderRadius: 99,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  actionButton: {
-    ...theme.outline,
-    ...theme.dropShadow,
-    alignItems: 'center',
-    borderRadius: 99,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+  container: {
+    flex: 1,
+    marginTop: 32,
     width: '100%',
   },
   imageStyle: {
@@ -339,9 +339,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 8,
     gap: 16,
+    marginBottom: 128,
     paddingHorizontal: 8,
     paddingVertical: 16,
-    marginBottom: 128,
   },
   modalContainer: {
     backgroundColor: theme.colors.darkBackground,
