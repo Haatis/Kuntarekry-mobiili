@@ -16,10 +16,25 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDown from '../../components/DropDown';
 import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 import { updateStoredList, useFavoriteList } from '../../hooks/usefavoritelist';
+import useJobCardAlgorithm from '../../hooks/usejobcardalgorithm';
+import { useContext } from 'react';
+import AuthContext from '../../hooks/useauth';
 
 export default function CardScreen() {
+  const { userData } = useContext(AuthContext);
   const { jobs } = useJobAdvertisements();
-  const { currentItems, updateStack } = UpdateCardStack(jobs);
+  const recommendedJobs = useJobCardAlgorithm(jobs, userData);
+
+  let currentItems, updateStack;
+  if (recommendedJobs.length > 0) {
+    const { currentItems: items, updateStack: stackUpdater } = UpdateCardStack(recommendedJobs);
+    currentItems = items;
+    updateStack = stackUpdater;
+  } else {
+    const { currentItems: items, updateStack: stackUpdater } = UpdateCardStack(jobs);
+    currentItems = items;
+    updateStack = stackUpdater;
+  }
   const { updateFavorites } = useFavoriteList();
 
   const [index, setIndex] = useState(0);

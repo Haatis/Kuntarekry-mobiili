@@ -12,69 +12,119 @@ import { manipulateAsync } from 'expo-image-manipulator';
 export default function PreviewProfileScreen() {
   const { userData } = useContext(AuthContext);
   const [image, setImage] = useState(userData ? userData.image : '');
-  const ProfileImage = {
-    uri: 'https://cdn.pixabay.com/photo/2016/09/24/03/20/man-1690965_960_720.jpg',
-  };
 
   const generatePdf = async () => {
     const image = await manipulateAsync(userData.image, [], { base64: true });
 
     const html = `
-<html>
-  <head>
-    <style>
-      h1 {
-        font-size: 24px;
-        margin-bottom: 8px;
-        text-align: center;
-      }
-      p {
-        font-size: 16px;
-        color: red;
-      }
-      .label {
-        color: ${theme.colors.textPrimary};
-        margin-left: 24px;
-        margin-right: 10px;
-        text-align: left;
-      }
-      .value {
-        color: ${theme.colors.textSecondary};
-        flex: 1;
-        text-align: left;
-      }
-      .centered {
-        text-align: center;
-      }
-      img {
-        display: block;
-        margin: 0 auto; /* Add this line to center the image */
-        width: 150px;
-        height: 150px;
-        border-radius: 50px;
-      }
-    </style>
-  </head>
-  <body>
-    <img src="data:image/jpeg;base64,${image.base64}" alt="profilepic">
-    <h1>${userData.firstName} ${userData.lastName}</h1>
-    <p class="centered" style="color: ${theme.colors.textPrimary}; font-size: 20px;">${
-      userData.employment
-    }</p>
-    <p class="centered" style="color: ${theme.colors.textPrimary}; font-size: 18px;">${
-      userData.introduction
-    }</p>
-    <p class="label">Syntymäaika:</p>
-    <p class="value">${userData.birthday && formatDate(userData.birthday)}</p>
-    <p class="label">Sähköposti:</p>
-    <p class="value">${userData.email}</p>
-    <p class="label">Puhelinnumero:</p>
-    <p class="value">${userData.phoneNumber}</p>
-    <p class="label">Sijainti:</p>
-    <p class="value">${userData.locationNames}</p>
-  </body>
-</html>
-`;
+    <html>
+    <head>
+      <style>
+        h1 {
+          font-size: 24px;
+          margin-bottom: 8px;
+          text-align: center;
+        }
+  
+        p {
+          font-size: 16px;
+        }
+  
+        .label {
+          color: ${theme.colors.textPrimary};
+          margin-left: 24px;
+          margin-right: 10px;
+          text-align: left;
+          margin-bottom: 0px;
+
+        }
+  
+        .value {
+          color: ${theme.colors.textSecondary};
+          text-align: left;
+          margin-bottom: 0px;
+        }
+  
+        .centered {
+          text-align: center;
+        }
+  
+        img {
+          display: block;
+          margin: 0 auto;
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+        }
+  
+        .heading {
+          font-size: 18px;
+          color: ${theme.colors.textPrimary};
+          text-align: center;
+          font-weight: bold;
+          margin-bottom: 0px;
+        }
+        
+        .row {
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          margin-bottom: 0px;
+        }
+        .container {
+          width: 45%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .introContainer {
+          width: 80%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .employmentContainer {
+          width: 65%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      </style>
+    </head>
+    <body>
+      <img src="data:image/jpeg;base64,${image.base64}" alt="profilepic">
+      <h1 style="color: ${theme.colors.textPrimary};">${userData.firstName} ${
+      userData.lastName
+    }</h1>
+    <div class="employmentContainer">
+      <p class="centered" style="color: ${theme.colors.textPrimary}; font-size: 16px;">
+        ${userData.employment}
+      </p>
+      </div>
+      <div class="introContainer">
+      <p class="centered" style="color: ${theme.colors.textSecondary}; font-size: 16px;">
+        ${userData.introduction}
+      </p>
+      </div>
+      <p class="heading">Perustiedot</p>
+      <div class="container">
+      <div class="row">
+        <p class="label">Syntymäaika:</p>
+        <p class="value">${userData.birthday && formatDate(userData.birthday)}</p>
+      </div>
+      <div class="row">
+        <p class="label">Sähköposti:</p>
+        <p class="value">${userData.email}</p>
+      </div>
+      <div class="row">
+        <p class="label">Puhelinnumero:</p>
+        <p class="value">${userData.phoneNumber}</p>
+      </div>
+      <div class="row">
+        <p class="label">Sijainti:</p>
+        <p class="value">${userData.locationNames}</p>
+      </div>
+      </div>
+    </body>
+    </html>
+  `;
 
     try {
       const { uri } = await Print.printToFileAsync({ html });
@@ -116,43 +166,41 @@ export default function PreviewProfileScreen() {
                 style={[theme.outline, styles.imageStyle]}
                 resizeMode="cover"
               />
-            ) : (
-              <Image
-                source={ProfileImage}
-                style={[theme.outline, styles.imageStyle]}
-                resizeMode="cover"
-              />
-            )}
+            ) : null}
           </View>
           <Text style={{ fontFamily: 'SourceSansPro', fontSize: 20 }}>
-            {userData.firstName} {userData.lastName}
+            {userData.firstName || '-'} {userData.lastName || '-'}
           </Text>
           <Text
             style={{ fontFamily: 'SourceSansPro', fontSize: 16, color: theme.colors.textPrimary }}
           >
-            {userData.employment}
+            {userData.employment || '-'}
           </Text>
           <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
-            {userData.introduction}
+            {userData.introduction || '-'}
           </Text>
           <Text style={theme.textVariants.uiL}>Perustiedot</Text>
           <View style={styles.rowText}>
             <Text style={[styles.label, theme.textVariants.uiM]}>Syntymäaika:</Text>
             <Text style={[styles.value, theme.textVariants.uiM]}>
-              {userData.birthday && formatDate(userData.birthday)}
+              {userData.birthday ? formatDate(userData.birthday) : '-'}
             </Text>
           </View>
           <View style={styles.rowText}>
             <Text style={[styles.label, theme.textVariants.uiM]}>Sähköposti:</Text>
-            <Text style={[styles.value, theme.textVariants.uiM]}>{userData.email}</Text>
+            <Text style={[styles.value, theme.textVariants.uiM]}>{userData.email || '-'}</Text>
           </View>
           <View style={styles.rowText}>
             <Text style={[styles.label, theme.textVariants.uiM]}>Puhelinnumero:</Text>
-            <Text style={[styles.value, theme.textVariants.uiM]}>{userData.phoneNumber}</Text>
+            <Text style={[styles.value, theme.textVariants.uiM]}>
+              {userData.phoneNumber || '-'}
+            </Text>
           </View>
           <View style={styles.rowText}>
             <Text style={[styles.label, theme.textVariants.uiM]}>Sijainti:</Text>
-            <Text style={[styles.value, theme.textVariants.uiM]}>{userData.locationNames}</Text>
+            <Text style={[styles.value, theme.textVariants.uiM]}>
+              {userData.locationNames || '-'}
+            </Text>
           </View>
         </View>
       </ScrollView>
