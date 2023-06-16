@@ -15,10 +15,12 @@ import { Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDown from '../../components/DropDown';
 import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
+import { updateStoredList, useFavoriteList } from '../../hooks/usefavoritelist';
 
 export default function CardScreen() {
   const { jobs } = useJobAdvertisements();
   const { currentItems, updateStack } = UpdateCardStack(jobs);
+  const { updateFavorites } = useFavoriteList();
 
   const [index, setIndex] = useState(0);
   const [topCardIndex, setTopCardIndex] = useState(0);
@@ -61,7 +63,10 @@ export default function CardScreen() {
 
   console.log('topCard ' + topCardIndex + ' index ' + index);
 
-  const handleLike = () => {
+  const handleLike = async () => {
+    console.log(topCardIndex + ' top ' + currentItems[topCardIndex]);
+    await updateStoredList('job', currentItems[topCardIndex].jobAdvertisement);
+    updateFavorites();
     updateIndex();
     setShowModal(true);
   };
@@ -75,7 +80,9 @@ export default function CardScreen() {
   };
 
   const updateIndex = () => {
-    setIndex(index + 1);
+    setIndex((currentValue) => {
+      return currentValue + 1;
+    });
     setTopCardIndex((currentValue) => {
       if (currentValue == 3) {
         updateStack(true);
@@ -132,6 +139,7 @@ export default function CardScreen() {
       },
     })
   ).current;
+
   return (
     <View style={styles.container}>
       <View style={{ flex: 1, width: '100%' }}>
@@ -226,16 +234,11 @@ export default function CardScreen() {
                 style={{ marginTop: 3 }}
               />
             </Pressable>
-            <Pressable
-              onPress={() => {
-                closeModal();
-              }}
-              style={styles.button}
-            >
+            <TouchableOpacity onPress={closeModal} style={styles.button}>
               <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
                 Jatka etsimistä
               </Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
