@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 
 export default function BasicInformation() {
   const { userData } = useContext(AuthContext);
-  const [textHeight, setTextHeight] = useState(57);
+  const textHeight = 57;
   const navigation = useNavigation();
   const [firstName, setFirstName] = useState(userData ? userData.firstName : '');
   const [lastName, setLastName] = useState(userData ? userData.lastName : '');

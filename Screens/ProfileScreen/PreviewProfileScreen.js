@@ -2,7 +2,6 @@ import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import { theme } from '../../styles/theme';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
-import { useState } from 'react';
 import BottomButton from '../../components/BottomButton';
 import * as FileSystem from 'expo-file-system';
 import * as Print from 'expo-print';
@@ -11,7 +10,7 @@ import { manipulateAsync } from 'expo-image-manipulator';
 
 export default function PreviewProfileScreen() {
   const { userData } = useContext(AuthContext);
-  const [image, setImage] = useState(userData ? userData.image : '');
+  const image = userData ? userData.image : '';
 
   const generatePdf = async () => {
     const image = await manipulateAsync(userData.image, [], { base64: true });
