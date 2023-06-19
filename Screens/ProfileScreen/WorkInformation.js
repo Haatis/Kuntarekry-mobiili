@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -13,7 +13,34 @@ import { useEffect } from 'react';
 
 export default function WorkInformation() {
   const { userData } = useContext(AuthContext);
+  const employmentOptions = ['Kokoaikatyö', 'Osaaikatyö', '3-vuorotyö', 'Tuntityö', '2-vuorotyö'];
+  const [showOptions, setShowOptions] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState(userData.employment || []);
 
+  const toggleOptions = () => {
+    setShowOptions(!showOptions);
+  };
+
+  const handleOptionSelect = (option) => {
+    setSelectedOptions([...selectedOptions, option]);
+    setShowOptions(false);
+  };
+
+  const removeEmploymentTag = (tag) => {
+    const updatedOptions = selectedOptions.filter((option) => option !== tag);
+    setSelectedOptions(updatedOptions);
+
+    const updatedUserData = {
+      ...userData,
+      employment: updatedOptions,
+    };
+
+    AsyncStorage.setItem('userData', JSON.stringify(updatedUserData))
+      .then(() => fetchUserData())
+      .catch((error) => console.log(error));
+  };
+
+  const filteredOptions = employmentOptions.filter((option) => !selectedOptions.includes(option));
   const [taskData, setTaskData] = useState([]);
   const navigation = useNavigation();
 
@@ -22,12 +49,7 @@ export default function WorkInformation() {
   const saveUserData = async () => {
     const updatedUserData = {
       ...userData,
-      //save new data
-    };
-
-    const employment = {
-      id: 1,
-      name: 'Työsuhteessa',
+      employment: selectedOptions,
     };
 
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
@@ -39,7 +61,7 @@ export default function WorkInformation() {
   const saveUserDataAndNavigate = async () => {
     const updatedUserData = {
       ...userData,
-      //save new data
+      employment: selectedOptions,
     };
 
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
@@ -132,6 +154,53 @@ export default function WorkInformation() {
             </TouchableOpacity>
           </View>
           <Text style={theme.textVariants.uiM}>Työsuhde</Text>
+          <TouchableOpacity
+            onPress={toggleOptions}
+            style={[theme.outline, theme.dropShadow, styles.createButton]}
+          >
+            <Text
+              style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, width: '80%' }]}
+            >
+              {'Valitse työsuhde'}
+            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons
+                name="chevron-down"
+                size={30}
+                color={theme.colors.textPrimary}
+              />
+            </View>
+          </TouchableOpacity>
+
+          {showOptions && (
+            <View style={styles.optionsContainer}>
+              {filteredOptions.map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  onPress={() => handleOptionSelect(option)}
+                  style={styles.optionItem}
+                >
+                  <Text>{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+          {selectedOptions.length > 0 ? (
+            <View style={styles.tagRow}>
+              {selectedOptions.map((option, index) => (
+                <TagLarge
+                  key={index}
+                  tagText={option}
+                  tagColor={theme.colors.tag3}
+                  tagClose={true}
+                  larger={true}
+                  onPressClose={() => removeEmploymentTag(option)}
+                />
+              ))}
+            </View>
+          ) : (
+            <Text>Et ole valinnut työsuhdetta</Text>
+          )}
         </View>
       </ScrollView>
       <BottomButton buttonText="Tallenna" buttonAction={() => saveUserData()} />
@@ -139,6 +208,16 @@ export default function WorkInformation() {
   );
 }
 const styles = StyleSheet.create({
+  createButton: {
+    alignItems: 'center',
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    width: '100%',
+  },
   editButton: {
     alignItems: 'center',
     borderColor: theme.colors.outlineDark,

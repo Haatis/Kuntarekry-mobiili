@@ -41,8 +41,12 @@ export default function useJobCardAlgorithm() {
     })
     .flat();
 
-  const userDataArray = [...locationNamesArray, ...taskNamesArray];
-  console.log('userDataArray', userDataArray);
+  const employmentArray = userData.employment
+    ? userData.employment.map((employment) => employment.toString().toLowerCase())
+    : [];
+
+  const userDataArray = [...locationNamesArray, ...taskNamesArray, ...employmentArray];
+  //console.log('userDataArray', userDataArray);
 
   const uniqueUserDataArray = [...new Set(userDataArray)];
 
@@ -69,6 +73,7 @@ const filterFields = [
   { name: 'location', rank: 10 },
   { name: 'region', rank: 10 },
   { name: 'taskArea', rank: 20 },
+  { name: 'employment', rank: 5 },
 ];
 
 const calculateRank = (job, userData) => {
