@@ -1,10 +1,9 @@
-import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, Image, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { theme } from '../../styles/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import Logo from '../../assets/logo.png';
 import BackgroundImage from '../../assets/substract.png';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 export default function WelcomeScreen() {
@@ -40,53 +39,78 @@ export default function WelcomeScreen() {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={[theme.textVariants.textM, { paddingBottom: 8 }]}>
-                  <Text style={{ fontWeight: 'bold' }}>Kuntarekrystä</Text> löytyy tuhansia avoimia
-                  työpaikkoja kaikkialta Suomesta
-                </Text>
-                <Text style={[theme.textVariants.textM, { paddingBottom: 8 }]}>
-                  <Text style={{ fontWeight: 'bold' }}>Työnhakijoille</Text> tarjoamme työvälineet
-                  työpaikkojen, sijaisuuksien ja keikkatöiden hakemiseen sekä tietoa työskentelystä
-                  kuntaorganisaatioissa ja hyvinvointialueilla.
-                </Text>
-                <Text style={[theme.textVariants.textM, { paddingBottom: 8 }]}>
-                  <Text style={{ fontWeight: 'bold' }}>Työnantajille</Text> - kunnille,
-                  kaupungeille, hyvinvointialueille, kuntayhtymille ja kuntien omistamille
-                  yrityksille - tarjoamme rekrytoinnin ohjelmisto- ja asiantuntijapalveluja, jotka
-                  sopivat ulkoiseen ja sisäiseen rekrytointiin sekä sijaisuuksien hallintaan.
-                </Text>
-                <Text style={[theme.textVariants.textM, { paddingBottom: 8 }]}>
-                  <Text style={{ fontWeight: 'bold' }}>Löydät meidät myös täältä:</Text>
-                </Text>
-                <View style={styles.webIconContainer}>
-                  <MaterialCommunityIcons name="facebook" size={40} color={theme.colors.primary} />
-                  <MaterialCommunityIcons name="twitter" size={40} color={theme.colors.primary} />
-                  <MaterialCommunityIcons name="instagram" size={40} color={theme.colors.primary} />
-                  <MaterialCommunityIcons name="linkedin" size={40} color={theme.colors.primary} />
-                </View>
-                <Text style={[theme.textVariants.uiM, { paddingBottom: 8, textAlign: 'center' }]}>
-                  Kieli{' '}
-                </Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 16 }}>
-                  <View style={styles.selected}>
-                    <Text style={{ fontSize: 28 }}>🇫🇮</Text>
-                  </View>
-                  <View style={styles.unSelected}>
-                    <Text style={{ fontSize: 28 }}>🇸🇪</Text>
-                  </View>
-                  <View style={styles.unSelected}>
-                    <Text style={{ fontSize: 28 }}>🇬🇧</Text>
+                <View style={styles.info}>
+                  <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
+                    <Text style={styles.textBold}>Kuntarekrystä</Text> löytyy tuhansia avoimia
+                    työpaikkoja kaikkialta Suomesta
+                  </Text>
+                  <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
+                    <Text style={styles.textBold}>Työnhakijoille </Text>
+                    tarjoamme työvälineet työpaikkojen, sijaisuuksien ja keikkatöiden hakemiseen
+                    sekä tietoa työskentelystä kuntaorganisaatioissa ja hyvinvointialueilla.
+                  </Text>
+                  <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
+                    <Text style={styles.textBold}>Työnantajille </Text>- kunnille, kaupungeille,
+                    hyvinvointialueille, kuntayhtymille ja kuntien omistamille yrityksille -
+                    tarjoamme rekrytoinnin ohjelmisto- ja asiantuntijapalveluja, jotka sopivat
+                    ulkoiseen ja sisäiseen rekrytointiin sekä sijaisuuksien hallintaan.
+                  </Text>
+                  <Text style={styles.textBold}>Löydät meidät myös täältä:</Text>
+                  <View style={styles.webIconContainer}>
+                    <MaterialCommunityIcons
+                      name="facebook"
+                      size={40}
+                      color={theme.colors.primary}
+                    />
+                    <MaterialCommunityIcons name="twitter" size={40} color={theme.colors.primary} />
+                    <MaterialCommunityIcons
+                      name="instagram"
+                      size={40}
+                      color={theme.colors.primary}
+                    />
+                    <MaterialCommunityIcons
+                      name="linkedin"
+                      size={40}
+                      color={theme.colors.primary}
+                    />
                   </View>
                 </View>
-                <Pressable onPress={() => navigation.navigate('LoginScreen')} style={styles.button}>
-                  <Text style={[theme.textVariants.uiM, { color: 'white' }]}>Jatka eteenpäin</Text>
+                <View style={{ gap: 8 }}>
+                  <Text
+                    style={{
+                      ...theme.textVariants.uiM,
+                      textAlign: 'center',
+                      color: theme.colors.textPrimary,
+                    }}
+                  >
+                    Kieli
+                  </Text>
+                  <View style={styles.flagRow}>
+                    <View style={styles.selected}>
+                      <Text style={{ fontSize: 28, textAlign: 'center' }}>🇫🇮</Text>
+                    </View>
+                    <View style={styles.unSelected}>
+                      <Text style={{ fontSize: 28, textAlign: 'center' }}>🇸🇪</Text>
+                    </View>
+                    <View style={styles.unSelected}>
+                      <Text style={{ fontSize: 28, textAlign: 'center' }}>🇬🇧</Text>
+                    </View>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('LoginScreen')}
+                  style={styles.button}
+                >
+                  <Text style={[theme.textVariants.uiM, { textAlign: 'center', color: 'white' }]}>
+                    Jatka eteenpäin
+                  </Text>
                   <MaterialCommunityIcons
                     name="chevron-right"
-                    size={22}
+                    size={28}
                     color="white"
-                    style={{ marginTop: 3 }}
+                    style={{ marginVertical: -99 }}
                   />
-                </Pressable>
+                </TouchableOpacity>
               </View>
             </View>
           </ImageBackground>
@@ -115,11 +139,22 @@ const styles = StyleSheet.create({
   contentContainer: {
     width: '100%',
   },
+  flagRow: {
+    flexDirection: 'row',
+    gap: 16,
+    justifyContent: 'center',
+  },
   imageContainer: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
     width: '100%',
+  },
+  info: {
+    borderBottomWidth: 1,
+    borderColor: theme.colors.outline,
+    gap: 8,
+    paddingBottom: 16,
   },
   logoContainer: {
     alignItems: 'center',
@@ -128,24 +163,34 @@ const styles = StyleSheet.create({
   selected: {
     borderColor: theme.colors.primary,
     borderRadius: 8,
-    borderWidth: 4,
+    borderWidth: 3,
+    height: 50,
+    justifyContent: 'center',
+    width: 50,
+  },
+  textBold: {
+    ...theme.textVariants.textM,
+    color: theme.colors.textPrimary,
+    fontWeight: 'bold',
   },
   textContainer: {
     backgroundColor: 'white',
     borderRadius: 4,
+    gap: 16,
     marginTop: 16,
     paddingHorizontal: 8,
     paddingVertical: 16,
   },
   unSelected: {
-    padding: 4,
+    ...theme.outline,
+    borderRadius: 8,
+    height: 50,
+    justifyContent: 'center',
+    width: 50,
   },
   webIconContainer: {
-    borderBottomWidth: 1,
-    borderColor: theme.colors.outline,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginBottom: 16,
-    paddingBottom: 16,
+    gap: 16,
+    justifyContent: 'center',
   },
 });

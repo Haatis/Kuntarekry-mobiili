@@ -115,18 +115,21 @@ function SearchContent({ navigation }) {
                 ref={searchInputRef}
               />
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <MaterialCommunityIcons
-                  name="magnify"
-                  size={30}
-                  color={theme.colors.textPrimary}
-                  onPress={handleSearch}
-                />
-                <TouchableOpacity style={{ flexDirection: 'row' }}>
+                <TouchableOpacity onPress={handleSearch}>
+                  <MaterialCommunityIcons
+                    name="magnify"
+                    size={30}
+                    color={theme.colors.textPrimary}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.openDrawer()}
+                  style={{ flexDirection: 'row' }}
+                >
                   <MaterialCommunityIcons
                     name="filter-outline"
                     size={30}
                     color={theme.colors.textPrimary}
-                    onPress={() => navigation.openDrawer()}
                   />
                   {filters.selectedFilters > 0 && (
                     <View style={styles.filterCircle}>
