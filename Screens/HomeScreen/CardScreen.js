@@ -76,10 +76,9 @@ export default function CardScreen() {
     extrapolate: 'clamp',
   });
 
-  console.log('topCard ' + topCardIndex + ' index ' + index);
+  //console.log('topCard ' + topCardIndex + ' index ' + index);
 
   const handleLike = async () => {
-    console.log(topCardIndex + ' top ' + currentItems[topCardIndex]);
     await updateStoredList('job', currentItems[topCardIndex].jobAdvertisement);
     updateFavorites();
     updateIndex();
@@ -327,8 +326,6 @@ export function UpdateCardStack(items) {
     }
   };
 
-  let jobNames = currentItems.map((a) => a.jobAdvertisement.title);
-  console.log(currentItems.length, jobNames);
   return { currentItems, updateStack };
 }
 

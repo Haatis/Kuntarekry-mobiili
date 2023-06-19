@@ -1,6 +1,4 @@
 export default function useJobCardAlgorithm(jobs, userData) {
-  console.log(userData);
-
   const locationNamesArray = userData.locationNames
     .map((location) => {
       const name = location.name ? location.name.toString().toLowerCase() : null;
@@ -40,13 +38,10 @@ export default function useJobCardAlgorithm(jobs, userData) {
   const filteredJobs = jobsWithRanks.filter((j) => j.jobAdvertisement.rank !== 0);
   filteredJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
 
-  console.log('Rankings:');
+  //console.log('Rankings:');
   filteredJobs.forEach((job) => {
-    console.log(`Job: ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`);
+    //console.log(`Job: ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`);
   });
-
-  console.log('User Data Array:');
-  console.log(uniqueUserDataArray.join('\n'));
 
   return filteredJobs;
 }
