@@ -15,16 +15,8 @@ export default function useJobCardAlgorithm(jobs, userData) {
     })
     .flat();
 
-  const userDataArray = [
-    ...Object.values(userData).map((value) => {
-      if (typeof value === 'object' && value !== null && 'name' in value) {
-        return value.name.toString().toLowerCase();
-      }
-      return value.toString().toLowerCase();
-    }),
-    ...locationNamesArray,
-    ...taskNamesArray,
-  ];
+  const userDataArray = [...locationNamesArray, ...taskNamesArray];
+  console.log('userDataArray', userDataArray);
 
   const uniqueUserDataArray = [...new Set(userDataArray)];
 
@@ -40,7 +32,9 @@ export default function useJobCardAlgorithm(jobs, userData) {
 
   //console.log('Rankings:');
   filteredJobs.forEach((job) => {
-    //console.log(`Job: ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`);
+    console.log(
+      `job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}}`
+    );
   });
 
   return filteredJobs;
