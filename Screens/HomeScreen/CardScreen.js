@@ -14,16 +14,11 @@ import { theme } from '../../styles/theme';
 import { Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDown from '../../components/DropDown';
-import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 import { updateStoredList, useFavoriteList } from '../../hooks/usefavoritelist';
-import useJobCardAlgorithm from '../../hooks/usejobcardalgorithm';
-import { useContext } from 'react';
-import AuthContext from '../../hooks/useauth';
+import { UpdateCardStack } from '../../hooks/usejobcardalgorithm';
 
 export default function CardScreen() {
-  const { userData } = useContext(AuthContext);
-  const { jobs } = useJobAdvertisements();
-  const recommendedJobs = useJobCardAlgorithm(jobs, userData);
+  const { currentItems, updateStack } = UpdateCardStack();
 
   let currentItems, updateStack;
 
@@ -305,24 +300,6 @@ export default function CardScreen() {
       </View>
     </View>
   );
-}
-
-export function UpdateCardStack(items) {
-  const STACK_SIZE = 6;
-  const CARDS_ADDED = 3;
-  const [startOffset, setStartOffset] = useState(0);
-  const endOffset = startOffset + STACK_SIZE;
-  const currentItems = items.slice(startOffset, endOffset);
-
-  const updateStack = (getNewCards) => {
-    if (getNewCards) {
-      setStartOffset((current) => current + CARDS_ADDED);
-    } else {
-      setStartOffset((current) => current - CARDS_ADDED);
-    }
-  };
-
-  return { currentItems, updateStack };
 }
 
 const styles = StyleSheet.create({

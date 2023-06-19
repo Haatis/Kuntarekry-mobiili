@@ -1,4 +1,30 @@
-export default function useJobCardAlgorithm(jobs, userData) {
+import { useState, useContext } from 'react';
+import AuthContext from '../hooks/useauth';
+import { useJobAdvertisements } from '../hooks/usejobadvertisements';
+
+export function UpdateCardStack() {
+  const jobs = useJobCardAlgorithm();
+  const STACK_SIZE = 6;
+  const CARDS_ADDED = 3;
+  const [startOffset, setStartOffset] = useState(0);
+  const endOffset = startOffset + STACK_SIZE;
+  const currentItems = jobs.slice(startOffset, endOffset);
+
+  const updateStack = (getNewCards) => {
+    if (getNewCards) {
+      setStartOffset((current) => current + CARDS_ADDED);
+    } else {
+      setStartOffset((current) => current - CARDS_ADDED);
+    }
+  };
+
+  return { currentItems, updateStack };
+}
+
+export default function useJobCardAlgorithm() {
+  const { jobs } = useJobAdvertisements();
+  const { userData } = useContext(AuthContext);
+
   const locationNamesArray = userData.locationNames
     .map((location) => {
       const name = location.name ? location.name.toString().toLowerCase() : null;
@@ -14,6 +40,7 @@ export default function useJobCardAlgorithm(jobs, userData) {
       return [name, parent].filter(Boolean);
     })
     .flat();
+
   const employmentArray = userData.employment
     ? userData.employment.map((employment) => employment.toString().toLowerCase())
     : [];
@@ -35,11 +62,11 @@ export default function useJobCardAlgorithm(jobs, userData) {
   const sortedJobs = rankedJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
 
   //console.log('Rankings:');
-  //sortedJobs.forEach((job) => {
-  //  console.log(
-  //    `${job.jobAdvertisement.profitCenter}, ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
-  //  );
-  //});
+  filteredJobs.forEach((job) => {
+    console.log(
+      `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
+    );
+  });
 
   return sortedJobs;
 }

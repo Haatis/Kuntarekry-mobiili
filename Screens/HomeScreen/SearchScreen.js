@@ -52,7 +52,6 @@ function SearchContent({ navigation }) {
       }
     } else {
       // Perform search logic here based on the searchText and filters
-      console.log('Performing search with:', searchText);
       setLastSearch(searchText);
       setSearchText('');
     }
