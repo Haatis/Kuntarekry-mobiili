@@ -26,15 +26,11 @@ export default function CardScreen() {
   const recommendedJobs = useJobCardAlgorithm(jobs, userData);
 
   let currentItems, updateStack;
-  if (recommendedJobs.length > 0) {
-    const { currentItems: items, updateStack: stackUpdater } = UpdateCardStack(recommendedJobs);
-    currentItems = items;
-    updateStack = stackUpdater;
-  } else {
-    const { currentItems: items, updateStack: stackUpdater } = UpdateCardStack(jobs);
-    currentItems = items;
-    updateStack = stackUpdater;
-  }
+
+  const { currentItems: items, updateStack: stackUpdater } = UpdateCardStack(recommendedJobs);
+  currentItems = items;
+  updateStack = stackUpdater;
+
   const { updateFavorites } = useFavoriteList();
 
   const [index, setIndex] = useState(0);

@@ -14,9 +14,9 @@ export default function useJobCardAlgorithm(jobs, userData) {
       return [name, parent].filter(Boolean);
     })
     .flat();
-  const employmentArray = userData.employment.map((employment) =>
-    employment.toString().toLowerCase()
-  );
+  const employmentArray = userData.employment
+    ? userData.employment.map((employment) => employment.toString().toLowerCase())
+    : [];
 
   const userDataArray = [...locationNamesArray, ...taskNamesArray, ...employmentArray];
   //console.log('userDataArray', userDataArray);
@@ -25,23 +25,25 @@ export default function useJobCardAlgorithm(jobs, userData) {
 
   const jobsWithRanks = initRanks(jobs);
 
-  jobsWithRanks.map((job) => {
-    uniqueUserDataArray.forEach((userDataPart) => calculateRank(job, userDataPart));
-    return job;
+  const rankedJobs = jobsWithRanks.map((job) => {
+    const rank = uniqueUserDataArray.reduce((acc, userDataPart) => {
+      return acc + calculateRank(job, userDataPart);
+    }, 0);
+    return { ...job, jobAdvertisement: { ...job.jobAdvertisement, rank } };
   });
 
-  const filteredJobs = jobsWithRanks.filter((j) => j.jobAdvertisement.rank !== 0);
-  filteredJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
+  const sortedJobs = rankedJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
 
   //console.log('Rankings:');
-  //filteredJobs.forEach((job) => {
-  //console.log(
-  // `job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}}`
-  //);
+  //sortedJobs.forEach((job) => {
+  //  console.log(
+  //    `${job.jobAdvertisement.profitCenter}, ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
+  //  );
   //});
 
-  return filteredJobs;
+  return sortedJobs;
 }
+
 const filterFields = [
   { name: 'location', rank: 10 },
   { name: 'region', rank: 10 },
@@ -50,10 +52,11 @@ const filterFields = [
 ];
 
 const calculateRank = (job, userData) => {
-  filterFields.forEach((field) => {
+  return filterFields.reduce((acc, field) => {
     const match = job.jobAdvertisement[field.name]?.toLowerCase().includes(userData);
-    if (match) job.jobAdvertisement.rank += field.rank;
-  });
+    if (match) return acc + field.rank;
+    return acc;
+  }, 0);
 };
 
 const initRanks = (jobs) =>
