@@ -20,12 +20,6 @@ import { UpdateCardStack } from '../../hooks/usejobcardalgorithm';
 export default function CardScreen() {
   const { currentItems, updateStack } = UpdateCardStack();
 
-  let currentItems, updateStack;
-
-  const { currentItems: items, updateStack: stackUpdater } = UpdateCardStack(recommendedJobs);
-  currentItems = items;
-  updateStack = stackUpdater;
-
   const { updateFavorites } = useFavoriteList();
 
   const [index, setIndex] = useState(0);

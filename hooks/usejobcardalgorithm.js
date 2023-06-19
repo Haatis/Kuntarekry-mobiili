@@ -62,11 +62,11 @@ export default function useJobCardAlgorithm() {
   const sortedJobs = rankedJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
 
   //console.log('Rankings:');
-  filteredJobs.forEach((job) => {
-    console.log(
-      `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
-    );
-  });
+  // sortedJobs.forEach((job) => {
+  //  console.log(
+  //   `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
+  // );
+  //});
 
   return sortedJobs;
 }
