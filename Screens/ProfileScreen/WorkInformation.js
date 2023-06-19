@@ -25,6 +25,11 @@ export default function WorkInformation() {
       //save new data
     };
 
+    const employment = {
+      id: 1,
+      name: 'Työsuhteessa',
+    };
+
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
 
     alert('Tiedot tallennettu');
@@ -126,6 +131,7 @@ export default function WorkInformation() {
               />
             </TouchableOpacity>
           </View>
+          <Text style={theme.textVariants.uiM}>Työsuhde</Text>
         </View>
       </ScrollView>
       <BottomButton buttonText="Tallenna" buttonAction={() => saveUserData()} />

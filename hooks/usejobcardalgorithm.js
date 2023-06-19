@@ -46,7 +46,7 @@ export default function useJobCardAlgorithm(jobs, userData) {
   return filteredJobs;
 }
 const filterFields = [
-  { name: 'location', rank: 20 },
+  { name: 'location', rank: 10 },
   { name: 'region', rank: 10 },
   { name: 'taskArea', rank: 20 },
 ];
