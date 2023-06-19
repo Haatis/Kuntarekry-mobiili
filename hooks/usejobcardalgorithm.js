@@ -14,9 +14,12 @@ export default function useJobCardAlgorithm(jobs, userData) {
       return [name, parent].filter(Boolean);
     })
     .flat();
+  const employmentArray = userData.employment.map((employment) =>
+    employment.toString().toLowerCase()
+  );
 
-  const userDataArray = [...locationNamesArray, ...taskNamesArray];
-  console.log('userDataArray', userDataArray);
+  const userDataArray = [...locationNamesArray, ...taskNamesArray, ...employmentArray];
+  //console.log('userDataArray', userDataArray);
 
   const uniqueUserDataArray = [...new Set(userDataArray)];
 
@@ -31,11 +34,11 @@ export default function useJobCardAlgorithm(jobs, userData) {
   filteredJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
 
   //console.log('Rankings:');
-  filteredJobs.forEach((job) => {
-    console.log(
-      `job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}}`
-    );
-  });
+  //filteredJobs.forEach((job) => {
+  //console.log(
+  // `job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}}`
+  //);
+  //});
 
   return filteredJobs;
 }
@@ -43,6 +46,7 @@ const filterFields = [
   { name: 'location', rank: 10 },
   { name: 'region', rank: 10 },
   { name: 'taskArea', rank: 20 },
+  { name: 'employment', rank: 5 },
 ];
 
 const calculateRank = (job, userData) => {
