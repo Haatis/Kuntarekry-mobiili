@@ -21,10 +21,10 @@ import { StatusBar } from 'expo-status-bar';
 
 export default function ProfileScreen() {
   const { userData, isLoggedIn, fetchUserData } = useContext(AuthContext);
-  const [image, setImage] = useState(userData ? userData.image : '');
+  const [previewImage, setPreviewImage] = useState(userData.image ? userData.image : '');
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-  console.log(userData);
+
   const pickImage = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -41,10 +41,8 @@ export default function ProfileScreen() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setPreviewImage(result.assets[0].uri);
     }
-    saveUserData(result.assets[0].uri);
-    setModalVisible(false);
   };
 
   const takePhoto = async () => {
@@ -63,10 +61,21 @@ export default function ProfileScreen() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setPreviewImage(result.assets[0].uri);
     }
+  };
 
-    saveUserData(result.assets[0].uri);
+  const deleteImage = () => {
+    setPreviewImage('');
+  };
+
+  const saveImage = () => {
+    saveUserData(previewImage);
+    setModalVisible(false);
+  };
+
+  const cancel = () => {
+    setPreviewImage(userData.image ? userData.image : '');
     setModalVisible(false);
   };
 
@@ -92,8 +101,12 @@ export default function ProfileScreen() {
                 onPress={() => setModalVisible(true)}
                 style={{ ...theme.dropShadow, borderRadius: 99 }}
               >
-                {image ? (
-                  <Image source={{ uri: image }} style={styles.imageStyle} resizeMode="cover" />
+                {userData.image ? (
+                  <Image
+                    source={{ uri: userData.image }}
+                    style={styles.imageStyle}
+                    resizeMode="cover"
+                  />
                 ) : (
                   <View
                     style={{
@@ -121,7 +134,7 @@ export default function ProfileScreen() {
                     <Text style={{ ...theme.textVariants.uiM, color: 'black' }}>
                       Valitse profiilikuva
                     </Text>
-                    <TouchableOpacity style={styles.actionButton} onPress={takePhoto}>
+                    <TouchableOpacity style={styles.actionButton} onPress={pickImage}>
                       <Text style={[theme.textVariants.uiL, { color: theme.colors.textPrimary }]}>
                         Valitse kuva
                       </Text>
@@ -132,7 +145,7 @@ export default function ProfileScreen() {
                         style={{ marginVertical: -99, marginHorizontal: -4 }}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.actionButton} onPress={pickImage}>
+                    <TouchableOpacity style={styles.actionButton} onPress={takePhoto}>
                       <Text style={[theme.textVariants.uiL, { color: theme.colors.textPrimary }]}>
                         Ota kuva
                       </Text>
@@ -143,13 +156,23 @@ export default function ProfileScreen() {
                         style={{ marginVertical: -99 }}
                       />
                     </TouchableOpacity>
-                    {image ? (
+                    {previewImage ? (
                       <View style={{ ...theme.dropShadow, borderRadius: 99 }}>
                         <Image
-                          source={{ uri: image }}
+                          source={{ uri: previewImage }}
                           style={{ ...styles.imageStyle }}
                           resizeMode="cover"
                         />
+                        <TouchableOpacity
+                          onPress={deleteImage}
+                          style={{ position: 'absolute', top: -4, right: -4 }}
+                        >
+                          <MaterialCommunityIcons
+                            name="close-thick"
+                            size={20}
+                            color={theme.colors.textPrimary}
+                          />
+                        </TouchableOpacity>
                       </View>
                     ) : (
                       <View
@@ -169,15 +192,12 @@ export default function ProfileScreen() {
                       </View>
                     )}
                     <View style={{ flexDirection: 'row', gap: 16 }}>
-                      <View style={styles.confirmButton}>
+                      <TouchableOpacity style={styles.confirmButton} onPress={saveImage}>
                         <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
                           Tallenna
                         </Text>
-                      </View>
-                      <TouchableOpacity
-                        style={styles.confirmButton}
-                        onPress={() => setModalVisible(false)}
-                      >
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.confirmButton} onPress={cancel}>
                         <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
                           Peruuta
                         </Text>
@@ -186,11 +206,9 @@ export default function ProfileScreen() {
                   </Pressable>
                 </Pressable>
               </Modal>
-              <View style={styles.cameraContainer}>
-                <TouchableOpacity style={styles.cameraButton} onPress={() => setModalVisible(true)}>
-                  <MaterialCommunityIcons name="camera" size={24} color="white" />
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity style={styles.cameraButton} onPress={() => setModalVisible(true)}>
+                <MaterialCommunityIcons name="camera" size={24} color="white" />
+              </TouchableOpacity>
             </View>
             <Text style={{ marginTop: 16, fontFamily: 'SourceSansPro', fontSize: 20 }}>
               {userData.firstName} {userData.lastName}
@@ -310,12 +328,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cameraButton: {
-    padding: 4,
-  },
-  cameraContainer: {
-    backgroundColor: theme.colors.textPrimary + '50',
+    backgroundColor: theme.colors.darkBackground,
     borderRadius: 99,
     bottom: 0,
+    padding: 4,
     position: 'absolute',
     right: 0,
   },
