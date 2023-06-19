@@ -26,6 +26,7 @@ export default function PersonalizationScreen2() {
   const navigation = useNavigation();
   const { userData } = useContext(AuthContext);
   const { fetchUserData } = useContext(AuthContext);
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -117,18 +118,25 @@ export default function PersonalizationScreen2() {
   };
 
   const saveAndContinue = async () => {
-    const jobIds = selectedJobs.map((job) => {
-      const selectedTask = locations.find((task) => task.name === job);
-      return selectedTask ? selectedTask.id : null;
-    });
-    const filteredJobIds = jobIds.filter((id) => id !== null);
-
     try {
-      await AsyncStorage.setItem('location', JSON.stringify(filteredJobIds));
       if (onboardingDone) {
         const updatedUserData = {
           ...userData,
-          locationNames: selectedJobs,
+          locationNames: selectedJobs.map((job) => {
+            const location = locations.find((location) => location.name === job);
+            if (location && location.parent) {
+              const parent = locations.find(
+                (parentLocation) => parentLocation.id === location.parent
+              );
+              if (parent) {
+                return {
+                  name: job,
+                  parent: parent.name,
+                };
+              }
+            }
+            return { parent: job };
+          }),
         };
 
         await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
@@ -139,7 +147,21 @@ export default function PersonalizationScreen2() {
       }
       const updatedUserData = {
         ...userData,
-        locationNames: selectedJobs,
+        locationNames: selectedJobs.map((job) => {
+          const location = locations.find((location) => location.name === job);
+          if (location && location.parent) {
+            const parent = locations.find(
+              (parentLocation) => parentLocation.id === location.parent
+            );
+            if (parent) {
+              return {
+                name: job,
+                parent: parent.name,
+              };
+            }
+          }
+          return { parent: job };
+        }),
       };
 
       await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));

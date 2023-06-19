@@ -8,10 +8,13 @@ import BottomButton from '../../components/BottomButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TagLarge from '../../components/Tags/TagLarge';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function WorkInformation() {
   const { userData } = useContext(AuthContext);
 
+  const [taskData, setTaskData] = useState([]);
   const navigation = useNavigation();
 
   const { fetchUserData } = useContext(AuthContext);
@@ -43,12 +46,36 @@ export default function WorkInformation() {
   const removeTag = (name) => {
     const updatedUserData = {
       ...userData,
-      taskNames: userData.taskNames.filter((taskName) => taskName !== name),
+      taskNames: userData.taskNames.filter((locationObj) => locationObj.name !== name),
     };
 
-    AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
-    fetchUserData();
+    AsyncStorage.setItem('userData', JSON.stringify(updatedUserData))
+      .then(() => fetchUserData())
+      .catch((error) => console.log(error));
   };
+
+  useEffect(() => {
+    if (userData.locationNames) {
+      const nameSet = new Set();
+      const parentSet = new Set();
+      const taskData = [];
+
+      userData.taskNames.forEach((obj) => {
+        if (obj.name) nameSet.add(obj.name);
+        if (obj.parent) parentSet.add(obj.parent);
+      });
+
+      nameSet.forEach((name) => {
+        taskData.push({ name: name });
+      });
+
+      parentSet.forEach((parent) => {
+        taskData.push({ parent: parent });
+      });
+
+      setTaskData(taskData);
+    }
+  }, [userData]);
 
   return (
     <>
@@ -65,17 +92,19 @@ export default function WorkInformation() {
             }}
           >
             <View style={styles.tagRow}>
-              {userData.taskNames.length > 0 ? (
-                userData.taskNames.map((name, index) => (
-                  <TagLarge
-                    key={index}
-                    tagText={name}
-                    tagColor={theme.colors.tag3}
-                    tagClose={true}
-                    larger={true}
-                    onPressClose={() => removeTag(name)}
-                  />
-                ))
+              {taskData ? (
+                taskData
+                  .filter((obj) => obj.name) // Exclude objects without the name property
+                  .map((obj, index) => (
+                    <TagLarge
+                      key={index}
+                      tagText={obj.name}
+                      tagColor={theme.colors.tag3}
+                      tagClose={true}
+                      larger={true}
+                      onPressClose={() => removeTag(obj.name)}
+                    />
+                  ))
               ) : (
                 <Text>Et ole valinnut sijaintia</Text>
               )}

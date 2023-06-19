@@ -38,57 +38,6 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   const [taskData, setTaskData] = useState([]);
 
   const { items } = usePersonalisation();
-
-  useEffect(() => {
-    if (locations && userData && userData.locationNames) {
-      const locationData = userData.locationNames.map((locationName) => {
-        const locationObject = locations.find((location) => location.name === locationName);
-        const parentObject =
-          locationObject && locationObject.parent
-            ? locations.find((location) => location.id === locationObject.parent)
-            : null;
-        const parentName = parentObject ? parentObject.name : null;
-        const children = locations
-          .filter((location) => location.parent === locationObject.id)
-          .map((location) => ({
-            name: location.name,
-            parent: location.parent,
-          }));
-        return {
-          name: locationName,
-          children,
-          parent: parentName,
-        };
-      });
-      setLocationData(locationData);
-    }
-  }, [locations, userData]);
-
-  useEffect(() => {
-    if (tasks && userData && userData.taskNames) {
-      const taskData = userData.taskNames.map((taskName) => {
-        const taskObject = tasks.find((task) => task.name === taskName);
-        const parentObject =
-          taskObject && taskObject.parent
-            ? tasks.find((task) => task.id === taskObject.parent)
-            : null;
-        const parentName = parentObject ? parentObject.name : null;
-        const children = tasks
-          .filter((task) => task.parent === taskObject.id)
-          .map((task) => ({
-            name: task.name,
-            parent: task.parent,
-          }));
-        return {
-          name: taskName,
-          children,
-          parent: parentName,
-        };
-      });
-      setTaskData(taskData);
-    }
-  }, [tasks, userData]);
-
   const filteredJobs = useMemo(() => {
     if (selectedFilters.length === 0) {
       return jobs; // Return all jobs if no filters are selected
@@ -262,6 +211,52 @@ export function DrawerContent({ setIsDrawerOpen, onStatusChange }) {
   useEffect(() => {
     countTypes();
   }, [selectedFilters]);
+
+  useEffect(() => {
+    if (userData && userData.locationNames && Array.isArray(userData.locationNames)) {
+      const nameSet = new Set();
+      const parentSet = new Set();
+      const locationData = [];
+
+      userData.locationNames.forEach((obj) => {
+        if (obj.name) nameSet.add(obj.name);
+        if (obj.parent) parentSet.add(obj.parent);
+      });
+
+      nameSet.forEach((name) => {
+        locationData.push({ name: name });
+      });
+
+      parentSet.forEach((parent) => {
+        locationData.push({ parent: parent });
+      });
+
+      setLocationData(locationData);
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (userData && userData.taskNames && Array.isArray(userData.taskNames)) {
+      const nameSet = new Set();
+      const parentSet = new Set();
+      const taskData = [];
+
+      userData.taskNames.forEach((obj) => {
+        if (obj.name) nameSet.add(obj.name);
+        if (obj.parent) parentSet.add(obj.parent);
+      });
+
+      nameSet.forEach((name) => {
+        taskData.push({ name: name });
+      });
+
+      parentSet.forEach((parent) => {
+        taskData.push({ parent: parent });
+      });
+
+      setTaskData(taskData);
+    }
+  }, [userData]);
 
   const countTypes = useCallback(() => {
     let taskCount = 0;

@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';
 import TagLarge from '../../components/Tags/TagLarge';
+import { useEffect } from 'react';
 
 export default function BasicInformation() {
   const { userData } = useContext(AuthContext);
@@ -25,6 +26,7 @@ export default function BasicInformation() {
   const [introduction, setIntroduction] = useState(userData ? userData.introduction : '');
   const { fetchUserData } = useContext(AuthContext);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [locationData, setLocationData] = useState([]);
 
   const saveUserData = async () => {
     const updatedUserData = {
@@ -67,12 +69,36 @@ export default function BasicInformation() {
   const removeTag = (name) => {
     const updatedUserData = {
       ...userData,
-      locationNames: userData.locationNames.filter((locationName) => locationName !== name),
+      locationNames: userData.locationNames.filter((locationObj) => locationObj.name !== name),
     };
 
-    AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
-    fetchUserData();
+    AsyncStorage.setItem('userData', JSON.stringify(updatedUserData))
+      .then(() => fetchUserData())
+      .catch((error) => console.log(error));
   };
+
+  useEffect(() => {
+    if (userData.locationNames) {
+      const nameSet = new Set();
+      const parentSet = new Set();
+      const locationData = [];
+
+      userData.locationNames.forEach((obj) => {
+        if (obj.name) nameSet.add(obj.name);
+        if (obj.parent) parentSet.add(obj.parent);
+      });
+
+      nameSet.forEach((name) => {
+        locationData.push({ name: name });
+      });
+
+      parentSet.forEach((parent) => {
+        locationData.push({ parent: parent });
+      });
+
+      setLocationData(locationData);
+    }
+  }, [userData]);
 
   return (
     <>
@@ -157,17 +183,19 @@ export default function BasicInformation() {
             }}
           >
             <View style={styles.tagRow}>
-              {userData.locationNames ? (
-                userData.locationNames.map((name, index) => (
-                  <TagLarge
-                    key={index}
-                    tagText={name}
-                    tagColor={theme.colors.tag3}
-                    tagClose={true}
-                    larger={true}
-                    onPressClose={() => removeTag(name)}
-                  />
-                ))
+              {locationData ? (
+                locationData
+                  .filter((obj) => obj.name) // Exclude objects without the name property
+                  .map((obj, index) => (
+                    <TagLarge
+                      key={index}
+                      tagText={obj.name}
+                      tagColor={theme.colors.tag3}
+                      tagClose={true}
+                      larger={true}
+                      onPressClose={() => removeTag(obj.name)}
+                    />
+                  ))
               ) : (
                 <Text>Et ole valinnut sijaintia</Text>
               )}

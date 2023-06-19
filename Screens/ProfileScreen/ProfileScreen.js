@@ -24,7 +24,7 @@ export default function ProfileScreen() {
   const [image, setImage] = useState(userData ? userData.image : '');
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-  console.log(userData);
+
   const pickImage = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 

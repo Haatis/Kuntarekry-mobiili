@@ -37,6 +37,7 @@ import SubstitutionsScreen from './Screens/ProfileScreen/SubstitutionsScreen/Sub
 import { FavoriteListProvider, useFavoriteList } from './hooks/usefavoritelist';
 import PreviewProfileScreen from './Screens/ProfileScreen/PreviewProfileScreen';
 import WorkInformation from './Screens/ProfileScreen/WorkInformation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();

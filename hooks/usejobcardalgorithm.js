@@ -3,6 +3,7 @@ export default function useJobCardAlgorithm(jobs, userData) {
   const jobsWithRanks = initRanks(jobs);
   jobsWithRanks.map((job) => {
     userDataArray.forEach((userDataPart) => calculateRank(job, userDataPart));
+    //console.log(`Job: ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`);
     return job;
   });
 
@@ -15,8 +16,8 @@ const filterFields = [
   { name: 'title', rank: 20 },
   { name: 'location', rank: 20 },
   { name: 'organization', rank: 20 },
-  { name: 'region', rank: 15 },
-  { name: 'taskArea', rank: 15 },
+  { name: 'region', rank: 10 },
+  { name: 'taskArea', rank: 20 },
   { name: 'employment', rank: 15 },
   { name: 'employmentType', rank: 15 },
 ];

@@ -31,16 +31,22 @@ export default function PersonalizationScreen() {
   };
 
   const saveAndContinue = async () => {
-    //const jobIds = selectedJobs.map((job) => {
-    // const selectedTask = tasks.find((task) => task.name === job);
-    // return selectedTask ? selectedTask.id : null;
-    //});
-    //const filteredJobIds = jobIds.filter((id) => id !== null);
     try {
       const updatedUserData = {
         ...userData,
-        taskNames: selectedJobs,
+        taskNames: selectedJobs.map((job) => {
+          const task = tasks.find((task) => task.name === job);
+          if (task && task.parent) {
+            const parent = tasks.find((parentTask) => parentTask.id === task.parent);
+            return {
+              name: job,
+              parent: parent.name,
+            };
+          }
+          return { name: job };
+        }),
       };
+
       await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
       fetchUserData();
       if (onboardingDone) {
