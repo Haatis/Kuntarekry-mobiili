@@ -1,8 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { theme } from '../../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable } from 'react-native';
 import moment from 'moment';
 
 const DAYS = [
@@ -69,7 +68,7 @@ export default function UsabilityScreen() {
             const isFullySelected = isMorningSelected && isAfternoonSelected && isEveningSelected;
 
             return (
-              <Pressable
+              <TouchableOpacity
                 key={index}
                 onPress={() => {
                   if (isFullySelected) {
@@ -117,12 +116,12 @@ export default function UsabilityScreen() {
                 <Text style={{ textAlign: 'center', color: 'white' }}>
                   {day.dayName} {day.formattedDate}{' '}
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             );
           })}
         </View>
         <View style={styles.column}>
-          <Text
+          <TouchableOpacity
             onPress={() => {
               if (selectedMorning.length === 7) {
                 setSelectedMorning([]);
@@ -130,18 +129,21 @@ export default function UsabilityScreen() {
                 setSelectedMorning([0, 1, 2, 3, 4, 5, 6]);
               }
             }}
-            style={{
-              ...styles.rectangle,
-              borderTopLeftRadius: 8,
-              borderTopRightRadius: 8,
-              backgroundColor:
-                selectedMorning.length === 7 ? theme.colors.danger : theme.colors.button,
-            }}
           >
-            AAMU
-          </Text>
-          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
             <Text
+              style={{
+                ...styles.rectangle,
+                borderTopLeftRadius: 8,
+                borderTopRightRadius: 8,
+                backgroundColor:
+                  selectedMorning.length === 7 ? theme.colors.danger : theme.colors.button,
+              }}
+            >
+              AAMU
+            </Text>
+          </TouchableOpacity>
+          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
+            <TouchableOpacity
               key={item}
               onPress={() => {
                 setSelectedMorning((prevSelectedAamu) => {
@@ -152,20 +154,23 @@ export default function UsabilityScreen() {
                   }
                 });
               }}
-              style={{
-                ...styles.rectangle,
-                color: selectedMorning.includes(item) ? 'white' : theme.colors.textPrimary,
-                backgroundColor: selectedMorning.includes(item)
-                  ? theme.colors.danger
-                  : theme.colors.tag4,
-              }}
             >
-              AAMU
-            </Text>
+              <Text
+                style={{
+                  ...styles.rectangle,
+                  color: selectedMorning.includes(item) ? 'white' : theme.colors.textPrimary,
+                  backgroundColor: selectedMorning.includes(item)
+                    ? theme.colors.danger
+                    : theme.colors.tag4,
+                }}
+              >
+                AAMU
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
         <View style={styles.column}>
-          <Text
+          <TouchableOpacity
             onPress={() => {
               if (selectedAfternoon.length === 7) {
                 setSelectedAfternoon([]);
@@ -173,18 +178,21 @@ export default function UsabilityScreen() {
                 setSelectedAfternoon([0, 1, 2, 3, 4, 5, 6]);
               }
             }}
-            style={{
-              ...styles.rectangle,
-              borderTopLeftRadius: 8,
-              borderTopRightRadius: 8,
-              backgroundColor:
-                selectedAfternoon.length === 7 ? theme.colors.danger : theme.colors.button,
-            }}
           >
-            ILTA
-          </Text>
-          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
             <Text
+              style={{
+                ...styles.rectangle,
+                borderTopLeftRadius: 8,
+                borderTopRightRadius: 8,
+                backgroundColor:
+                  selectedAfternoon.length === 7 ? theme.colors.danger : theme.colors.button,
+              }}
+            >
+              ILTA
+            </Text>
+          </TouchableOpacity>
+          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
+            <TouchableOpacity
               key={item}
               onPress={() => {
                 setSelectedAfternoon((prevSelectedAfternoon) => {
@@ -195,20 +203,23 @@ export default function UsabilityScreen() {
                   }
                 });
               }}
-              style={{
-                ...styles.rectangle,
-                color: selectedAfternoon.includes(item) ? 'white' : theme.colors.textPrimary,
-                backgroundColor: selectedAfternoon.includes(item)
-                  ? theme.colors.danger
-                  : theme.colors.tag4,
-              }}
             >
-              ILTA
-            </Text>
+              <Text
+                style={{
+                  ...styles.rectangle,
+                  color: selectedAfternoon.includes(item) ? 'white' : theme.colors.textPrimary,
+                  backgroundColor: selectedAfternoon.includes(item)
+                    ? theme.colors.danger
+                    : theme.colors.tag4,
+                }}
+              >
+                ILTA
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
         <View style={styles.column}>
-          <Text
+          <TouchableOpacity
             onPress={() => {
               if (selectedEvening.length === 7) {
                 setSelectedEvening([]);
@@ -216,18 +227,21 @@ export default function UsabilityScreen() {
                 setSelectedEvening([0, 1, 2, 3, 4, 5, 6]);
               }
             }}
-            style={{
-              ...styles.rectangle,
-              borderTopLeftRadius: 8,
-              borderTopRightRadius: 8,
-              backgroundColor:
-                selectedEvening.length === 7 ? theme.colors.danger : theme.colors.button,
-            }}
           >
-            YÖ
-          </Text>
-          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
             <Text
+              style={{
+                ...styles.rectangle,
+                borderTopLeftRadius: 8,
+                borderTopRightRadius: 8,
+                backgroundColor:
+                  selectedEvening.length === 7 ? theme.colors.danger : theme.colors.button,
+              }}
+            >
+              YÖ
+            </Text>
+          </TouchableOpacity>
+          {Array.from({ length: 7 }, (_, i) => i).map((item) => (
+            <TouchableOpacity
               key={item}
               onPress={() => {
                 setSelectedEvening((prevSelectedEvening) => {
@@ -238,17 +252,20 @@ export default function UsabilityScreen() {
                   }
                 });
               }}
-              style={{
-                ...styles.rectangle,
-
-                color: selectedEvening.includes(item) ? 'white' : theme.colors.textPrimary,
-                backgroundColor: selectedEvening.includes(item)
-                  ? theme.colors.danger
-                  : theme.colors.tag4,
-              }}
             >
-              YÖ
-            </Text>
+              <Text
+                style={{
+                  ...styles.rectangle,
+
+                  color: selectedEvening.includes(item) ? 'white' : theme.colors.textPrimary,
+                  backgroundColor: selectedEvening.includes(item)
+                    ? theme.colors.danger
+                    : theme.colors.tag4,
+                }}
+              >
+                YÖ
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
         <View style={styles.column}>
