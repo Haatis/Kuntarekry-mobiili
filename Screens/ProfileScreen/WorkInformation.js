@@ -11,11 +11,19 @@ import TagLarge from '../../components/Tags/TagLarge';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-export default function WorkInformation({ save, setSave }) {
+export default function WorkInformation({ save, setSave, setIsChanged, isChanged }) {
   const { userData } = useContext(AuthContext);
   const employmentOptions = ['Kokoaikatyö', 'Osaaikatyö', '3-vuorotyö', 'Tuntityö', '2-vuorotyö'];
   const [showOptions, setShowOptions] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(userData.employment || []);
+
+  useEffect(() => {
+    if (selectedOptions !== userData.employment) {
+      setIsChanged(true);
+    } else {
+      setIsChanged(false);
+    }
+  }, [selectedOptions]);
 
   useEffect(() => {
     if (save) {
@@ -36,15 +44,6 @@ export default function WorkInformation({ save, setSave }) {
   const removeEmploymentTag = (tag) => {
     const updatedOptions = selectedOptions.filter((option) => option !== tag);
     setSelectedOptions(updatedOptions);
-
-    const updatedUserData = {
-      ...userData,
-      employment: updatedOptions,
-    };
-
-    AsyncStorage.setItem('userData', JSON.stringify(updatedUserData))
-      .then(() => fetchUserData())
-      .catch((error) => console.log(error));
   };
 
   const filteredOptions = employmentOptions.filter((option) => !selectedOptions.includes(option));
@@ -210,7 +209,9 @@ export default function WorkInformation({ save, setSave }) {
           )}
         </View>
       </ScrollView>
-      <BottomButton buttonText="Tallenna" buttonAction={() => saveUserData()} />
+      {isChanged ? (
+        <BottomButton buttonText="Tallenna ja jatka" buttonAction={() => saveUserData()} />
+      ) : null}
     </>
   );
 }

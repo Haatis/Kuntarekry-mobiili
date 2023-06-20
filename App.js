@@ -188,6 +188,7 @@ function OnBoardingStackNavigator() {
 function StackNavigator() {
   const { favorites } = useFavoriteList();
   const [save, setSave] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
 
   return (
     <Stack.Navigator screenOptions={{ header: (props) => <AppBar {...props} /> }}>
@@ -241,21 +242,37 @@ function StackNavigator() {
           name="BasicInformation"
           options={{
             header: () => (
-              <AppBar back={true} confirm={true} setSave={setSave} title={'Perustiedot'} />
+              <AppBar back={true} setSave={setSave} title={'Perustiedot'} isChanged={isChanged} />
             ),
           }}
         >
-          {(props) => <BasicInformation {...props} save={save} setSave={setSave} />}
+          {(props) => (
+            <BasicInformation
+              {...props}
+              save={save}
+              setSave={setSave}
+              setIsChanged={setIsChanged}
+              isChanged={isChanged}
+            />
+          )}
         </Stack.Screen>
         <Stack.Screen
           name="WorkInformation"
           options={{
             header: () => (
-              <AppBar back={true} confirm={true} setSave={setSave} title={'Työtoiveet'} />
+              <AppBar back={true} setSave={setSave} title={'Työtoiveet'} isChanged={isChanged} />
             ),
           }}
         >
-          {(props) => <WorkInformation {...props} save={save} setSave={setSave} />}
+          {(props) => (
+            <WorkInformation
+              {...props}
+              save={save}
+              setSave={setSave}
+              setIsChanged={setIsChanged}
+              isChanged={isChanged}
+            />
+          )}
         </Stack.Screen>
 
         <Stack.Screen

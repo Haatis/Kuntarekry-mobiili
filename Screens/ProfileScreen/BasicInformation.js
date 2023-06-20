@@ -12,8 +12,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';
 import TagLarge from '../../components/Tags/TagLarge';
 import { useEffect } from 'react';
+import { set } from 'react-native-reanimated';
 
-export default function BasicInformation({ save, setSave }) {
+export default function BasicInformation({ save, setSave, setIsChanged, isChanged }) {
   const { userData } = useContext(AuthContext);
   const textHeight = 57;
   const navigation = useNavigation();
@@ -27,6 +28,22 @@ export default function BasicInformation({ save, setSave }) {
   const { fetchUserData } = useContext(AuthContext);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [locationData, setLocationData] = useState([]);
+
+  useEffect(() => {
+    if (
+      firstName !== userData.firstName ||
+      lastName !== userData.lastName ||
+      email !== userData.email ||
+      birthday !== userData.birthday ||
+      phoneNumber !== userData.phoneNumber ||
+      employmentInfo !== userData.employmentInfo ||
+      introduction !== userData.introduction
+    ) {
+      setIsChanged(true);
+    } else {
+      setIsChanged(false);
+    }
+  }, [firstName, lastName, email, birthday, phoneNumber, employmentInfo, introduction]);
 
   const saveUserData = async () => {
     const updatedUserData = {
@@ -259,7 +276,9 @@ export default function BasicInformation({ save, setSave }) {
           </View>
         </View>
       </ScrollView>
-      <BottomButton buttonText="Tallenna" buttonAction={() => saveUserData()} />
+      {isChanged ? (
+        <BottomButton buttonText="Tallenna ja jatka" buttonAction={() => saveUserData()} />
+      ) : null}
     </>
   );
 }

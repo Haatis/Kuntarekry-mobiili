@@ -17,16 +17,16 @@ import Constants from 'expo-constants';
 import { theme } from '../styles/theme';
 import { useState } from 'react';
 
-export default function AppBar({ back, confirm, setSave, title, underTitle }) {
+export default function AppBar({ back, setSave, title, underTitle, isChanged }) {
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
 
   const navigateBack = () => {
-    if (confirm) {
-      setShowModal(true);
-    } else {
-      setShowModal(false);
+    if (!isChanged) {
       navigation.goBack();
+      return;
+    } else {
+      setShowModal(true);
     }
   };
 
