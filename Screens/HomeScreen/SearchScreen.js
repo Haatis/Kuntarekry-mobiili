@@ -207,10 +207,7 @@ const styles = StyleSheet.create({
   },
   createButton: {
     alignItems: 'center',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    borderRadius: 99,
     flexDirection: 'row',
     height: 50,
     justifyContent: 'space-between',

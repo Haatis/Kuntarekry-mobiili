@@ -94,7 +94,7 @@ export default function ProfileScreen() {
     if (isLoggedIn && userData) {
       return (
         <>
-          {modalVisible && <StatusBar style="dark" backgroundColor={theme.colors.darkBackground} />}
+          {modalVisible && <StatusBar style="dark" />}
           <View style={theme.containerCenter}>
             <View style={styles.profileContainer}>
               <TouchableOpacity
@@ -124,7 +124,13 @@ export default function ProfileScreen() {
                   </View>
                 )}
               </TouchableOpacity>
-              <Modal transparent={true} visible={modalVisible} style={{ width: '100%' }}>
+              <Modal
+                transparent={true}
+                visible={modalVisible}
+                style={{ width: '100%' }}
+                animationType="fade"
+                statusBarTranslucent
+              >
                 <Pressable
                   style={styles.modalContainer}
                   activeOpacity={1}

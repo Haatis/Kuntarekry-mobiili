@@ -16,6 +16,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDown from '../../components/DropDown';
 import { updateStoredList, useFavoriteList } from '../../hooks/usefavoritelist';
 import { UpdateCardStack } from '../../hooks/usejobcardalgorithm';
+import { StatusBar } from 'expo-status-bar';
 
 export default function CardScreen() {
   const { currentItems, updateStack } = UpdateCardStack();
@@ -140,159 +141,166 @@ export default function CardScreen() {
   ).current;
 
   return (
-    <View style={styles.container}>
-      <View style={{ flex: 1, width: '100%' }}>
-        {currentItems
-          .map((job, i) => {
-            if (i < topCardIndex || i > topCardIndex + 1) {
-              return null;
-            } else if (i == topCardIndex) {
-              return (
-                <Animated.View
-                  key={i}
-                  style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    transform: [
-                      { translateX: pan.x },
-                      { translateY: translateX },
-                      { rotate: rotate },
-                    ],
-                  }}
-                  {...panResponder.panHandlers}
-                >
-                  <SwipeableCard job={job.jobAdvertisement} />
+    <>
+      {showModal && <StatusBar style="dark" />}
+      <View style={styles.container}>
+        <View style={{ flex: 1, width: '100%' }}>
+          {currentItems
+            .map((job, i) => {
+              if (i < topCardIndex || i > topCardIndex + 1) {
+                return null;
+              } else if (i == topCardIndex) {
+                return (
                   <Animated.View
+                    key={i}
                     style={{
+                      position: 'absolute',
                       width: '100%',
                       height: '100%',
-                      position: 'absolute',
-                      borderRadius: 8,
-                      backgroundColor: cardColor,
-                      pointerEvents: 'none',
+                      transform: [
+                        { translateX: pan.x },
+                        { translateY: translateX },
+                        { rotate: rotate },
+                      ],
                     }}
-                  ></Animated.View>
-                </Animated.View>
-              );
-            } else {
-              return (
-                <Animated.View
-                  key={i}
-                  style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    opacity: nextCardOpacity,
-                    transform: [{ scale: nextCardScale }],
-                  }}
-                  {...panResponder.panHandlers}
-                >
-                  <SwipeableCard job={job.jobAdvertisement} />
-                </Animated.View>
-              );
-            }
-          })
-          .reverse()}
-      </View>
-      <Modal transparent={true} visible={showModal} animationType="fade">
-        <View
-          style={{
-            height: '100%',
-            backgroundColor: theme.colors.darkBackground,
-            justifyContent: 'center',
-          }}
-        >
-          <View style={styles.likedCard}>
-            <View style={{ alignItems: 'center' }}>
-              <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {currentItems[topCardIndex - 1]?.jobAdvertisement.title}
-              </Text>
-              <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
-                {currentItems[topCardIndex - 1]?.jobAdvertisement.profitCenter}
-              </Text>
-              <Text numberOfLines={8} style={{ padding: 16, color: 'white' }}>
-                {currentItems[topCardIndex - 1]?.jobAdvertisement.jobDesc}
-              </Text>
-              <MaterialCommunityIcons
-                name="heart"
-                size={40}
-                color={theme.colors.secondary}
-                style={{ padding: 16, backgroundColor: 'white', borderRadius: 99 }}
-              />
+                    {...panResponder.panHandlers}
+                  >
+                    <SwipeableCard job={job.jobAdvertisement} />
+                    <Animated.View
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        borderRadius: 8,
+                        backgroundColor: cardColor,
+                        pointerEvents: 'none',
+                      }}
+                    ></Animated.View>
+                  </Animated.View>
+                );
+              } else {
+                return (
+                  <Animated.View
+                    key={i}
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      opacity: nextCardOpacity,
+                      transform: [{ scale: nextCardScale }],
+                    }}
+                    {...panResponder.panHandlers}
+                  >
+                    <SwipeableCard job={job.jobAdvertisement} />
+                  </Animated.View>
+                );
+              }
+            })
+            .reverse()}
+        </View>
+        <Modal transparent={true} visible={showModal} animationType="fade" statusBarTranslucent>
+          <View
+            style={{
+              height: '100%',
+              backgroundColor: theme.colors.darkBackground,
+              justifyContent: 'center',
+            }}
+          >
+            <View style={styles.likedCard}>
+              <View style={{ alignItems: 'center' }}>
+                <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
+                  {currentItems[topCardIndex - 1]?.jobAdvertisement.title}
+                </Text>
+                <Text style={[theme.textVariants.textXL, { color: 'white' }]}>
+                  {currentItems[topCardIndex - 1]?.jobAdvertisement.profitCenter}
+                </Text>
+                <Text numberOfLines={8} style={{ padding: 16, color: 'white' }}>
+                  {currentItems[topCardIndex - 1]?.jobAdvertisement.jobDesc}
+                </Text>
+                <MaterialCommunityIcons
+                  name="heart"
+                  size={40}
+                  color={theme.colors.secondary}
+                  style={{ padding: 16, backgroundColor: 'white', borderRadius: 99 }}
+                />
+              </View>
+              <DropDown category="Lisätty kansioon: Kaikki Suosikit" />
+              <Pressable style={styles.button}>
+                <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                  Ilmoitukseen
+                </Text>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={28}
+                  color={theme.colors.textPrimary}
+                  style={{ marginTop: 3 }}
+                />
+              </Pressable>
+              <TouchableOpacity onPress={closeModal} style={styles.button}>
+                <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                  Jatka etsimistä
+                </Text>
+              </TouchableOpacity>
             </View>
-            <DropDown category="Lisätty kansioon: Kaikki Suosikit" />
-            <Pressable style={styles.button}>
-              <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
-                Ilmoitukseen
-              </Text>
-              <MaterialCommunityIcons
-                name="chevron-right"
-                size={28}
-                color={theme.colors.textPrimary}
-                style={{ marginTop: 3 }}
-              />
-            </Pressable>
-            <TouchableOpacity onPress={closeModal} style={styles.button}>
-              <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
-                Jatka etsimistä
-              </Text>
+          </View>
+        </Modal>
+        <View style={styles.buttonRow}>
+          <View style={{ gap: 16, flexDirection: 'row' }}>
+            {index === 0 ? (
+              <View
+                style={{
+                  ...styles.buttonCircle,
+                  borderColor: theme.colors.textPrimary,
+                  width: 50,
+                  opacity: 0.5,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="arrow-left"
+                  size={32}
+                  color={theme.colors.textPrimary}
+                />
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={reduceIndex}
+                style={{ ...styles.buttonCircle, borderColor: theme.colors.textPrimary, width: 50 }}
+              >
+                <MaterialCommunityIcons
+                  name="arrow-left"
+                  size={32}
+                  color={theme.colors.textPrimary}
+                />
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              onPress={handleHide}
+              style={{ ...styles.buttonCircle, borderColor: theme.colors.danger }}
+            >
+              <MaterialCommunityIcons name="close-thick" size={44} color={theme.colors.danger} />
             </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
-      <View style={styles.buttonRow}>
-        <View style={{ gap: 16, flexDirection: 'row' }}>
-          {index === 0 ? (
-            <View
-              style={{
-                ...styles.buttonCircle,
-                borderColor: theme.colors.textPrimary,
-                width: 50,
-                opacity: 0.5,
-              }}
-            >
-              <MaterialCommunityIcons
-                name="arrow-left"
-                size={32}
-                color={theme.colors.textPrimary}
-              />
-            </View>
-          ) : (
+          <View style={{ gap: 16, flexDirection: 'row' }}>
             <TouchableOpacity
-              onPress={reduceIndex}
+              onPress={handleLike}
+              style={{ ...styles.buttonCircle, borderColor: theme.colors.secondary }}
+            >
+              <MaterialCommunityIcons name="heart" size={40} color={theme.colors.secondary} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={updateIndex}
               style={{ ...styles.buttonCircle, borderColor: theme.colors.textPrimary, width: 50 }}
             >
               <MaterialCommunityIcons
-                name="arrow-left"
+                name="arrow-right"
                 size={32}
                 color={theme.colors.textPrimary}
               />
             </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            onPress={handleHide}
-            style={{ ...styles.buttonCircle, borderColor: theme.colors.danger }}
-          >
-            <MaterialCommunityIcons name="close-thick" size={44} color={theme.colors.danger} />
-          </TouchableOpacity>
-        </View>
-        <View style={{ gap: 16, flexDirection: 'row' }}>
-          <TouchableOpacity
-            onPress={handleLike}
-            style={{ ...styles.buttonCircle, borderColor: theme.colors.secondary }}
-          >
-            <MaterialCommunityIcons name="heart" size={40} color={theme.colors.secondary} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={updateIndex}
-            style={{ ...styles.buttonCircle, borderColor: theme.colors.textPrimary, width: 50 }}
-          >
-            <MaterialCommunityIcons name="arrow-right" size={32} color={theme.colors.textPrimary} />
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </>
   );
 }
 
