@@ -222,7 +222,9 @@ export default function ProfileScreen() {
                 },
               ]}
             >
-              {userData.employment ? userData.employment : 'Esittelytekstiä ei ole vielä lisätty'}
+              {userData.employmentInfo
+                ? userData.employmentInfo
+                : 'Esittelytekstiä ei ole vielä lisätty'}
             </Text>
             <View style={styles.container}>
               <View style={styles.row}>

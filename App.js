@@ -187,6 +187,7 @@ function OnBoardingStackNavigator() {
 
 function StackNavigator() {
   const { favorites } = useFavoriteList();
+  const [save, setSave] = useState(false);
 
   return (
     <Stack.Navigator screenOptions={{ header: (props) => <AppBar {...props} /> }}>
@@ -238,18 +239,25 @@ function StackNavigator() {
         />
         <Stack.Screen
           name="BasicInformation"
-          component={BasicInformation}
           options={{
-            header: () => <AppBar back={true} title={'Perustiedot'} />,
+            header: () => (
+              <AppBar back={true} confirm={true} setSave={setSave} title={'Perustiedot'} />
+            ),
           }}
-        />
+        >
+          {(props) => <BasicInformation {...props} save={save} setSave={setSave} />}
+        </Stack.Screen>
         <Stack.Screen
           name="WorkInformation"
-          component={WorkInformation}
           options={{
-            header: () => <AppBar back={true} title={'Työtoiveet'} />,
+            header: () => (
+              <AppBar back={true} confirm={true} setSave={setSave} title={'Työtoiveet'} />
+            ),
           }}
-        />
+        >
+          {(props) => <WorkInformation {...props} save={save} setSave={setSave} />}
+        </Stack.Screen>
+
         <Stack.Screen
           name="SubstitutionsScreen"
           component={SubstitutionsScreen}

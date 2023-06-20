@@ -1,4 +1,13 @@
-import { View, Image, ImageBackground, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import {
+  View,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Modal,
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -6,9 +15,34 @@ import BackgroundImage from '../assets/substract.png';
 import Logo from '../assets/logo.png';
 import Constants from 'expo-constants';
 import { theme } from '../styles/theme';
+import { useState } from 'react';
 
-export default function AppBar({ back, title, underTitle }) {
+export default function AppBar({ back, confirm, setSave, title, underTitle }) {
   const navigation = useNavigation();
+  const [showModal, setShowModal] = useState(false);
+
+  const navigateBack = () => {
+    if (confirm) {
+      setShowModal(true);
+    } else {
+      setShowModal(false);
+      navigation.goBack();
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleConfirmLeave = () => {
+    setShowModal(false);
+    navigation.goBack();
+  };
+
+  const handleSave = () => {
+    setShowModal(false);
+    setSave(true);
+  };
 
   return (
     <View style={styles.container}>
@@ -37,7 +71,7 @@ export default function AppBar({ back, title, underTitle }) {
                     ...theme.outlineDark,
                     ...theme.dropShadow,
                   }}
-                  onPress={() => navigation.goBack()}
+                  onPress={navigateBack}
                 >
                   <MaterialCommunityIcons
                     name="chevron-left"
@@ -79,6 +113,27 @@ export default function AppBar({ back, title, underTitle }) {
           )}
         </ImageBackground>
       </LinearGradient>
+      {showModal && <StatusBar style="dark" backgroundColor={theme.colors.darkBackground} />}
+      <Modal visible={showModal} transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalButtonContainer}>
+            <Text style={{ ...theme.textVariants.uiM, color: 'black' }}>
+              Tallentamattomat tiedot häviävät. Haluatko jatkaa?
+            </Text>
+            <View style={{ flexDirection: 'row', gap: 16 }}>
+              <TouchableOpacity style={styles.confirmButton} onPress={handleSave}>
+                <Text style={styles.modalButtonText}>Tallenna</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmLeave}>
+                <Text style={styles.modalButtonText}>Älä tallenna</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={styles.confirmButton} onPress={closeModal}>
+              <Text style={styles.modalButtonText}>Peruuta</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -92,6 +147,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 45,
   },
+  confirmButton: {
+    ...theme.outlineDark,
+    borderRadius: 99,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
   container: {
     height: Constants.statusBarHeight + 60,
     overflow: 'hidden',
@@ -101,6 +162,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     marginTop: Constants.statusBarHeight,
+  },
+  modalButtonContainer: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 8,
+    gap: 16,
+    marginBottom: 128,
+    paddingHorizontal: 8,
+    paddingVertical: 32,
+  },
+  modalContainer: {
+    backgroundColor: theme.colors.darkBackground,
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    width: '100%',
   },
   textContainer: {
     flex: 1,

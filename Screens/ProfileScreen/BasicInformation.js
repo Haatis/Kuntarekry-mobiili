@@ -13,7 +13,7 @@ import moment from 'moment/moment';
 import TagLarge from '../../components/Tags/TagLarge';
 import { useEffect } from 'react';
 
-export default function BasicInformation() {
+export default function BasicInformation({ save, setSave }) {
   const { userData } = useContext(AuthContext);
   const textHeight = 57;
   const navigation = useNavigation();
@@ -22,7 +22,7 @@ export default function BasicInformation() {
   const [email, setEmail] = useState(userData ? userData.email : '');
   const [birthday, setBirthday] = useState(userData ? userData.birthday : '');
   const [phoneNumber, setPhoneNumber] = useState(userData ? userData.phoneNumber : '');
-  const [employment, setEmployment] = useState(userData ? userData.employment : '');
+  const [employmentInfo, setEmploymentInfo] = useState(userData ? userData.employmentInfo : '');
   const [introduction, setIntroduction] = useState(userData ? userData.introduction : '');
   const { fetchUserData } = useContext(AuthContext);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -37,15 +37,22 @@ export default function BasicInformation() {
       email,
       birthday,
       phoneNumber,
-      employment,
+      employmentInfo,
       introduction,
     };
 
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
 
-    alert('Tiedot tallennettu');
     fetchUserData();
+    navigation.goBack();
   };
+
+  useEffect(() => {
+    if (save) {
+      saveUserData();
+      setSave(false);
+    }
+  }, [save]);
 
   const saveUserDataAndNavigate = async () => {
     const updatedUserData = {
@@ -56,7 +63,7 @@ export default function BasicInformation() {
       email,
       birthday,
       phoneNumber,
-      employment,
+      employmentInfo,
       introduction,
     };
 
@@ -227,8 +234,8 @@ export default function BasicInformation() {
             <TextInput
               style={[theme.textVariants.textL, { color: theme.colors.textPrimary, flex: 1 }]}
               placeholder="Kerro tilanteesi muutamalla lauseella"
-              defaultValue={userData ? userData.employment : ''}
-              onChangeText={(text) => setEmployment(text)}
+              defaultValue={userData ? userData.employmentInfo : ''}
+              onChangeText={(text) => setEmploymentInfo(text)}
               multiline={true}
               numberOfLines={4}
               maxLength={150}

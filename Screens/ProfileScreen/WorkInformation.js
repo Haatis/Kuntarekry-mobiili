@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -11,11 +11,18 @@ import TagLarge from '../../components/Tags/TagLarge';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-export default function WorkInformation() {
+export default function WorkInformation({ save, setSave }) {
   const { userData } = useContext(AuthContext);
   const employmentOptions = ['Kokoaikatyö', 'Osaaikatyö', '3-vuorotyö', 'Tuntityö', '2-vuorotyö'];
   const [showOptions, setShowOptions] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(userData.employment || []);
+
+  useEffect(() => {
+    if (save) {
+      saveUserData();
+      setSave(false);
+    }
+  }, [save]);
 
   const toggleOptions = () => {
     setShowOptions(!showOptions);
@@ -54,8 +61,8 @@ export default function WorkInformation() {
 
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
 
-    alert('Tiedot tallennettu');
     fetchUserData();
+    navigation.goBack();
   };
 
   const saveUserDataAndNavigate = async () => {

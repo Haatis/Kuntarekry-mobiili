@@ -80,7 +80,7 @@ export default function PreviewProfileScreen() {
           margin-left: auto;
           margin-right: auto;
         }
-        .employmentContainer {
+        .employmentInfoContainer {
           width: 65%;
           margin-left: auto;
           margin-right: auto;
@@ -92,9 +92,9 @@ export default function PreviewProfileScreen() {
       <h1 style="color: ${theme.colors.textPrimary};">${userData.firstName} ${
       userData.lastName
     }</h1>
-    <div class="employmentContainer">
+    <div class="employmentInfoContainer">
       <p class="centered" style="color: ${theme.colors.textPrimary}; font-size: 16px;">
-        ${userData.employment}
+        ${userData.employmentInfo}
       </p>
       </div>
       <div class="introContainer">
@@ -153,6 +153,19 @@ export default function PreviewProfileScreen() {
 
     return `${day}/${month}/${year}`;
   };
+  const locationGroups = userData.locationNames.reduce((groups, location) => {
+    const { name, parent } = location;
+    if (parent in groups) {
+      groups[parent].push(name);
+    } else {
+      groups[parent] = [name];
+    }
+    return groups;
+  }, {});
+
+  const formattedLocations = Object.entries(locationGroups)
+    .map(([parent, locations]) => `${locations.join(', ')} - ${parent}`)
+    .join('\n');
 
   return (
     <>
@@ -173,7 +186,7 @@ export default function PreviewProfileScreen() {
           <Text
             style={{ fontFamily: 'SourceSansPro', fontSize: 16, color: theme.colors.textPrimary }}
           >
-            {userData.employment || '-'}
+            {userData.employmentInfo || '-'}
           </Text>
           <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
             {userData.introduction || '-'}
@@ -197,9 +210,7 @@ export default function PreviewProfileScreen() {
           </View>
           <View style={styles.rowText}>
             <Text style={[styles.label, theme.textVariants.uiM]}>Sijainti:</Text>
-            <Text style={[styles.value, theme.textVariants.uiM]}>
-              {userData.locationNames || '-'}
-            </Text>
+            <Text style={[styles.value, theme.textVariants.uiM]}>{formattedLocations}</Text>
           </View>
         </View>
       </ScrollView>
