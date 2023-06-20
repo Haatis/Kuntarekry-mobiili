@@ -59,6 +59,9 @@ export default function SwipeableCard({ job }) {
         onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
       >
         <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
+          Vastaa profiiliin: {job.percentage + '%'}
+        </Text>
+        <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
           Haku päättyy: {publicationEnds}
         </Text>
         <View style={styles.tagRow}>

@@ -46,7 +46,6 @@ export default function useJobCardAlgorithm() {
     : [];
 
   const userDataArray = [...locationNamesArray, ...taskNamesArray, ...employmentArray];
-  //console.log('userDataArray', userDataArray);
 
   const uniqueUserDataArray = [...new Set(userDataArray)];
 
@@ -62,14 +61,42 @@ export default function useJobCardAlgorithm() {
   const sortedJobs = rankedJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
 
   //console.log('Rankings:');
-  // sortedJobs.forEach((job) => {
-  //  console.log(
-  //   `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
+  //sortedJobs.forEach((job) => {
+  //console.log(
+  //  `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
+  // );
+  //});
+  const updatedJobs = calculateMatchPercentage(sortedJobs, userData);
+
+  return updatedJobs;
+}
+
+const calculateMatchPercentage = (jobs, userData) => {
+  let maxPoints = 0;
+  if (userData.locationNames.length > 0) {
+    maxPoints += 20;
+  }
+  if (userData.taskNames.length > 0) {
+    maxPoints += 20;
+  }
+  if (userData.employment.length > 0) {
+    maxPoints += 5;
+  }
+
+  // console.log('Rankings:');
+  const updatedJobs = jobs.map((job) => {
+    const matchPercentage = Math.round((job.jobAdvertisement.rank / maxPoints) * 100);
+    return { ...job, jobAdvertisement: { ...job.jobAdvertisement, percentage: matchPercentage } };
+  });
+
+  //updatedJobs.forEach((job) => {
+  // console.log(
+  //   `${job.jobAdvertisement.profitCenter}, ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}, Percentage: ${job.jobAdvertisement.percentage}%`
   // );
   //});
 
-  return sortedJobs;
-}
+  return updatedJobs;
+};
 
 const filterFields = [
   { name: 'location', rank: 10 },
@@ -79,9 +106,23 @@ const filterFields = [
 ];
 
 const calculateRank = (job, userData) => {
+  const matchedFields = {};
+
   return filterFields.reduce((acc, field) => {
-    const match = job.jobAdvertisement[field.name]?.toLowerCase().includes(userData);
-    if (match) return acc + field.rank;
+    const fieldName = field.name;
+    const fieldValue = job.jobAdvertisement[fieldName]?.toLowerCase();
+
+    if (matchedFields[fieldName]) {
+      return acc;
+    }
+
+    const match = userData.includes(fieldValue);
+
+    if (match) {
+      matchedFields[fieldName] = true;
+      return acc + field.rank;
+    }
+
     return acc;
   }, 0);
 };
