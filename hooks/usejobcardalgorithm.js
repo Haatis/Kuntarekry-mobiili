@@ -25,36 +25,11 @@ export default function useJobCardAlgorithm() {
   const { jobs } = useJobAdvertisements();
   const { userData } = useContext(AuthContext);
 
-  const locationNamesArray = userData.locationNames
-    .map((location) => {
-      const name = location.name ? location.name.toString().toLowerCase() : null;
-      const parent = location.parent ? location.parent.toString().toLowerCase() : null;
-      return [name, parent].filter(Boolean);
-    })
-    .flat();
-
-  const taskNamesArray = userData.taskNames
-    .map((task) => {
-      const name = task.name ? task.name.toString().toLowerCase() : null;
-      const parent = task.parent ? task.parent.toString().toLowerCase() : null;
-      return [name, parent].filter(Boolean);
-    })
-    .flat();
-
-  const employmentArray = userData.employment
-    ? userData.employment.map((employment) => employment.toString().toLowerCase())
-    : [];
-
-  const userDataArray = [...locationNamesArray, ...taskNamesArray, ...employmentArray];
-
-  const uniqueUserDataArray = [...new Set(userDataArray)];
-
   const jobsWithRanks = initRanks(jobs);
 
   const rankedJobs = jobsWithRanks.map((job) => {
-    const rank = uniqueUserDataArray.reduce((acc, userDataPart) => {
-      return acc + calculateRank(job, userDataPart);
-    }, 0);
+    const matchedFields = {}; // Reset the matchedFields object for each job
+    const rank = calculateRank(job, userData, matchedFields);
     return { ...job, jobAdvertisement: { ...job.jobAdvertisement, rank } };
   });
 
@@ -62,10 +37,11 @@ export default function useJobCardAlgorithm() {
 
   //console.log('Rankings:');
   //sortedJobs.forEach((job) => {
-  //console.log(
-  //  `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
-  // );
+  //  console.log(
+  //    `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
+  //  );
   //});
+
   const updatedJobs = calculateMatchPercentage(sortedJobs, userData);
 
   return updatedJobs;
@@ -73,13 +49,13 @@ export default function useJobCardAlgorithm() {
 
 const calculateMatchPercentage = (jobs, userData) => {
   let maxPoints = 0;
-  if (userData.locationNames.length > 0) {
+  if (userData.locationNames && userData.locationNames.length > 0) {
     maxPoints += 20;
   }
-  if (userData.taskNames.length > 0) {
+  if (userData.taskNames && userData.taskNames.length > 0) {
     maxPoints += 20;
   }
-  if (userData.employment.length > 0) {
+  if (userData.employment && userData.employment.length > 0) {
     maxPoints += 5;
   }
 
@@ -105,20 +81,30 @@ const filterFields = [
   { name: 'employment', rank: 5 },
 ];
 
-const calculateRank = (job, userData) => {
-  const matchedFields = {};
-
+const calculateRank = (job, userData, matchedFields) => {
   return filterFields.reduce((acc, field) => {
     const fieldName = field.name;
-    const fieldValue = job.jobAdvertisement[fieldName]?.toLowerCase();
+    let fieldValues = [];
 
-    if (matchedFields[fieldName]) {
-      return acc;
+    if (fieldName === 'location') {
+      fieldValues = userData.locationNames.map((location) =>
+        location.name?.toString().toLowerCase()
+      );
+    } else if (fieldName === 'region') {
+      fieldValues = userData.locationNames.map((location) =>
+        location.parent?.toString().toLowerCase()
+      );
+    } else if (fieldName === 'taskArea') {
+      fieldValues = userData.taskNames.map((task) => task.name?.toString().toLowerCase());
+    } else if (fieldName === 'employment') {
+      fieldValues = userData.employment.map((employment) => employment.toString().toLowerCase());
     }
 
-    const match = userData.includes(fieldValue);
+    const match = fieldValues.some((fieldValue) =>
+      job.jobAdvertisement[fieldName]?.toLowerCase().includes(fieldValue)
+    );
 
-    if (match) {
+    if (match && !matchedFields[fieldName]) {
       matchedFields[fieldName] = true;
       return acc + field.rank;
     }
@@ -126,7 +112,6 @@ const calculateRank = (job, userData) => {
     return acc;
   }, 0);
 };
-
 const initRanks = (jobs) =>
   jobs.map((job) => ({
     ...job,

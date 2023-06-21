@@ -12,7 +12,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';
 import TagLarge from '../../components/Tags/TagLarge';
 import { useEffect } from 'react';
-import { set } from 'react-native-reanimated';
 
 export default function BasicInformation({ save, setSave, setIsChanged, isChanged }) {
   const { userData } = useContext(AuthContext);

@@ -53,14 +53,22 @@ export default function SwipeableCard({ job }) {
             </TouchableOpacity>
           </LinearGradient>
         </LinearGradient>
+        <View
+          style={{
+            alignSelf: 'flex-start',
+            backgroundColor: theme.colors.primary,
+            paddingHorizontal: 8,
+          }}
+        >
+          <Text style={[theme.textVariants.textM, { color: 'white' }]}>
+            Vastaa profiiliin: {job.percentage + '%'}
+          </Text>
+        </View>
       </ImageBackground>
       <View
         style={styles.cardBottom}
         onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
       >
-        <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
-          Vastaa profiiliin: {job.percentage + '%'}
-        </Text>
         <Text style={[theme.textVariants.textM, { color: theme.colors.button }]}>
           Haku päättyy: {publicationEnds}
         </Text>
