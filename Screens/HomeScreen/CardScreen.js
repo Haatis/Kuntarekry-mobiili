@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import SwipeableCard from '../../components/SwipeableCard';
 import { theme } from '../../styles/theme';
-import { Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDown from '../../components/DropDown';
 import { updateStoredList, useFavoriteList } from '../../hooks/usefavoritelist';
@@ -65,7 +64,8 @@ export default function CardScreen() {
   //console.log('topCard ' + topCardIndex + ' index ' + index);
 
   const handleLike = async () => {
-    await updateStoredList('job', currentItems[topCardIndex].jobAdvertisement);
+    const likedItem = currentItems[topCardIndex].jobAdvertisement;
+    await updateStoredList('job', likedItem);
     updateFavorites();
     updateIndex();
     setShowModal(true);
@@ -105,40 +105,38 @@ export default function CardScreen() {
     });
   };
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], {
-        useNativeDriver: false,
-      }),
-      onPanResponderRelease: (e, gestureState) => {
-        if (gestureState.dx > 120) {
-          // Swipe right = like
-          Animated.spring(pan, {
-            toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
-            useNativeDriver: false,
-          }).start(() => {
-            handleLike();
-            pan.setValue({ x: 0, y: 0 });
-          });
-        } else if (gestureState.dx < -120) {
-          // Swipe left = hide
-          Animated.spring(pan, {
-            toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
-            useNativeDriver: false,
-          }).start(() => {
-            handleHide();
-            pan.setValue({ x: 0, y: 0 });
-          });
-        } else {
-          Animated.spring(pan, {
-            toValue: { x: 0, y: 0 },
-            useNativeDriver: false,
-          }).start();
-        }
-      },
-    })
-  ).current;
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], {
+      useNativeDriver: false,
+    }),
+    onPanResponderRelease: (e, gestureState) => {
+      if (gestureState.dx > 120) {
+        // Swipe right = like
+        Animated.spring(pan, {
+          toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
+          useNativeDriver: false,
+        }).start(() => {
+          handleLike();
+          pan.setValue({ x: 0, y: 0 });
+        });
+      } else if (gestureState.dx < -120) {
+        // Swipe left = hide
+        Animated.spring(pan, {
+          toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
+          useNativeDriver: false,
+        }).start(() => {
+          handleHide();
+          pan.setValue({ x: 0, y: 0 });
+        });
+      } else {
+        Animated.spring(pan, {
+          toValue: { x: 0, y: 0 },
+          useNativeDriver: false,
+        }).start();
+      }
+    },
+  });
 
   return (
     <>
@@ -225,7 +223,7 @@ export default function CardScreen() {
                 />
               </View>
               <DropDown category="Lisätty kansioon: Kaikki Suosikit" />
-              <Pressable style={styles.button}>
+              <View style={styles.button}>
                 <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
                   Ilmoitukseen
                 </Text>
@@ -235,7 +233,7 @@ export default function CardScreen() {
                   color={theme.colors.textPrimary}
                   style={{ marginTop: 3 }}
                 />
-              </Pressable>
+              </View>
               <TouchableOpacity onPress={closeModal} style={styles.button}>
                 <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
                   Jatka etsimistä

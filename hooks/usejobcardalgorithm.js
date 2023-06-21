@@ -73,13 +73,13 @@ export default function useJobCardAlgorithm() {
 
 const calculateMatchPercentage = (jobs, userData) => {
   let maxPoints = 0;
-  if (userData.locationNames.length > 0) {
+  if (userData.locationNames && userData.locationNames.length > 0) {
     maxPoints += 20;
   }
-  if (userData.taskNames.length > 0) {
+  if (userData.taskNames && userData.taskNames.length > 0) {
     maxPoints += 20;
   }
-  if (userData.employment.length > 0) {
+  if (userData.employment && userData.employment.length > 0) {
     maxPoints += 5;
   }
 
