@@ -31,7 +31,7 @@ export default function TagLarge({ tagColor, tagText, tagClose, onPressClose }) 
   }
 
   return (
-    <TouchableOpacity style={[styles.tag, { backgroundColor: tagColor }]}>
+    <TouchableOpacity onPress={onPressClose} style={[styles.tag, { backgroundColor: tagColor }]}>
       <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>{tagText}</Text>
     </TouchableOpacity>
   );

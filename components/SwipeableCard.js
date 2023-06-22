@@ -56,12 +56,18 @@ export default function SwipeableCard({ job }) {
         <View
           style={{
             alignSelf: 'flex-start',
-            backgroundColor: theme.colors.primary,
+            backgroundColor: theme.colors.secondary,
             paddingHorizontal: 8,
+            borderTopLeftRadius: 8,
+            borderBottomRightRadius: 8,
+            borderTopRightRadius: 8,
           }}
         >
-          <Text style={[theme.textVariants.textM, { color: 'white' }]}>
-            Vastaa profiiliin: {job.percentage + '%'}
+          <Text style={[theme.textVariants.textM, { color: 'white', textAlign: 'center' }]}>
+            {job.percentage + '%'} Vastaavuus
+          </Text>
+          <Text style={[theme.textVariants.textM, { color: 'white', textAlign: 'center' }]}>
+            profiiliisi
           </Text>
         </View>
       </ImageBackground>
