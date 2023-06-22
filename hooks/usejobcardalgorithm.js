@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import AuthContext from '../hooks/useauth';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
+import { useJobTasks } from '../hooks/usejobtasks';
 
 export function UpdateCardStack() {
   const jobs = useJobCardAlgorithm();
@@ -23,7 +24,12 @@ export function UpdateCardStack() {
 
 export default function useJobCardAlgorithm() {
   const { jobs } = useJobAdvertisements();
+  const { tasks } = useJobTasks();
   const { userData } = useContext(AuthContext);
+
+  if (!jobs || !userData) {
+    return []; // Return an empty array if jobs or userData is undefined or null
+  }
 
   const jobsWithRanks = initRanks(jobs);
 
@@ -87,17 +93,16 @@ const calculateRank = (job, userData, matchedFields) => {
     let fieldValues = [];
 
     if (fieldName === 'location') {
-      fieldValues = userData.locationNames.map((location) =>
-        location.name?.toString().toLowerCase()
-      );
+      fieldValues =
+        userData.locationNames?.map((location) => location.name?.toString().toLowerCase()) || [];
     } else if (fieldName === 'region') {
-      fieldValues = userData.locationNames.map((location) =>
-        location.parent?.toString().toLowerCase()
-      );
+      fieldValues =
+        userData.locationNames?.map((location) => location.parent?.toString().toLowerCase()) || [];
     } else if (fieldName === 'taskArea') {
-      fieldValues = userData.taskNames.map((task) => task.name?.toString().toLowerCase());
+      fieldValues = userData.taskNames?.map((task) => task.name?.toString().toLowerCase()) || [];
     } else if (fieldName === 'employment') {
-      fieldValues = userData.employment.map((employment) => employment.toString().toLowerCase());
+      fieldValues =
+        userData.employment?.map((employment) => employment.toString().toLowerCase()) || [];
     }
 
     const match = fieldValues.some((fieldValue) =>
@@ -112,6 +117,7 @@ const calculateRank = (job, userData, matchedFields) => {
     return acc;
   }, 0);
 };
+
 const initRanks = (jobs) =>
   jobs.map((job) => ({
     ...job,
