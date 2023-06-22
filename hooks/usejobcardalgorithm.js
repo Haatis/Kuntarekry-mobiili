@@ -27,13 +27,13 @@ export default function useJobCardAlgorithm() {
   const { tasks } = useJobTasks();
   const { userData } = useContext(AuthContext);
 
-  if (!jobs || !userData) {
-    return []; // Return an empty array if jobs or userData is undefined or null
+  if (!jobs || !userData || !tasks) {
+    return []; // Return an empty array if jobs, userData, or tasks is undefined or null
   }
-
+  if (jobs.length === 0 || userData.length === 0 || tasks.length === 0) {
+    return []; // Return an empty array if jobs, userData, or tasks is empty
+  }
   const jobsWithRanks = initRanks(jobs);
-
-  console.log(userData);
 
   // Function to retrieve the parent task area based on taskArea name
   function getParentTaskArea(taskAreaName, tasks) {
@@ -55,12 +55,12 @@ export default function useJobCardAlgorithm() {
 
   const sortedJobs = rankedJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
 
-  console.log('Rankings:');
-  sortedJobs.forEach((job) => {
-    console.log(
-      `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
-    );
-  });
+  //console.log('Rankings:');
+  //sortedJobs.forEach((job) => {
+  //  console.log(
+  //    `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
+  //   );
+  // });
 
   const updatedJobs = calculateMatchPercentage(sortedJobs, userData);
 
@@ -76,6 +76,9 @@ const calculateMatchPercentage = (jobs, userData) => {
     maxPoints += 20;
   }
   if (userData.employment && userData.employment.length > 0) {
+    maxPoints += 5;
+  }
+  if (userData.employmentType && userData.employmentType.length > 0) {
     maxPoints += 5;
   }
 
@@ -100,6 +103,7 @@ const filterFields = [
   { name: 'taskArea', rank: 15 },
   { name: 'taskAreaParent', rank: 5 }, // Added 'taskAreaParent' with a rank of 30
   { name: 'employment', rank: 5 },
+  { name: 'employmentType', rank: 5 },
 ];
 
 const calculateRank = (job, userData, tasks, matchedFields, getParentTaskArea) => {
@@ -134,6 +138,10 @@ const calculateRank = (job, userData, tasks, matchedFields, getParentTaskArea) =
     } else if (fieldName === 'employment') {
       fieldValues =
         userData.employment?.map((employment) => employment.toString().toLowerCase()) || [];
+    } else if (fieldName === 'employmentType') {
+      fieldValues =
+        userData.employmentType?.map((employmentType) => employmentType.toString().toLowerCase()) ||
+        [];
     }
 
     const match = fieldValues.some((fieldValue) =>

@@ -16,14 +16,24 @@ export default function WorkInformation({ save, setSave, setIsChanged, isChanged
   const employmentOptions = ['Kokoaikatyö', 'Osaaikatyö', '3-vuorotyö', 'Tuntityö', '2-vuorotyö'];
   const [showOptions, setShowOptions] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(userData.employment || []);
-
+  const [selectedEmploymentType, setSelectedEmploymentType] = useState(
+    userData.employmentType || []
+  );
   useEffect(() => {
-    if (selectedOptions !== userData.employment) {
+    const selectedOptionsString = JSON.stringify(selectedOptions);
+    const employmentString = JSON.stringify(userData.employment);
+    const selectedEmploymentTypeString = JSON.stringify(selectedEmploymentType);
+    const employmentTypeString = JSON.stringify(userData.employmentType);
+
+    if (
+      selectedOptionsString !== employmentString ||
+      selectedEmploymentTypeString !== employmentTypeString
+    ) {
       setIsChanged(true);
     } else {
       setIsChanged(false);
     }
-  }, [selectedOptions]);
+  }, [selectedOptions, selectedEmploymentType, userData.employment, userData.employmentType]);
 
   useEffect(() => {
     if (save) {
@@ -41,6 +51,23 @@ export default function WorkInformation({ save, setSave, setIsChanged, isChanged
     setShowOptions(false);
   };
 
+  const selectEmploymentType = (option) => {
+    setSelectedEmploymentType((prevSelectedEmploymentType) => {
+      // Check if the option already exists in the array
+      const exists = prevSelectedEmploymentType.includes(option);
+
+      if (exists) {
+        // If the option exists, filter it out
+        return prevSelectedEmploymentType.filter((item) => item !== option);
+      } else {
+        // If the option doesn't exist, add it
+        return [...prevSelectedEmploymentType, option];
+      }
+    });
+  };
+
+  const isVakinainenSelected = selectedEmploymentType.includes('Vakinainen');
+  const isMaaraaikainenSelected = selectedEmploymentType.includes('Määräaikainen');
   const removeEmploymentTag = (tag) => {
     const updatedOptions = selectedOptions.filter((option) => option !== tag);
     setSelectedOptions(updatedOptions);
@@ -56,6 +83,7 @@ export default function WorkInformation({ save, setSave, setIsChanged, isChanged
     const updatedUserData = {
       ...userData,
       employment: selectedOptions,
+      employmentType: selectedEmploymentType,
     };
 
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
@@ -207,6 +235,23 @@ export default function WorkInformation({ save, setSave, setIsChanged, isChanged
           ) : (
             <Text>Et ole valinnut työsuhdetta</Text>
           )}
+          <Text style={theme.textVariants.uiM}>Työn luonne</Text>
+          <View style={styles.tagRow}>
+            <TagLarge
+              tagText={'Vakinainen'}
+              tagColor={isVakinainenSelected ? theme.colors.tag2 : theme.colors.tag4}
+              larger={true}
+              onPressClose={() => selectEmploymentType('Vakinainen')}
+              tagClose={isVakinainenSelected}
+            />
+            <TagLarge
+              tagText={'Määräaikainen'}
+              tagColor={isMaaraaikainenSelected ? theme.colors.tag2 : theme.colors.tag4}
+              larger={true}
+              onPressClose={() => selectEmploymentType('Määräaikainen')}
+              tagClose={isMaaraaikainenSelected}
+            />
+          </View>
         </View>
       </ScrollView>
       {isChanged ? (
