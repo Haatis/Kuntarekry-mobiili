@@ -60,8 +60,6 @@ export default function CardScreen() {
     extrapolate: 'clamp',
   });
 
-  //console.log('topCard ' + topCardIndex + ' index ' + index);
-
   const handleLike = () => {
     const likedItem = currentItems[topCardIndex].jobAdvertisement;
     favoriteJob(likedItem.id);
@@ -71,8 +69,7 @@ export default function CardScreen() {
 
   const handleHide = () => {
     const hiddenItem = currentItems[topCardIndex].jobAdvertisement;
-    favoriteJob(hiddenItem.id);
-    hideJob();
+    hideJob(hiddenItem.id);
     updateIndex();
   };
 

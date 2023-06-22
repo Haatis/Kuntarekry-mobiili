@@ -5,9 +5,11 @@ import { useNavigation } from '@react-navigation/native';
 import { memo, useState } from 'react';
 import TagRow from './TagRow';
 import FavoriteButton from './FavoriteButton';
+import { useJobBookmarks } from '../hooks/usejobbookmarks';
 
 export default memo(SmallCard);
 function SmallCard({ job, cardType = 'default' }) {
+  const { hideJob } = useJobBookmarks();
   const imgNumber = job.organization?.length;
   const navigation = useNavigation();
   const imageURL = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
@@ -15,6 +17,8 @@ function SmallCard({ job, cardType = 'default' }) {
 
   const trimmedDesc = job.jobDesc?.trim().replace(/\s+/g, ' ');
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
+
+  const removeHidden = () => hideJob(job.id);
 
   return (
     <Pressable
@@ -37,7 +41,11 @@ function SmallCard({ job, cardType = 'default' }) {
         {
           {
             default: <FavoriteButton job={job} />,
-            hidden: <MaterialCommunityIcons name="close-thick" size={16} color="black" />,
+            hidden: (
+              <TouchableOpacity onPress={removeHidden}>
+                <MaterialCommunityIcons name="close-thick" size={16} color="black" />
+              </TouchableOpacity>
+            ),
             applied: null,
           }[cardType]
         }

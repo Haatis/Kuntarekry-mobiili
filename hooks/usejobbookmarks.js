@@ -26,22 +26,17 @@ export function BookmarkProvider({ children }) {
   const favoriteJob = async (id) => {
     try {
       const item = await AsyncStorage.getItem(FAVORITE_JOBS_KEY);
-      let newJobIDs;
-      if (item !== null) {
-        const currentJobIDs = new Set(JSON.parse(item));
-        if (currentJobIDs.has(id)) {
-          // Remove from favorites
-          newJobIDs = new Set([...currentJobIDs]);
-          newJobIDs.delete(id);
-        } else {
-          newJobIDs = new Set([...currentJobIDs, id]);
-        }
-        await AsyncStorage.setItem(FAVORITE_JOBS_KEY, JSON.stringify([...newJobIDs]));
+      const currentJobIDs = item !== null ? new Set(JSON.parse(item)) : new Set();
+
+      if (currentJobIDs.has(id)) {
+        // Remove from favorites if already exists
+        currentJobIDs.delete(id);
       } else {
-        newJobIDs = new Set([id]);
-        await AsyncStorage.setItem(FAVORITE_JOBS_KEY, JSON.stringify([id]));
+        currentJobIDs.add(id);
       }
-      const favoriteJobs = jobs.filter((j) => newJobIDs.has(j.jobAdvertisement.id));
+
+      await AsyncStorage.setItem(FAVORITE_JOBS_KEY, JSON.stringify([...currentJobIDs]));
+      const favoriteJobs = jobs.filter((j) => currentJobIDs.has(j.jobAdvertisement.id));
       setFavoriteJobs(favoriteJobs);
     } catch (error) {
       console.error(error);
@@ -50,16 +45,18 @@ export function BookmarkProvider({ children }) {
 
   const favoriteEmployer = async (id) => {
     try {
-      const item = await AsyncStorage.getItem(HIDDEN_JOBS_KEY);
-      if (item !== null) {
-        const currentJobs = JSON.parse(item);
-        const newJobs = new Set([...currentJobs, id]);
-        await AsyncStorage.setItem(HIDDEN_JOBS_KEY, JSON.stringify([...newJobs]));
-        setHiddenJobs(newJobs);
+      const item = await AsyncStorage.getItem(FAVORITE_EMPLOYERS_KEY);
+      const currentEmployerIDs = item !== null ? new Set(JSON.parse(item)) : new Set();
+
+      if (currentEmployerIDs.has(id)) {
+        // Remove from favorites if already exists
+        currentEmployerIDs.delete(id);
       } else {
-        await AsyncStorage.setItem(HIDDEN_JOBS_KEY, JSON.stringify([id]));
-        setHiddenJobs(new Set([id]));
+        currentEmployerIDs.add(id);
       }
+
+      await AsyncStorage.setItem(FAVORITE_EMPLOYERS_KEY, JSON.stringify([...currentEmployerIDs]));
+      setFavoriteEmployers(currentEmployerIDs);
     } catch (error) {
       console.error(error);
     }
@@ -68,15 +65,25 @@ export function BookmarkProvider({ children }) {
   const hideJob = async (id) => {
     try {
       const item = await AsyncStorage.getItem(HIDDEN_JOBS_KEY);
-      if (item !== null) {
-        const currentJobs = JSON.parse(item);
-        const newJobs = new Set([...currentJobs, id]);
-        await AsyncStorage.setItem(HIDDEN_JOBS_KEY, JSON.stringify([...newJobs]));
-        setHiddenJobs(newJobs);
+      const currentHiddenIDs = item !== null ? new Set(JSON.parse(item)) : new Set();
+
+      if (currentHiddenIDs.has(id)) {
+        // Remove from hidden list if already exists
+        currentHiddenIDs.delete(id);
       } else {
-        await AsyncStorage.setItem(HIDDEN_JOBS_KEY, JSON.stringify([id]));
-        setHiddenJobs(new Set([id]));
+        currentHiddenIDs.add(id);
+        const favoriteItem = await AsyncStorage.getItem(FAVORITE_JOBS_KEY);
+        const currentFavoriteIDs = new Set(JSON.parse(favoriteItem));
+        currentFavoriteIDs.delete(id);
+        await AsyncStorage.setItem(FAVORITE_JOBS_KEY, JSON.stringify([...currentFavoriteIDs]));
+        const favoriteJobs = jobs.filter((j) => currentFavoriteIDs.has(j.jobAdvertisement.id));
+        setFavoriteJobs(favoriteJobs);
+        console.log('favorite', currentFavoriteIDs);
       }
+      await AsyncStorage.setItem(HIDDEN_JOBS_KEY, JSON.stringify([...currentHiddenIDs]));
+      const hiddenJobs = jobs.filter((j) => currentHiddenIDs.has(j.jobAdvertisement.id));
+      setHiddenJobs(hiddenJobs);
+      console.log('hidden', currentHiddenIDs);
     } catch (error) {
       console.error(error);
     }
@@ -104,26 +111,6 @@ export function BookmarkProvider({ children }) {
       console.error(error);
     }
   };
-
-  async function mergeLists(type, item, publication, link, storedList) {
-    const mergedList = { ...storedList };
-    if (type === 'job') {
-      const jobIndex = storedList.jobs.findIndex((job) => job.id === item.id);
-      if (jobIndex !== -1) {
-        mergedList.jobs.splice(jobIndex, 1);
-      } else {
-        mergedList.jobs.push({ ...item, publication, link }); // add publication and link to the job object
-      }
-    } else if (type === 'employer') {
-      const employerIndex = storedList.employers.findIndex((employer) => employer === item);
-      if (employerIndex !== -1) {
-        mergedList.employers.splice(employerIndex, 1);
-      } else {
-        mergedList.employers.push(item);
-      }
-    }
-    return mergedList;
-  }
 
   useEffect(() => {
     (async () => {

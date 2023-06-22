@@ -33,7 +33,7 @@ export default function useJobCardAlgorithm() {
 
   const jobsWithRanks = initRanks(jobs);
 
-  console.log(userData);
+  // console.log(userData);
 
   // Function to retrieve the parent task area based on taskArea name
   function getParentTaskArea(taskAreaName, tasks) {
@@ -55,12 +55,12 @@ export default function useJobCardAlgorithm() {
 
   const sortedJobs = rankedJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
 
-  console.log('Rankings:');
+  /*  console.log('Rankings:');
   sortedJobs.forEach((job) => {
     console.log(
       `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
     );
-  });
+  }); */
 
   const updatedJobs = calculateMatchPercentage(sortedJobs, userData);
 
