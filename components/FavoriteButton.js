@@ -1,26 +1,25 @@
-import { updateStoredList, useFavoriteList } from '../hooks/usefavoritelist';
+import { useJobBookmarks } from '../hooks/usejobbookmarks';
 import { theme } from '../styles/theme';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function FavoriteButton({ job, employer, size = 24 }) {
-  const { favorites, updateFavorites } = useFavoriteList();
+  const { favoriteJobs, favoriteEmployers, favoriteJob, favoriteEmployer } = useJobBookmarks();
 
   const containerLength = Math.round(size * 1.66);
 
-  const handlePress = async () => {
+  const handlePress = () => {
     if (job != null) {
-      await updateStoredList('job', job);
+      favoriteJob(job.id);
     } else {
-      await updateStoredList('employer', employer);
+      favoriteEmployer(employer);
     }
-    updateFavorites();
   };
 
   const isFavorite =
     job != null
-      ? favorites.jobs.some((fav) => fav.id === job.id)
-      : favorites.employers.some((fav) => fav === employer);
+      ? favoriteJobs.some((fav) => fav.jobAdvertisement.id === job.id)
+      : favoriteEmployers.some((fav) => fav === employer);
 
   return (
     <TouchableOpacity

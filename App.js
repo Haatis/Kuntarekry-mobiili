@@ -34,7 +34,7 @@ import { AuthProvider } from './hooks/useauth';
 import BasicInformation from './Screens/ProfileScreen/BasicInformation';
 import { DrawerStatusProvider } from './hooks/usedrawerstatus';
 import SubstitutionsScreen from './Screens/ProfileScreen/SubstitutionsScreen/SubstitutionsScreen';
-import { FavoriteListProvider, useFavoriteList } from './hooks/usefavoritelist';
+import { BookmarkProvider, useJobBookmarks } from './hooks/usejobbookmarks';
 import PreviewProfileScreen from './Screens/ProfileScreen/PreviewProfileScreen';
 import WorkInformation from './Screens/ProfileScreen/WorkInformation';
 
@@ -99,7 +99,7 @@ function AppWrapper() {
           <JobOrganisationProvider>
             <PersonalisationProvider>
               <FilteredJobsProvider filteredJobs={filteredJobs} selectedFilters={selectedFilters}>
-                <FavoriteListProvider>
+                <BookmarkProvider>
                   <DrawerStatusProvider drawerStatus={isDrawerOpen}>
                     <NavigationContainer>
                       <StatusBar style="inverted" />
@@ -139,7 +139,7 @@ function AppWrapper() {
                       </Drawer.Navigator>
                     </NavigationContainer>
                   </DrawerStatusProvider>
-                </FavoriteListProvider>
+                </BookmarkProvider>
               </FilteredJobsProvider>
             </PersonalisationProvider>
           </JobOrganisationProvider>
@@ -186,7 +186,7 @@ function OnBoardingStackNavigator() {
 }
 
 function StackNavigator() {
-  const { favorites } = useFavoriteList();
+  const { favoriteJobs } = useJobBookmarks();
   const [save, setSave] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
 
@@ -211,9 +211,7 @@ function StackNavigator() {
           name="FavoriteFolder"
           component={FavoriteFolder}
           options={{
-            header: () => (
-              <AppBar back={true} title={`Kaikki suosikit (${favorites.jobs.length})`} />
-            ),
+            header: () => <AppBar back={true} title={`Kaikki suosikit (${favoriteJobs.length})`} />,
           }}
         />
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />

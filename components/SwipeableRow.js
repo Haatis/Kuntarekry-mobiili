@@ -2,11 +2,11 @@ import { useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../styles/theme';
-import { updateStoredList, useFavoriteList } from '../hooks/usefavoritelist';
+import { useJobBookmarks } from '../hooks/usejobbookmarks';
 import { Swipeable } from 'react-native-gesture-handler';
 
 export default function SwipeableRow({ job, children }) {
-  const { updateFavorites } = useFavoriteList();
+  const { favoriteJob, hideJob } = useJobBookmarks();
 
   const swipeableRowRef = useRef(null);
 
@@ -52,17 +52,16 @@ export default function SwipeableRow({ job, children }) {
 
   const swipedOpen = async (direction) => {
     if (direction === 'right') {
-      console.log('right');
+      handleHide();
     } else if (direction === 'left') {
       handleLike();
     }
     swipeableRowRef.current.close();
   };
 
-  const handleLike = async () => {
-    await updateStoredList('job', job);
-    updateFavorites();
-  };
+  const handleLike = () => favoriteJob(job.id);
+
+  const handleHide = () => hideJob(job.id);
 
   return (
     <Swipeable

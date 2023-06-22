@@ -2,13 +2,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../../styles/theme';
 import FolderCard from '../../components/FolderCard';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useFavoriteList } from '../../hooks/usefavoritelist';
+import { useJobBookmarks } from '../../hooks/usejobbookmarks';
 
 export default function FavoritesTab() {
-  const { favorites } = useFavoriteList();
+  const { favoriteJobs, favoriteEmployers } = useJobBookmarks();
   const placeholderImage =
     'https://cdn.pixabay.com/photo/2015/12/07/10/58/architect-1080592_960_720.jpg';
-  const imgNumber = favorites.jobs[favorites.jobs.length - 1]?.organization.length;
+  const imgNumber = favoriteJobs[favoriteJobs.length - 1]?.jobAdvertisement.organization.length;
   const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job`;
   return (
     <View style={theme.containerTop}>
@@ -28,10 +28,10 @@ export default function FavoritesTab() {
       <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>Työpaikat</Text>
       <FolderCard title="It-tukihenkilö" amount={8} type={1} />
       <FolderCard title="Aikaisemmin katsotut" amount={50} type={1} />
-      {favorites.jobs.length > 0 ? (
+      {favoriteJobs.length > 0 ? (
         <FolderCard
           title="Kaikki suosikit"
-          amount={favorites.jobs.length}
+          amount={favoriteJobs.length}
           type={1}
           image={randomJobImage}
         />
@@ -42,10 +42,10 @@ export default function FavoritesTab() {
         </Text>
       )}
       <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>Työnantajat</Text>
-      {favorites.employers.length > 0 ? (
+      {favoriteEmployers.length > 0 ? (
         <FolderCard
           title="Kaikki suosikit"
-          amount={favorites.employers.length}
+          amount={favoriteEmployers.length}
           type={2}
           image={placeholderImage}
         />

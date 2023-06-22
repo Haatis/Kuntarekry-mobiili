@@ -13,14 +13,13 @@ import SwipeableCard from '../../components/SwipeableCard';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDown from '../../components/DropDown';
-import { updateStoredList, useFavoriteList } from '../../hooks/usefavoritelist';
+import { useJobBookmarks } from '../../hooks/usejobbookmarks';
 import { UpdateCardStack } from '../../hooks/usejobcardalgorithm';
 import { StatusBar } from 'expo-status-bar';
 
 export default function CardScreen() {
   const { currentItems, updateStack } = UpdateCardStack();
-
-  const { updateFavorites } = useFavoriteList();
+  const { favoriteJob, hideJob } = useJobBookmarks();
 
   const [index, setIndex] = useState(0);
   const [topCardIndex, setTopCardIndex] = useState(0);
@@ -63,15 +62,17 @@ export default function CardScreen() {
 
   //console.log('topCard ' + topCardIndex + ' index ' + index);
 
-  const handleLike = async () => {
+  const handleLike = () => {
     const likedItem = currentItems[topCardIndex].jobAdvertisement;
-    await updateStoredList('job', likedItem);
-    updateFavorites();
+    favoriteJob(likedItem.id);
     updateIndex();
     setShowModal(true);
   };
 
   const handleHide = () => {
+    const hiddenItem = currentItems[topCardIndex].jobAdvertisement;
+    favoriteJob(hiddenItem.id);
+    hideJob();
     updateIndex();
   };
 
