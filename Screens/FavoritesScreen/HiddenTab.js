@@ -8,7 +8,6 @@ export default function HiddenTab() {
   const data = hiddenJobs.map((job) => job.jobAdvertisement);
   const renderItem = ({ item, index }) => <SmallCard key={index} job={item} cardType="hidden" />;
 
-  console.log(hiddenJobs);
   return (
     <>
       {hiddenJobs.length > 0 ? (

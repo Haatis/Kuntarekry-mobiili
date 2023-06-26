@@ -112,7 +112,7 @@ export default function WorkInformation({ save, setSave, setIsChanged, isChanged
 
     AsyncStorage.setItem('userData', JSON.stringify(updatedUserData))
       .then(() => fetchUserData())
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   };
 
   useEffect(() => {

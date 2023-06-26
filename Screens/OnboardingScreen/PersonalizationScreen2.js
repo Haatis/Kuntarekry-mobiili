@@ -169,7 +169,7 @@ export default function PersonalizationScreen2() {
       fetchUserData();
       finishOnboarding();
     } catch (error) {
-      console.log('Error saving location IDs:', error);
+      console.error('Error saving location IDs:', error);
     }
   };
 

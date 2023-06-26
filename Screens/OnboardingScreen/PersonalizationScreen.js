@@ -55,7 +55,7 @@ export default function PersonalizationScreen() {
       }
       navigation.navigate('PersonalizationScreen2');
     } catch (error) {
-      console.log('Error saving job IDs:', error);
+      console.error('Error saving job IDs:', error);
     }
   };
 

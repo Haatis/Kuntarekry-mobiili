@@ -82,7 +82,6 @@ const calculateMatchPercentage = (jobs, userData) => {
     maxPoints += 5;
   }
 
-  // console.log('Rankings:');
   const updatedJobs = jobs.map((job) => {
     const matchPercentage = Math.round((job.jobAdvertisement.rank / maxPoints) * 100);
     return { ...job, jobAdvertisement: { ...job.jobAdvertisement, percentage: matchPercentage } };

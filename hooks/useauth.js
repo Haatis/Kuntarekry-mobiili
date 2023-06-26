@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
         setUserData(parsedUserData);
       }
     } catch (error) {
-      console.log('Error fetching user data:', error);
+      console.error('Error fetching user data:', error);
     }
     setLoading(false);
   };
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
         console.log('isLoggedIn', isLoggedIn ? 'true' : 'false');
         await AsyncStorage.setItem('isLoggedIn', isLoggedIn ? 'true' : 'false');
       } catch (error) {
-        console.log('Error saving isLoggedIn:', error);
+        console.error('Error saving isLoggedIn:', error);
       }
     };
     if (isLoggedIn === true) saveIsLoggedIn();
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
           setIsLoggedIn(storedIsLoggedIn === 'true');
         }
       } catch (error) {
-        console.log('Error fetching isLoggedIn:', error);
+        console.error('Error fetching isLoggedIn:', error);
       }
     };
     fetchIsLoggedIn();

@@ -78,12 +78,12 @@ export function BookmarkProvider({ children }) {
         await AsyncStorage.setItem(FAVORITE_JOBS_KEY, JSON.stringify([...currentFavoriteIDs]));
         const favoriteJobs = jobs.filter((j) => currentFavoriteIDs.has(j.jobAdvertisement.id));
         setFavoriteJobs(favoriteJobs);
-        console.log('favorite', currentFavoriteIDs);
+        // console.log('favorite', currentFavoriteIDs);
       }
       await AsyncStorage.setItem(HIDDEN_JOBS_KEY, JSON.stringify([...currentHiddenIDs]));
       const hiddenJobs = jobs.filter((j) => currentHiddenIDs.has(j.jobAdvertisement.id));
       setHiddenJobs(hiddenJobs);
-      console.log('hidden', currentHiddenIDs);
+      //console.log('hidden', currentHiddenIDs);
     } catch (error) {
       console.error(error);
     }
