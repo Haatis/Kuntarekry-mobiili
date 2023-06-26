@@ -81,6 +81,9 @@ const calculateMatchPercentage = (jobs, userData) => {
   if (userData.employmentType && userData.employmentType.length > 0) {
     maxPoints += 5;
   }
+  if (userData.title && userData.title.length > 0) {
+    maxPoints += 5;
+  }
 
   const updatedJobs = jobs.map((job) => {
     const matchPercentage = Math.round((job.jobAdvertisement.rank / maxPoints) * 100);
@@ -103,6 +106,7 @@ const filterFields = [
   { name: 'taskAreaParent', rank: 5 }, // Added 'taskAreaParent' with a rank of 30
   { name: 'employment', rank: 5 },
   { name: 'employmentType', rank: 5 },
+  { name: 'title', rank: 5 },
 ];
 
 const calculateRank = (job, userData, tasks, matchedFields, getParentTaskArea) => {
@@ -134,13 +138,15 @@ const calculateRank = (job, userData, tasks, matchedFields, getParentTaskArea) =
       }
 
       return acc;
-    } else if (fieldName === 'employment') {
+    } else if (fieldName === 'employment' && userData.employment !== []) {
       fieldValues =
         userData.employment?.map((employment) => employment.toString().toLowerCase()) || [];
-    } else if (fieldName === 'employmentType') {
+    } else if (fieldName === 'employmentType' && userData.employmentType !== []) {
       fieldValues =
         userData.employmentType?.map((employmentType) => employmentType.toString().toLowerCase()) ||
         [];
+    } else if (fieldName === 'title' && userData.title !== '') {
+      fieldValues = [userData.title?.toString().toLowerCase()];
     }
 
     const match = fieldValues.some((fieldValue) =>

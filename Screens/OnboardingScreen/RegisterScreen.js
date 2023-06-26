@@ -22,6 +22,9 @@ export default function RegisterScreen() {
   const { onboardingDone } = useOnboarding();
   const { userData } = useContext(AuthContext);
   const { setIsLoggedIn } = useContext(AuthContext);
+  const [title] = useState('');
+  const [employment] = useState([]);
+  const [employmentType] = useState([]);
 
   const createUser = async () => {
     if (!isChecked) {
@@ -53,6 +56,9 @@ export default function RegisterScreen() {
       email,
       username,
       password,
+      title,
+      employment,
+      employmentType,
     };
 
     try {

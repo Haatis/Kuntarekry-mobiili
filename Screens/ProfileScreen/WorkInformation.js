@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -15,6 +15,7 @@ export default function WorkInformation({ save, setSave, setIsChanged, isChanged
   const { userData } = useContext(AuthContext);
   const employmentOptions = ['Kokoaikatyö', 'Osaaikatyö', '3-vuorotyö', 'Tuntityö', '2-vuorotyö'];
   const [showOptions, setShowOptions] = useState(false);
+  const [title, setTitle] = useState(userData ? userData.title : '');
   const [selectedOptions, setSelectedOptions] = useState(userData.employment || []);
   const [selectedEmploymentType, setSelectedEmploymentType] = useState(
     userData.employmentType || []
@@ -27,13 +28,20 @@ export default function WorkInformation({ save, setSave, setIsChanged, isChanged
 
     if (
       selectedOptionsString !== employmentString ||
-      selectedEmploymentTypeString !== employmentTypeString
+      selectedEmploymentTypeString !== employmentTypeString ||
+      title !== userData.title
     ) {
       setIsChanged(true);
     } else {
       setIsChanged(false);
     }
-  }, [selectedOptions, selectedEmploymentType, userData.employment, userData.employmentType]);
+  }, [
+    selectedOptions,
+    selectedEmploymentType,
+    userData.employment,
+    userData.employmentType,
+    title,
+  ]);
 
   useEffect(() => {
     if (save) {
@@ -84,6 +92,7 @@ export default function WorkInformation({ save, setSave, setIsChanged, isChanged
       ...userData,
       employment: selectedOptions,
       employmentType: selectedEmploymentType,
+      title: title,
     };
 
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
@@ -252,6 +261,17 @@ export default function WorkInformation({ save, setSave, setIsChanged, isChanged
               tagClose={isMaaraaikainenSelected}
             />
           </View>
+          <Text style={theme.textVariants.uiM}>Toiveet</Text>
+          <View
+            style={[{ borderWidth: 1, borderColor: theme.colors.outlineDark }, styles.createButton]}
+          >
+            <TextInput
+              style={[theme.textVariants.textM, { color: theme.colors.textPrimary, flex: 1 }]}
+              defaultValue={userData ? userData.title : ''}
+              onChangeText={(text) => setTitle(text)}
+            />
+            <Text style={[theme.textVariants.uiS, styles.labelText]}>Työnimike</Text>
+          </View>
         </View>
       </ScrollView>
       {isChanged ? (
@@ -281,6 +301,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
+  },
+  labelText: {
+    backgroundColor: 'white',
+    color: theme.colors.textSecondary,
+    left: 12,
+    paddingHorizontal: 4,
+    position: 'absolute',
+    top: -8,
   },
   tagRow: {
     alignItems: 'center',
