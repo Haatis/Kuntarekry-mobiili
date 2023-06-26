@@ -70,20 +70,23 @@ export function BookmarkProvider({ children }) {
       if (currentHiddenIDs.has(id)) {
         // Remove from hidden list if already exists
         currentHiddenIDs.delete(id);
+        const newHiddenJobs = hiddenJobs.filter((j) => j.id !== id);
+        setHiddenJobs(newHiddenJobs);
       } else {
         currentHiddenIDs.add(id);
+        const newHiddenJob = jobs.find((j) => j.jobAdvertisement.id === id);
+        setHiddenJobs((prevJobs) => [...prevJobs, newHiddenJob]);
+        // If favorite list has id remove from favorites
         const favoriteItem = await AsyncStorage.getItem(FAVORITE_JOBS_KEY);
         const currentFavoriteIDs = new Set(JSON.parse(favoriteItem));
-        currentFavoriteIDs.delete(id);
-        await AsyncStorage.setItem(FAVORITE_JOBS_KEY, JSON.stringify([...currentFavoriteIDs]));
-        const favoriteJobs = jobs.filter((j) => currentFavoriteIDs.has(j.jobAdvertisement.id));
-        setFavoriteJobs(favoriteJobs);
-        // console.log('favorite', currentFavoriteIDs);
+        if (currentFavoriteIDs.has(id)) {
+          currentFavoriteIDs.delete(id);
+          await AsyncStorage.setItem(FAVORITE_JOBS_KEY, JSON.stringify([...currentFavoriteIDs]));
+          const favoriteJobs = jobs.filter((j) => currentFavoriteIDs.has(j.jobAdvertisement.id));
+          setFavoriteJobs(favoriteJobs);
+        }
       }
       await AsyncStorage.setItem(HIDDEN_JOBS_KEY, JSON.stringify([...currentHiddenIDs]));
-      const hiddenJobs = jobs.filter((j) => currentHiddenIDs.has(j.jobAdvertisement.id));
-      setHiddenJobs(hiddenJobs);
-      //console.log('hidden', currentHiddenIDs);
     } catch (error) {
       console.error(error);
     }
@@ -128,8 +131,9 @@ export function BookmarkProvider({ children }) {
         }
         const storedHiddenJobs = await AsyncStorage.getItem(HIDDEN_JOBS_KEY);
         if (storedHiddenJobs != null) {
-          const parsedJobs = new Set(JSON.parse(storedHiddenJobs));
-          setHiddenJobs(parsedJobs);
+          const jobIDs = new Set(JSON.parse(storedHiddenJobs));
+          const hiddenJobs = jobs.filter((j) => jobIDs.has(j.jobAdvertisement.id));
+          setHiddenJobs(hiddenJobs);
         }
       } catch (error) {
         console.error(error);
