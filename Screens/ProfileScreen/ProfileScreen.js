@@ -13,6 +13,7 @@ export default function ProfileScreen() {
   const { userData, isLoggedIn, fetchUserData } = useContext(AuthContext);
   const [previewImage, setPreviewImage] = useState(userData.image ? userData.image : '');
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const navigation = useNavigation();
 
   const pickImage = async () => {
@@ -87,7 +88,7 @@ export default function ProfileScreen() {
         <View style={theme.containerCenter}>
           <View style={styles.profileContainer}>
             <TouchableOpacity
-              onPress={() => setModalVisible(true)}
+              onPress={isLoggedIn ? () => setModalVisible(true) : () => setModalVisible2(true)}
               style={{ ...theme.dropShadow, borderRadius: 99 }}
             >
               {userData.image ? (
@@ -197,9 +198,54 @@ export default function ProfileScreen() {
                 </Pressable>
               </Pressable>
             </Modal>
-            <TouchableOpacity style={styles.cameraButton} onPress={() => setModalVisible(true)}>
-              <MaterialCommunityIcons name="camera" size={24} color="white" />
-            </TouchableOpacity>
+            <Modal
+              transparent={true}
+              visible={modalVisible2}
+              style={{ width: '100%' }}
+              animationType="fade"
+              statusBarTranslucent
+            >
+              <Pressable
+                style={styles.modalContainer}
+                activeOpacity={1}
+                onPress={() => setModalVisible2(false)}
+              >
+                <Pressable style={styles.modalButtonContainer}>
+                  <Text style={{ ...theme.textVariants.uiM, color: 'black' }}>Kirjaudu sisään</Text>
+
+                  <View style={{ flexDirection: 'row', gap: 16 }}>
+                    <TouchableOpacity
+                      style={styles.confirmButton}
+                      onPress={() => {
+                        setModalVisible2(false);
+                        navigation.navigate('LoginScreen');
+                      }}
+                    >
+                      <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                        Kirjaudu sisään
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.confirmButton}
+                      onPress={() => setModalVisible2(false)}
+                    >
+                      <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                        Peruuta
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </Pressable>
+              </Pressable>
+            </Modal>
+            {isLoggedIn ? (
+              <TouchableOpacity style={styles.cameraButton} onPress={() => setModalVisible(true)}>
+                <MaterialCommunityIcons name="camera" size={24} color="white" />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.cameraButton} onPress={() => setModalVisible2(true)}>
+                <MaterialCommunityIcons name="lock" size={24} color="white" />
+              </TouchableOpacity>
+            )}
           </View>
           <Text style={{ marginTop: 16, fontFamily: 'SourceSansPro', fontSize: 20 }}>
             {userData.firstName} {userData.lastName}
@@ -215,7 +261,9 @@ export default function ProfileScreen() {
           >
             {userData.employmentInfo
               ? userData.employmentInfo
-              : 'Esittelytekstiä ei ole vielä lisätty'}
+              : isLoggedIn
+              ? 'Esittelytekstiä ei ole vielä lisätty'
+              : 'Kirjaudu sisään täyttääksesi profiili'}
           </Text>
           <View style={styles.container}>
             <View style={styles.row}>
@@ -233,7 +281,7 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('LoginScreen')}
+                  onPress={() => setModalVisible2(true)}
                   style={[theme.outline, styles.square, theme.dropShadow]}
                 >
                   <MaterialCommunityIcons name="lock" size={50} color={theme.colors.textPrimary} />
@@ -241,18 +289,43 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
               )}
 
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons
-                  name="file-account"
-                  size={50}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ ...theme.textVariants.textL }}>CV</Text>
-              </View>
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons name="school" size={50} color={theme.colors.textPrimary} />
-                <Text style={{ ...theme.textVariants.textL }}>Pätevyydet</Text>
-              </View>
+              {isLoggedIn ? (
+                <TouchableOpacity style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <MaterialCommunityIcons
+                    name="file-account"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>CV</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => setModalVisible2(true)}
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                >
+                  <MaterialCommunityIcons name="lock" size={50} color={theme.colors.textPrimary} />
+                  <Text style={{ ...theme.textVariants.textL }}>CV</Text>
+                </TouchableOpacity>
+              )}
+
+              {isLoggedIn ? (
+                <TouchableOpacity style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <MaterialCommunityIcons
+                    name="school"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Pätevyydet</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => setModalVisible2(true)}
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                >
+                  <MaterialCommunityIcons name="lock" size={50} color={theme.colors.textPrimary} />
+                  <Text style={{ ...theme.textVariants.textL }}>Pätevyydet</Text>
+                </TouchableOpacity>
+              )}
             </View>
             <View style={{ ...styles.row, marginVertical: 16 }}>
               <TouchableOpacity
@@ -266,42 +339,79 @@ export default function ProfileScreen() {
                 />
                 <Text style={{ ...theme.textVariants.textL }}>Työtoiveet</Text>
               </TouchableOpacity>
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons
-                  name="file-image"
-                  size={50}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ ...theme.textVariants.textL }}>Portfolio</Text>
-              </View>
-              <View style={[theme.outline, styles.square, theme.dropShadow]}>
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={50}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ ...theme.textVariants.textL }}>Muut</Text>
-              </View>
+              {isLoggedIn ? (
+                <TouchableOpacity style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <MaterialCommunityIcons
+                    name="file-image"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Portfolio</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => setModalVisible2(true)}
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                >
+                  <MaterialCommunityIcons name="lock" size={50} color={theme.colors.textPrimary} />
+                  <Text style={{ ...theme.textVariants.textL }}>Portfolio</Text>
+                </TouchableOpacity>
+              )}
+              {isLoggedIn ? (
+                <TouchableOpacity style={[theme.outline, styles.square, theme.dropShadow]}>
+                  <MaterialCommunityIcons
+                    name="dots-vertical"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Muut</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => setModalVisible2(true)}
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                >
+                  <MaterialCommunityIcons name="lock" size={50} color={theme.colors.textPrimary} />
+                  <Text style={{ ...theme.textVariants.textL }}>Muut</Text>
+                </TouchableOpacity>
+              )}
             </View>
             <View style={styles.row}>
-              <TouchableOpacity
-                style={[theme.outline, styles.square, theme.dropShadow]}
-                onPress={() => navigation.navigate('SubstitutionsScreen')}
-              >
-                <MaterialCommunityIcons
-                  name="calendar-month"
-                  size={50}
-                  color={theme.colors.textPrimary}
-                />
-                <Text style={{ ...theme.textVariants.textL }}>Keikat</Text>
-              </TouchableOpacity>
+              {isLoggedIn ? (
+                <TouchableOpacity
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                  onPress={() => navigation.navigate('SubstitutionsScreen')}
+                >
+                  <MaterialCommunityIcons
+                    name="calendar-month"
+                    size={50}
+                    color={theme.colors.textPrimary}
+                  />
+                  <Text style={{ ...theme.textVariants.textL }}>Keikat</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                  onPress={() => setModalVisible2(true)}
+                >
+                  <MaterialCommunityIcons name="lock" size={50} color={theme.colors.textPrimary} />
+                  <Text style={{ ...theme.textVariants.textL }}>Keikat</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
-        <BottomButton
-          buttonText="Esikatsele profiilia"
-          buttonAction={() => navigation.navigate('PreviewProfileScreen')}
-        />
+        {isLoggedIn ? (
+          <BottomButton
+            buttonText="Esikatsele profiilia"
+            buttonAction={() => navigation.navigate('PreviewProfileScreen')}
+          />
+        ) : (
+          <BottomButton
+            buttonText="Kirjaudu sisään"
+            buttonAction={() => navigation.navigate('LoginScreen')}
+          />
+        )}
       </>
     );
   };
