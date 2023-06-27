@@ -2,27 +2,21 @@ import {
   View,
   StyleSheet,
   Text,
-  FlatList,
-  TextInput,
   TouchableOpacity,
   ActivityIndicator,
   Modal,
-  ScrollView,
   Pressable,
 } from 'react-native';
+import { useState, useRef, useCallback, useMemo } from 'react';
+import { FlashList } from '@shopify/flash-list';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useFilteredJobs } from '../../hooks/usejobfilters';
 import SwipeableRow from '../../components/SwipeableRow';
-import { useCallback } from 'react';
 import useSearchJobs from '../../hooks/usejobsearch';
-import { useState, useRef } from 'react';
 import { useDrawerStatus } from '../../hooks/usedrawerstatus';
-import { useMemo } from 'react';
-import { FlashList } from '@shopify/flash-list';
 import SearchBar from '../../components/SearchBar';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 function SearchContent({ navigation }) {
   const status = useDrawerStatus();
@@ -102,7 +96,7 @@ function SearchContent({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <>
       <SearchBar
         searchText={searchText}
         setSearchText={setSearchText}
@@ -171,19 +165,13 @@ function SearchContent({ navigation }) {
           </View>
         </Pressable>
       </Modal>
-    </SafeAreaView>
+    </>
   );
 }
 const styles = StyleSheet.create({
   activeSortItem: {
     backgroundColor: theme.colors.secondary,
     color: 'white',
-  },
-  container: {
-    backgroundColor: 'white',
-    flex: 1,
-    margin: 0,
-    paddingTop: 0,
   },
   orderButton: {
     ...theme.dropShadow,

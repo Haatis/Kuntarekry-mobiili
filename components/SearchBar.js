@@ -1,4 +1,3 @@
-import React from 'react';
 import { TextInput, View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../styles/theme';
@@ -15,7 +14,7 @@ const SearchBar = ({
   searchJobs,
 }) => {
   return (
-    <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
+    <View style={styles.createButton}>
       <TextInput
         style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, width: '80%' }]}
         placeholder={`${
@@ -51,14 +50,15 @@ const SearchBar = ({
 
 const styles = StyleSheet.create({
   createButton: {
+    ...theme.outline,
+    ...theme.dropShadow,
     alignItems: 'center',
     borderRadius: 99,
     flexDirection: 'row',
     height: 50,
     justifyContent: 'space-between',
-    marginTop: -56,
+    marginTop: 8,
     paddingHorizontal: 16,
-    paddingVertical: 8,
     width: '100%',
   },
   filterCircle: {
