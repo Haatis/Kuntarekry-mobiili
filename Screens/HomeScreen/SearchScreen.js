@@ -102,7 +102,7 @@ function SearchContent({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <SearchBar
         searchText={searchText}
         setSearchText={setSearchText}
@@ -171,7 +171,7 @@ function SearchContent({ navigation }) {
           </View>
         </Pressable>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
-    margin: 0,
+    marginTop: 0,
     paddingTop: 0,
   },
   orderButton: {
