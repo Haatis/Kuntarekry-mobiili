@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Modal,
+  ScrollView,
   Pressable,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -19,6 +20,9 @@ import useSearchJobs from '../../hooks/usejobsearch';
 import { useState, useRef } from 'react';
 import { useDrawerStatus } from '../../hooks/usedrawerstatus';
 import { useMemo } from 'react';
+import { FlashList } from '@shopify/flash-list';
+import SearchBar from '../../components/SearchBar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function SearchContent({ navigation }) {
   const status = useDrawerStatus();
@@ -57,10 +61,12 @@ function SearchContent({ navigation }) {
     }
   };
   const renderItem = useCallback(
-    ({ item, index }) => (
-      <SwipeableRow job={item.jobAdvertisement}>
-        <SmallCard key={index} job={item.jobAdvertisement} />
-      </SwipeableRow>
+    ({ item }) => (
+      <View style={{ marginVertical: 4 }}>
+        <SwipeableRow job={item.jobAdvertisement}>
+          <SmallCard job={item.jobAdvertisement} />
+        </SwipeableRow>
+      </View>
     ),
     []
   );
@@ -96,63 +102,32 @@ function SearchContent({ navigation }) {
   }
 
   return (
-    <>
-      <FlatList
-        ListHeaderComponent={
-          <View style={{ width: '100%' }}>
-            <View style={[theme.outline, theme.dropShadow, styles.createButton]}>
-              <TextInput
-                style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, width: '80%' }]}
-                placeholder={`${
-                  filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
-                }${lastSearch ? ` hakusanalla "${lastSearch}"` : ''} (${
-                  lastSearch ? searchJobs.length : filters.filteredJobs.length
-                })`}
-                onChangeText={setSearchText}
-                value={searchText}
-                onSubmitEditing={handleSearch}
-                ref={searchInputRef}
-              />
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity onPress={handleSearch}>
-                  <MaterialCommunityIcons
-                    name="magnify"
-                    size={30}
-                    color={theme.colors.textPrimary}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.openDrawer()}
-                  style={{ flexDirection: 'row' }}
-                >
-                  <MaterialCommunityIcons
-                    name="filter-outline"
-                    size={30}
-                    color={theme.colors.textPrimary}
-                  />
-                  {filters.selectedFilters > 0 && (
-                    <View style={styles.filterCircle}>
-                      <Text style={styles.filterCount}>{filters.selectedFilters}</Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        }
-        stickyHeaderIndices={[0]}
-        stickyHeaderHiddenOnScroll={true}
-        contentContainerStyle={{
-          paddingHorizontal: 8,
-          gap: 8,
-          backgroundColor: 'white',
-        }}
-        windowSize={11}
-        data={sortedData}
-        renderItem={renderItem}
-        initialNumToRender={5}
-        maxToRenderPerBatch={10}
+    <SafeAreaView style={styles.container}>
+      <SearchBar
+        searchText={searchText}
+        setSearchText={setSearchText}
+        handleSearch={handleSearch}
+        handleOpenDrawer={() => navigation.openDrawer()}
+        filterCount={filters.selectedFilters}
+        lastSearch={lastSearch}
+        searchInputRef={searchInputRef}
+        filters={filters}
+        searchJobs={searchJobs}
       />
+      <View style={{ height: '100%' }}>
+        <FlashList
+          contentContainerStyle={{
+            paddingHorizontal: 8,
+            backgroundColor: 'white',
+          }}
+          windowSize={11}
+          data={sortedData}
+          renderItem={renderItem}
+          initialNumToRender={5}
+          maxToRenderPerBatch={10}
+          estimatedItemSize={200}
+        />
+      </View>
 
       <TouchableOpacity
         style={styles.orderButton}
@@ -196,41 +171,19 @@ function SearchContent({ navigation }) {
           </View>
         </Pressable>
       </Modal>
-    </>
+    </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   activeSortItem: {
     backgroundColor: theme.colors.secondary,
     color: 'white',
   },
-  createButton: {
-    alignItems: 'center',
-    borderRadius: 99,
-    flexDirection: 'row',
-    height: 50,
-    justifyContent: 'space-between',
-    marginTop: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    width: '100%',
-  },
-  filterCircle: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.primary,
-    borderRadius: 10,
-    height: 20,
-    justifyContent: 'center',
-    marginLeft: -11,
-    marginRight: 8,
-    marginTop: -8,
-    pointerEvents: 'none',
-    width: 20,
-  },
-  filterCount: {
-    color: 'white',
-    fontSize: 12,
+  container: {
+    backgroundColor: 'white',
+    flex: 1,
+    margin: 0,
+    paddingTop: 0,
   },
   orderButton: {
     ...theme.dropShadow,

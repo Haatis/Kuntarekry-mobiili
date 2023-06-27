@@ -19,6 +19,7 @@
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/material-top-tabs": "^6.6.2",
     "@react-navigation/stack": "^6.3.16",
+    "@shopify/flash-list": "1.4.0",
     "context": "^3.0.7",
     "dayjs": "^1.11.7",
     "expo": "~48.0.15",
