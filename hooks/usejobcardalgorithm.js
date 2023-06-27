@@ -21,48 +21,49 @@ export function UpdateCardStack() {
 
   return { currentItems, updateStack };
 }
+import { useEffect } from 'react';
 
 export default function useJobCardAlgorithm() {
   const { jobs } = useJobAdvertisements();
   const { tasks } = useJobTasks();
   const { userData } = useContext(AuthContext);
 
-  if (!jobs || !userData || !tasks) {
-    return []; // Return an empty array if jobs, userData, or tasks is undefined or null
-  }
-  if (jobs.length === 0 || userData.length === 0 || tasks.length === 0) {
-    return []; // Return an empty array if jobs, userData, or tasks is empty
-  }
-  const jobsWithRanks = initRanks(jobs);
+  const [updatedJobs, setUpdatedJobs] = useState([]);
 
-  // Function to retrieve the parent task area based on taskArea name
-  function getParentTaskArea(taskAreaName, tasks) {
-    const taskArea = tasks.find((task) => task.name === taskAreaName);
-    if (taskArea && taskArea.parent) {
-      const parentTaskArea = tasks.find((task) => task.id === taskArea.parent);
-      if (parentTaskArea) {
-        return parentTaskArea.name;
-      }
+  useEffect(() => {
+    if (!jobs || !userData || !tasks) {
+      setUpdatedJobs([]);
+      return;
     }
-    return null; // No parent task area found
-  }
+    if (jobs.length === 0 || userData.length === 0 || tasks.length === 0) {
+      setUpdatedJobs([]);
+      return;
+    }
 
-  const rankedJobs = jobsWithRanks.map((job) => {
-    const matchedFields = {}; // Reset the matchedFields object for each job
-    const rank = calculateRank(job, userData, tasks, matchedFields, getParentTaskArea); // Pass the tasks array and getParentTaskArea function to calculateRank
-    return { ...job, jobAdvertisement: { ...job.jobAdvertisement, rank } };
-  });
+    function getParentTaskArea(taskAreaName, tasks) {
+      const taskArea = tasks.find((task) => task.name === taskAreaName);
+      if (taskArea && taskArea.parent) {
+        const parentTaskArea = tasks.find((task) => task.id === taskArea.parent);
+        if (parentTaskArea) {
+          return parentTaskArea.name;
+        }
+      }
+      return null;
+    }
 
-  const sortedJobs = rankedJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
+    const jobsWithRanks = initRanks(jobs);
 
-  //console.log('Rankings:');
-  //sortedJobs.forEach((job) => {
-  //  console.log(
-  //    `${job.jobAdvertisement.profitCenter},  ${job.jobAdvertisement.title}, Rank: ${job.jobAdvertisement.rank}`
-  //   );
-  // });
+    const rankedJobs = jobsWithRanks.map((job) => {
+      const matchedFields = {};
+      const rank = calculateRank(job, userData, tasks, matchedFields, getParentTaskArea);
+      return { ...job, jobAdvertisement: { ...job.jobAdvertisement, rank } };
+    });
 
-  const updatedJobs = calculateMatchPercentage(sortedJobs, userData);
+    const sortedJobs = rankedJobs.sort((a, b) => b.jobAdvertisement.rank - a.jobAdvertisement.rank);
+
+    const updatedJobs = calculateMatchPercentage(sortedJobs, userData);
+    setUpdatedJobs(updatedJobs);
+  }, [jobs, userData, tasks]);
 
   return updatedJobs;
 }
@@ -110,7 +111,6 @@ const filterFields = [
 ];
 
 const calculateRank = (job, userData, tasks, matchedFields, getParentTaskArea) => {
-  // Pass the tasks array as a parameter
   return filterFields.reduce((acc, field) => {
     const fieldName = field.name;
     let fieldValues = [];
