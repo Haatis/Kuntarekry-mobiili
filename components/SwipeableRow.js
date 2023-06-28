@@ -6,7 +6,7 @@ import { useJobBookmarks } from '../hooks/usejobbookmarks';
 import { Swipeable } from 'react-native-gesture-handler';
 
 export default function SwipeableRow({ job, children }) {
-  const { favoriteJob, hideJob } = useJobBookmarks();
+  const { favoriteJob, hideJob, hiddenJobs } = useJobBookmarks();
 
   const swipeableRowRef = useRef(null);
 
@@ -60,24 +60,31 @@ export default function SwipeableRow({ job, children }) {
   };
 
   const handleLike = () => favoriteJob(job.id);
-
   const handleHide = () => hideJob(job.id);
 
+  const isHidden = hiddenJobs.has(job.id);
+
   return (
-    <Swipeable
-      containerStyle={{ overflow: 'visible' }}
-      ref={swipeableRowRef}
-      friction={2}
-      leftThreshold={30}
-      rightThreshold={40}
-      overshootLeft={false}
-      overshootRight={false}
-      renderLeftActions={renderLeftActions}
-      renderRightActions={renderRightActions}
-      onSwipeableOpen={swipedOpen}
-    >
-      {children}
-    </Swipeable>
+    <>
+      {isHidden ? (
+        <>{children}</>
+      ) : (
+        <Swipeable
+          containerStyle={{ overflow: 'visible' }}
+          ref={swipeableRowRef}
+          friction={2}
+          leftThreshold={30}
+          rightThreshold={40}
+          overshootLeft={false}
+          overshootRight={false}
+          renderLeftActions={renderLeftActions}
+          renderRightActions={renderRightActions}
+          onSwipeableOpen={swipedOpen}
+        >
+          {children}
+        </Swipeable>
+      )}
+    </>
   );
 }
 
