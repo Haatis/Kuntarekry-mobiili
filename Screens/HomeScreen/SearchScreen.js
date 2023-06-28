@@ -55,8 +55,8 @@ function SearchContent({ navigation }) {
     }
   };
   const renderItem = useCallback(
-    ({ item }) => (
-      <View style={{ marginVertical: 4 }}>
+    ({ item, index }) => (
+      <View style={index === 0 ? { marginTop: 64 } : { marginVertical: 8 }}>
         <SwipeableRow job={item.jobAdvertisement}>
           <SmallCard job={item.jobAdvertisement} />
         </SwipeableRow>
@@ -97,17 +97,6 @@ function SearchContent({ navigation }) {
 
   return (
     <>
-      <SearchBar
-        searchText={searchText}
-        setSearchText={setSearchText}
-        handleSearch={handleSearch}
-        handleOpenDrawer={() => navigation.openDrawer()}
-        filterCount={filters.selectedFilters}
-        lastSearch={lastSearch}
-        searchInputRef={searchInputRef}
-        filters={filters}
-        searchJobs={searchJobs}
-      />
       <View style={{ height: '100%' }}>
         <FlashList
           contentContainerStyle={{
@@ -120,6 +109,20 @@ function SearchContent({ navigation }) {
           initialNumToRender={5}
           maxToRenderPerBatch={10}
           estimatedItemSize={200}
+        />
+      </View>
+      <View style={{ backgroundColor: 'transparent', position: 'absolute', width: '100%' }}>
+        <SearchBar
+          searchText={searchText}
+          setSearchText={setSearchText}
+          handleSearch={handleSearch}
+          handleOpenDrawer={() => navigation.openDrawer()}
+          filterCount={filters.selectedFilters}
+          lastSearch={lastSearch}
+          searchInputRef={searchInputRef}
+          filters={filters}
+          searchJobs={searchJobs}
+          containerStyle={{ backgroundColor: 'transparent' }}
         />
       </View>
 
