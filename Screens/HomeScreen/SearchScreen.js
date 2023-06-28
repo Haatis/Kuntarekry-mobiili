@@ -2,27 +2,21 @@ import {
   View,
   StyleSheet,
   Text,
-  FlatList,
-  TextInput,
   TouchableOpacity,
   ActivityIndicator,
   Modal,
-  ScrollView,
   Pressable,
 } from 'react-native';
+import { useState, useRef, useCallback, useMemo } from 'react';
+import { FlashList } from '@shopify/flash-list';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import SmallCard from '../../components/SmallCard';
 import { useFilteredJobs } from '../../hooks/usejobfilters';
 import SwipeableRow from '../../components/SwipeableRow';
-import { useCallback } from 'react';
 import useSearchJobs from '../../hooks/usejobsearch';
-import { useState, useRef } from 'react';
 import { useDrawerStatus } from '../../hooks/usedrawerstatus';
-import { useMemo } from 'react';
-import { FlashList } from '@shopify/flash-list';
 import SearchBar from '../../components/SearchBar';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 function SearchContent({ navigation }) {
   const status = useDrawerStatus();
@@ -61,8 +55,8 @@ function SearchContent({ navigation }) {
     }
   };
   const renderItem = useCallback(
-    ({ item }) => (
-      <View style={{ marginVertical: 4 }}>
+    ({ item, index }) => (
+      <View style={index === 0 ? { marginTop: 64 } : { marginVertical: 8 }}>
         <SwipeableRow job={item.jobAdvertisement}>
           <SmallCard job={item.jobAdvertisement} />
         </SwipeableRow>
@@ -102,18 +96,7 @@ function SearchContent({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <SearchBar
-        searchText={searchText}
-        setSearchText={setSearchText}
-        handleSearch={handleSearch}
-        handleOpenDrawer={() => navigation.openDrawer()}
-        filterCount={filters.selectedFilters}
-        lastSearch={lastSearch}
-        searchInputRef={searchInputRef}
-        filters={filters}
-        searchJobs={searchJobs}
-      />
+    <>
       <View style={{ height: '100%' }}>
         <FlashList
           contentContainerStyle={{
@@ -126,6 +109,20 @@ function SearchContent({ navigation }) {
           initialNumToRender={5}
           maxToRenderPerBatch={10}
           estimatedItemSize={200}
+        />
+      </View>
+      <View style={{ backgroundColor: 'transparent', position: 'absolute', width: '100%' }}>
+        <SearchBar
+          searchText={searchText}
+          setSearchText={setSearchText}
+          handleSearch={handleSearch}
+          handleOpenDrawer={() => navigation.openDrawer()}
+          filterCount={filters.selectedFilters}
+          lastSearch={lastSearch}
+          searchInputRef={searchInputRef}
+          filters={filters}
+          searchJobs={searchJobs}
+          containerStyle={{ backgroundColor: 'transparent' }}
         />
       </View>
 
@@ -171,19 +168,13 @@ function SearchContent({ navigation }) {
           </View>
         </Pressable>
       </Modal>
-    </View>
+    </>
   );
 }
 const styles = StyleSheet.create({
   activeSortItem: {
     backgroundColor: theme.colors.secondary,
     color: 'white',
-  },
-  container: {
-    backgroundColor: 'white',
-    flex: 1,
-    marginTop: 0,
-    paddingTop: 0,
   },
   orderButton: {
     ...theme.dropShadow,
