@@ -10,7 +10,7 @@ export default function FavoriteFolder() {
   const data = jobs.filter((j) => favoriteJobs.has(j.jobAdvertisement.id));
 
   const renderItem = ({ item, index }) => (
-    <SwipeableRow job={item}>
+    <SwipeableRow job={item.jobAdvertisement}>
       <SmallCard key={index} job={item.jobAdvertisement} />
     </SwipeableRow>
   );
