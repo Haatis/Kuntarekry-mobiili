@@ -1,7 +1,8 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import AuthContext from '../hooks/useauth';
 import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 import { useJobTasks } from '../hooks/usejobtasks';
+import { useJobBookmarks } from './usejobbookmarks';
 
 export function UpdateCardStack() {
   const jobs = useJobCardAlgorithm();
@@ -21,22 +22,30 @@ export function UpdateCardStack() {
 
   return { currentItems, updateStack };
 }
-import { useEffect } from 'react';
 
-export default function useJobCardAlgorithm() {
+function useJobCardAlgorithm() {
   const { jobs } = useJobAdvertisements();
   const { tasks } = useJobTasks();
   const { userData } = useContext(AuthContext);
-
+  const { favoriteJobs, hiddenJobs } = useJobBookmarks();
   const [updatedJobs, setUpdatedJobs] = useState([]);
+
+  // Create a set from all hidden and favorite job ids
+  const favoriteIDs = new Set(favoriteJobs.map((favorite) => favorite.jobAdvertisement.id));
+  const hiddenIDs = new Set(hiddenJobs.map((hidden) => hidden.jobAdvertisement.id));
+
+  const removedJobsIDs = new Set([...favoriteIDs, ...hiddenIDs]);
+
+  // Remove favorited and hidden jobs from jobs
+  const filteredJobs = jobs.filter((job) => {
+    return !removedJobsIDs.has(job.jobAdvertisement.id);
+  });
 
   useEffect(() => {
     if (!jobs || !userData || !tasks) {
-      setUpdatedJobs([]);
       return;
     }
     if (jobs.length === 0 || userData.length === 0 || tasks.length === 0) {
-      setUpdatedJobs([]);
       return;
     }
 
@@ -50,8 +59,8 @@ export default function useJobCardAlgorithm() {
       }
       return null;
     }
-
-    const jobsWithRanks = initRanks(jobs);
+    //  console.log(removedJobsIDs);
+    const jobsWithRanks = initRanks(filteredJobs);
 
     const rankedJobs = jobsWithRanks.map((job) => {
       const matchedFields = {};
