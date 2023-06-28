@@ -30,56 +30,51 @@ const SearchBar = ({
     }
   };
   return (
-    <>
-      <View style={styles.createButton}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-          <TextInput
-            style={[
-              theme.textVariants.uiM,
-              {
-                color: theme.colors.textPrimary,
-                width: filters.selectedFilters > 0 ? 175 : 155,
-              },
-            ]}
-            placeholder={`${
-              filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
-            } (${lastSearch ? searchJobs.length : filters.filteredJobs.length})`}
-            placeholderTextColor={theme.colors.textSecondary}
-            onChangeText={setSearchText}
-            value={searchText}
-            onSubmitEditing={handleSearch}
-            ref={searchInputRef}
+    <View style={styles.createButton}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+      >
+        <TextInput
+          style={{ ...theme.textVariants.uiM, color: theme.colors.textPrimary }}
+          placeholder={`${
+            filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
+          } (${lastSearch ? searchJobs.length : filters.filteredJobs.length})  `}
+          placeholderTextColor={theme.colors.textSecondary}
+          onChangeText={setSearchText}
+          value={searchText}
+          onSubmitEditing={handleSearch}
+          ref={searchInputRef}
+        />
+        {lastSearch && (
+          <Tag
+            tagText={lastSearch}
+            tagColor={theme.colors.tag3}
+            tagClose={true}
+            onPress={() => setLastSearch('')}
           />
-          {lastSearch && (
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 4 }}>
-              <Tag
-                tagText={lastSearch}
-                tagColor={theme.colors.tag4}
-                tagClose={true}
-                onPress={() => setLastSearch('')}
-              />
+        )}
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity onPress={handleSearch}>
+          <MaterialCommunityIcons name="magnify" size={30} color={theme.colors.textPrimary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleOpenDrawer} style={{ flexDirection: 'row' }}>
+          <MaterialCommunityIcons
+            name="filter-outline"
+            size={30}
+            color={theme.colors.textPrimary}
+          />
+          {filterCount > 0 && (
+            <View style={styles.filterCircle}>
+              <Text style={styles.filterCount}>{filterCount}</Text>
             </View>
           )}
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <TouchableOpacity onPress={handleSearch}>
-            <MaterialCommunityIcons name="magnify" size={30} color={theme.colors.textPrimary} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleOpenDrawer} style={{ flexDirection: 'row' }}>
-            <MaterialCommunityIcons
-              name="filter-outline"
-              size={30}
-              color={theme.colors.textPrimary}
-            />
-            {filterCount > 0 && (
-              <View style={styles.filterCircle}>
-                <Text style={styles.filterCount}>{filterCount}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
       </View>
-    </>
+    </View>
   );
 };
 
