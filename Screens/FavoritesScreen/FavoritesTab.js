@@ -6,6 +6,7 @@ import { useJobBookmarks } from '../../hooks/usejobbookmarks';
 
 export default function FavoritesTab() {
   const { favoriteJobs, favoriteEmployers } = useJobBookmarks();
+
   const placeholderImage =
     'https://cdn.pixabay.com/photo/2015/12/07/10/58/architect-1080592_960_720.jpg';
   const imgNumber = favoriteJobs[favoriteJobs.length - 1]?.jobAdvertisement.organization.length;
@@ -28,10 +29,10 @@ export default function FavoritesTab() {
       <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>Työpaikat</Text>
       <FolderCard title="It-tukihenkilö" amount={8} type={1} />
       <FolderCard title="Aikaisemmin katsotut" amount={50} type={1} />
-      {favoriteJobs.length > 0 ? (
+      {favoriteJobs.size > 0 ? (
         <FolderCard
           title="Kaikki suosikit"
-          amount={favoriteJobs.length}
+          amount={favoriteJobs.size}
           type={1}
           image={randomJobImage}
         />
@@ -42,10 +43,10 @@ export default function FavoritesTab() {
         </Text>
       )}
       <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>Työnantajat</Text>
-      {favoriteEmployers.length > 0 ? (
+      {favoriteEmployers.size > 0 ? (
         <FolderCard
           title="Kaikki suosikit"
-          amount={favoriteEmployers.length}
+          amount={favoriteEmployers.size}
           type={2}
           image={placeholderImage}
         />

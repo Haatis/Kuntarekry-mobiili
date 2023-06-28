@@ -211,7 +211,7 @@ function StackNavigator() {
           name="FavoriteFolder"
           component={FavoriteFolder}
           options={{
-            header: () => <AppBar back={true} title={`Kaikki suosikit (${favoriteJobs.length})`} />,
+            header: () => <AppBar back={true} title={`Kaikki suosikit (${favoriteJobs.size})`} />,
           }}
         />
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />

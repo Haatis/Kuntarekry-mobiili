@@ -11,28 +11,26 @@ const BookmarkContext = createContext();
 export function BookmarkProvider({ children }) {
   const { jobs } = useJobAdvertisements();
 
-  const [favoriteJobs, setFavoriteJobs] = useState([]);
-  const [favoriteEmployers, setFavoriteEmployers] = useState([]);
-  const [hiddenJobs, setHiddenJobs] = useState([]);
+  const [favoriteJobs, setFavoriteJobs] = useState(new Set());
+  const [favoriteEmployers, setFavoriteEmployers] = useState(new Set());
+  const [hiddenJobs, setHiddenJobs] = useState(new Set());
 
   useEffect(() => {
     (async () => {
       try {
         const storedFavoriteJobIDs = await AsyncStorage.getItem(FAVORITE_JOBS_KEY);
         if (storedFavoriteJobIDs != null) {
-          const jobIDs = new Set(JSON.parse(storedFavoriteJobIDs));
-          const favoriteJobs = jobs.filter((j) => jobIDs.has(j.jobAdvertisement.id));
+          const favoriteJobs = new Set(JSON.parse(storedFavoriteJobIDs));
           setFavoriteJobs(favoriteJobs);
         }
         const storedFavoriteEmployers = await AsyncStorage.getItem(FAVORITE_EMPLOYERS_KEY);
         if (storedFavoriteEmployers != null) {
-          const parsedJobs = new Set(JSON.parse(storedFavoriteEmployers));
-          setFavoriteEmployers(parsedJobs);
+          const favoriteEmployers = new Set(JSON.parse(storedFavoriteEmployers));
+          setFavoriteEmployers(favoriteEmployers);
         }
         const storedHiddenJobs = await AsyncStorage.getItem(HIDDEN_JOBS_KEY);
         if (storedHiddenJobs != null) {
-          const jobIDs = new Set(JSON.parse(storedHiddenJobs));
-          const hiddenJobs = jobs.filter((j) => jobIDs.has(j.jobAdvertisement.id));
+          const hiddenJobs = new Set(JSON.parse(storedHiddenJobs));
           setHiddenJobs(hiddenJobs);
         }
       } catch (error) {
@@ -45,17 +43,14 @@ export function BookmarkProvider({ children }) {
     try {
       const item = await AsyncStorage.getItem(FAVORITE_JOBS_KEY);
       const currentJobIDs = item !== null ? new Set(JSON.parse(item)) : new Set();
-
       if (currentJobIDs.has(id)) {
         // Remove from favorites if already exists
         currentJobIDs.delete(id);
       } else {
         currentJobIDs.add(id);
       }
-
       await AsyncStorage.setItem(FAVORITE_JOBS_KEY, JSON.stringify([...currentJobIDs]));
-      const favoriteJobs = jobs.filter((j) => currentJobIDs.has(j.jobAdvertisement.id));
-      setFavoriteJobs(favoriteJobs);
+      setFavoriteJobs(currentJobIDs);
     } catch (error) {
       console.error(error);
     }
@@ -65,14 +60,12 @@ export function BookmarkProvider({ children }) {
     try {
       const item = await AsyncStorage.getItem(FAVORITE_EMPLOYERS_KEY);
       const currentEmployerIDs = item !== null ? new Set(JSON.parse(item)) : new Set();
-
       if (currentEmployerIDs.has(id)) {
         // Remove from favorites if already exists
         currentEmployerIDs.delete(id);
       } else {
         currentEmployerIDs.add(id);
       }
-
       await AsyncStorage.setItem(FAVORITE_EMPLOYERS_KEY, JSON.stringify([...currentEmployerIDs]));
       setFavoriteEmployers(currentEmployerIDs);
     } catch (error) {
@@ -88,20 +81,17 @@ export function BookmarkProvider({ children }) {
       if (currentHiddenIDs.has(id)) {
         // Remove from hidden list if already exists
         currentHiddenIDs.delete(id);
-        const newHiddenJobs = hiddenJobs.filter((j) => j.id !== id);
-        setHiddenJobs(newHiddenJobs);
+        setHiddenJobs(currentHiddenIDs);
       } else {
         currentHiddenIDs.add(id);
-        const newHiddenJob = jobs.find((j) => j.jobAdvertisement.id === id);
-        setHiddenJobs((prevJobs) => [...prevJobs, newHiddenJob]);
+        setHiddenJobs(currentHiddenIDs);
         // If favorite list has id remove from favorites
         const favoriteItem = await AsyncStorage.getItem(FAVORITE_JOBS_KEY);
         const currentFavoriteIDs = new Set(JSON.parse(favoriteItem));
         if (currentFavoriteIDs.has(id)) {
           currentFavoriteIDs.delete(id);
           await AsyncStorage.setItem(FAVORITE_JOBS_KEY, JSON.stringify([...currentFavoriteIDs]));
-          const favoriteJobs = jobs.filter((j) => currentFavoriteIDs.has(j.jobAdvertisement.id));
-          setFavoriteJobs(favoriteJobs);
+          setFavoriteJobs(currentFavoriteIDs);
         }
       }
       await AsyncStorage.setItem(HIDDEN_JOBS_KEY, JSON.stringify([...currentHiddenIDs]));
