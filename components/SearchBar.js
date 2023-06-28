@@ -2,6 +2,7 @@ import { TextInput, View, TouchableOpacity, Text, StyleSheet } from 'react-nativ
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../styles/theme';
 import { useState, useRef } from 'react';
+import Tag from './Tags/Tag';
 
 const SearchBar = ({
   setLastSearch,
@@ -32,37 +33,62 @@ const SearchBar = ({
     }
   };
   return (
-    <View style={styles.createButton}>
-      <TextInput
-        style={[theme.textVariants.uiM, { color: theme.colors.textPrimary, width: '80%' }]}
-        placeholder={`${
-          filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
-        }${lastSearch ? ` hakusanalla "${lastSearch}"` : ''} (${
-          lastSearch ? searchJobs.length : filters.filteredJobs.length
-        })`}
-        onChangeText={setSearchText}
-        value={searchText}
-        onSubmitEditing={handleSearch}
-        ref={searchInputRef}
-      />
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <TouchableOpacity onPress={handleSearch}>
-          <MaterialCommunityIcons name="magnify" size={30} color={theme.colors.textPrimary} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleOpenDrawer} style={{ flexDirection: 'row' }}>
-          <MaterialCommunityIcons
-            name="filter-outline"
-            size={30}
-            color={theme.colors.textPrimary}
+    <>
+      <View style={styles.createButton}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+          <TextInput
+            style={[
+              theme.textVariants.uiM,
+              {
+                color: theme.colors.textPrimary,
+                width: filters.selectedFilters > 0 ? 145 : 115,
+              },
+            ]}
+            placeholder={`${
+              filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
+            }`}
+            placeholderTextColor={theme.colors.textSecondary}
+            onChangeText={setSearchText}
+            value={searchText}
+            onSubmitEditing={handleSearch}
+            ref={searchInputRef}
           />
-          {filterCount > 0 && (
-            <View style={styles.filterCircle}>
-              <Text style={styles.filterCount}>{filterCount}</Text>
+          {lastSearch && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 4 }}>
+              <Tag
+                tagText={lastSearch}
+                tagColor={theme.colors.tag4}
+                tagClose={true}
+                onPress={() => setLastSearch('')}
+              />
             </View>
           )}
-        </TouchableOpacity>
+          <Text
+            style={[
+              theme.textVariants.uiS,
+              { color: theme.colors.textSecondary, marginTop: -1, marginLeft: 4 },
+            ]}
+          >{`(${lastSearch ? searchJobs.length : filters.filteredJobs.length})`}</Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity onPress={handleSearch}>
+            <MaterialCommunityIcons name="magnify" size={30} color={theme.colors.textPrimary} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleOpenDrawer} style={{ flexDirection: 'row' }}>
+            <MaterialCommunityIcons
+              name="filter-outline"
+              size={30}
+              color={theme.colors.textPrimary}
+            />
+            {filterCount > 0 && (
+              <View style={styles.filterCircle}>
+                <Text style={styles.filterCount}>{filterCount}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
