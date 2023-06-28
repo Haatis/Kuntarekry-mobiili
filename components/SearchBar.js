@@ -21,9 +21,6 @@ const SearchBar = ({
         searchInputRef.current.focus();
       } else {
         // Clear the search text if it's already focused
-        setSearchText('');
-        setLastSearch('');
-        //defocus
         searchInputRef.current.blur();
       }
     } else {
@@ -41,12 +38,12 @@ const SearchBar = ({
               theme.textVariants.uiM,
               {
                 color: theme.colors.textPrimary,
-                width: filters.selectedFilters > 0 ? 145 : 115,
+                width: filters.selectedFilters > 0 ? 175 : 155,
               },
             ]}
             placeholder={`${
               filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
-            }`}
+            } (${lastSearch ? searchJobs.length : filters.filteredJobs.length})`}
             placeholderTextColor={theme.colors.textSecondary}
             onChangeText={setSearchText}
             value={searchText}
@@ -63,12 +60,6 @@ const SearchBar = ({
               />
             </View>
           )}
-          <Text
-            style={[
-              theme.textVariants.uiS,
-              { color: theme.colors.textSecondary, marginTop: -1, marginLeft: 4 },
-            ]}
-          >{`(${lastSearch ? searchJobs.length : filters.filteredJobs.length})`}</Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <TouchableOpacity onPress={handleSearch}>
