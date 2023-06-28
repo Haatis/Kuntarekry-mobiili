@@ -2,15 +2,20 @@ import SmallCard from '../../components/SmallCard';
 import { useJobBookmarks } from '../../hooks/usejobbookmarks';
 import { View, FlatList, Text } from 'react-native';
 import { theme } from '../../styles/theme';
+import { useJobAdvertisements } from '../../hooks/usejobadvertisements';
 
 export default function HiddenTab() {
   const { hiddenJobs } = useJobBookmarks();
-  const data = hiddenJobs.map((job) => job.jobAdvertisement);
-  const renderItem = ({ item, index }) => <SmallCard key={index} job={item} cardType="hidden" />;
+  const { jobs } = useJobAdvertisements();
+  const data = jobs.filter((j) => hiddenJobs.has(j.jobAdvertisement.id));
+
+  const renderItem = ({ item, index }) => (
+    <SmallCard key={index} job={item.jobAdvertisement} cardType="hidden" />
+  );
 
   return (
     <>
-      {hiddenJobs.length > 0 ? (
+      {hiddenJobs.size > 0 ? (
         <FlatList
           style={{ flex: 1, backgroundColor: 'white' }}
           data={data}

@@ -17,9 +17,7 @@ export default function FavoriteButton({ job, employer, size = 24 }) {
   };
 
   const isFavorite =
-    job != null
-      ? favoriteJobs.some((fav) => fav.jobAdvertisement.id === job.id)
-      : favoriteEmployers.some((fav) => fav === employer);
+    job != null ? favoriteJobs.has(job.id) : favoriteEmployers.has((fav) => fav === employer);
 
   return (
     <TouchableOpacity

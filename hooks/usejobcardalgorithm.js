@@ -30,12 +30,7 @@ function useJobCardAlgorithm() {
   const { favoriteJobs, hiddenJobs } = useJobBookmarks();
   const [updatedJobs, setUpdatedJobs] = useState([]);
 
-  // Create a set from all hidden and favorite job ids
-  const favoriteIDs = new Set(favoriteJobs.map((favorite) => favorite.jobAdvertisement.id));
-  const hiddenIDs = new Set(hiddenJobs.map((hidden) => hidden.jobAdvertisement.id));
-
-  const removedJobsIDs = new Set([...favoriteIDs, ...hiddenIDs]);
-
+  const removedJobsIDs = new Set([...favoriteJobs, ...hiddenJobs]);
   // Remove favorited and hidden jobs from jobs
   const filteredJobs = jobs.filter((job) => {
     return !removedJobsIDs.has(job.jobAdvertisement.id);
@@ -72,6 +67,7 @@ function useJobCardAlgorithm() {
 
     const updatedJobs = calculateMatchPercentage(sortedJobs, userData);
     setUpdatedJobs(updatedJobs);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobs, userData, tasks]);
 
   return updatedJobs;

@@ -2,14 +2,16 @@ import { FlatList } from 'react-native-gesture-handler';
 import { useJobBookmarks } from '../hooks/usejobbookmarks';
 import SmallCard from '../components/SmallCard';
 import SwipeableRow from '../components/SwipeableRow';
+import { useJobAdvertisements } from '../hooks/usejobadvertisements';
 
 export default function FavoriteFolder() {
   const { favoriteJobs } = useJobBookmarks();
+  const { jobs } = useJobAdvertisements();
+  const data = jobs.filter((j) => favoriteJobs.has(j.jobAdvertisement.id));
 
-  const data = favoriteJobs.map((job) => job.jobAdvertisement);
   const renderItem = ({ item, index }) => (
     <SwipeableRow job={item}>
-      <SmallCard key={index} job={item} />
+      <SmallCard key={index} job={item.jobAdvertisement} />
     </SwipeableRow>
   );
 
