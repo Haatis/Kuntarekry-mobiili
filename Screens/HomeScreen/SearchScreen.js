@@ -1,12 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  Modal,
-  Pressable,
-} from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { useState, useCallback, useMemo } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -23,7 +15,7 @@ function SearchContent({ navigation }) {
   const searchJobs = useSearchJobs(filters.filteredJobs, lastSearch);
   const [activeSortType, setActiveSortType] = useState('newest');
   const [showSortSelector, setShowSortSelector] = useState(false);
-  let jobs = lastSearch ? searchJobs : filters.filteredJobs;
+  const jobs = lastSearch ? searchJobs : filters.filteredJobs;
   const sortType = [
     { label: 'Uusin ensin', value: 'newest' },
     { label: 'Hakuaika päättyy', value: 'endTime' },
@@ -32,8 +24,8 @@ function SearchContent({ navigation }) {
   ];
 
   const renderItem = useCallback(
-    ({ item, index }) => (
-      <View style={index === 0 ? { marginTop: 64 } : { marginVertical: 8 }}>
+    ({ item }) => (
+      <View style={{ marginBottom: 8 }}>
         <SwipeableRow job={item.jobAdvertisement}>
           <SmallCard job={item.jobAdvertisement} />
         </SwipeableRow>
@@ -66,17 +58,15 @@ function SearchContent({ navigation }) {
 
   return (
     <>
-      <View style={{ height: '100%' }}>
+      <View style={{ height: '100%', backgroundColor: 'white' }}>
         <FlashList
           contentContainerStyle={{
+            paddingTop: 64,
             paddingHorizontal: 8,
             backgroundColor: 'white',
           }}
-          windowSize={11}
           data={sortedData}
           renderItem={renderItem}
-          initialNumToRender={5}
-          maxToRenderPerBatch={10}
           estimatedItemSize={200}
         />
       </View>
@@ -90,7 +80,6 @@ function SearchContent({ navigation }) {
           searchJobs={searchJobs}
         />
       </View>
-
       <TouchableOpacity
         style={styles.orderButton}
         onPress={() => setShowSortSelector(!showSortSelector)}
