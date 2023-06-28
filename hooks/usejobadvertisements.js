@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 const JOBS_URI = FileSystem.cacheDirectory + 'jobs';
 const JOBS_LAST_UPDATED_KEY = 'jobs_last_updated';
 
-const JobAdvertisementContext = createContext({ jobs: [] });
+const JobAdvertisementContext = createContext();
 
 export function JobAdvertisementProvider({ children }) {
   const [jobs, setJobs] = useState([]);
