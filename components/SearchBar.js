@@ -1,18 +1,36 @@
 import { TextInput, View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../styles/theme';
+import { useState, useRef } from 'react';
 
 const SearchBar = ({
-  searchText,
-  setSearchText,
-  handleSearch,
+  setLastSearch,
   handleOpenDrawer,
   filterCount,
   lastSearch,
-  searchInputRef,
   filters,
   searchJobs,
 }) => {
+  const [searchText, setSearchText] = useState('');
+  const searchInputRef = useRef(null);
+  const handleSearch = () => {
+    if (searchText === '') {
+      if (searchInputRef.current && !searchInputRef.current.isFocused()) {
+        // Focus on the TextInput if search query is empty and it's not already focused
+        searchInputRef.current.focus();
+      } else {
+        // Clear the search text if it's already focused
+        setSearchText('');
+        setLastSearch('');
+        //defocus
+        searchInputRef.current.blur();
+      }
+    } else {
+      // Perform search logic here based on the searchText and filters
+      setLastSearch(searchText);
+      setSearchText('');
+    }
+  };
   return (
     <View style={styles.createButton}>
       <TextInput

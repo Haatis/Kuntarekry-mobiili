@@ -7,7 +7,7 @@ import {
   Modal,
   Pressable,
 } from 'react-native';
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
@@ -15,19 +15,14 @@ import SmallCard from '../../components/SmallCard';
 import { useFilteredJobs } from '../../hooks/usejobfilters';
 import SwipeableRow from '../../components/SwipeableRow';
 import useSearchJobs from '../../hooks/usejobsearch';
-import { useDrawerStatus } from '../../hooks/usedrawerstatus';
 import SearchBar from '../../components/SearchBar';
 
 function SearchContent({ navigation }) {
-  const status = useDrawerStatus();
   const filters = useFilteredJobs();
-  const [searchText, setSearchText] = useState('');
   const [lastSearch, setLastSearch] = useState('');
-  const searchInputRef = useRef(null);
   const searchJobs = useSearchJobs(filters.filteredJobs, lastSearch);
   const [activeSortType, setActiveSortType] = useState('newest');
   const [showSortSelector, setShowSortSelector] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   let jobs = lastSearch ? searchJobs : filters.filteredJobs;
   const sortType = [
     { label: 'Uusin ensin', value: 'newest' },
@@ -36,24 +31,6 @@ function SearchContent({ navigation }) {
     { label: 'Sijainti', value: 'location' },
   ];
 
-  const handleSearch = () => {
-    if (searchText === '') {
-      if (searchInputRef.current && !searchInputRef.current.isFocused()) {
-        // Focus on the TextInput if search query is empty and it's not already focused
-        searchInputRef.current.focus();
-      } else {
-        // Clear the search text if it's already focused
-        setSearchText('');
-        setLastSearch('');
-        //defocus
-        searchInputRef.current.blur();
-      }
-    } else {
-      // Perform search logic here based on the searchText and filters
-      setLastSearch(searchText);
-      setSearchText('');
-    }
-  };
   const renderItem = useCallback(
     ({ item, index }) => (
       <View style={index === 0 ? { marginTop: 64 } : { marginVertical: 8 }}>
@@ -87,14 +64,6 @@ function SearchContent({ navigation }) {
     }
   }, [jobs, activeSortType]);
 
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      </View>
-    );
-  }
-
   return (
     <>
       <View style={{ height: '100%' }}>
@@ -113,16 +82,12 @@ function SearchContent({ navigation }) {
       </View>
       <View style={{ backgroundColor: 'transparent', position: 'absolute', width: '100%' }}>
         <SearchBar
-          searchText={searchText}
-          setSearchText={setSearchText}
-          handleSearch={handleSearch}
+          setLastSearch={setLastSearch}
           handleOpenDrawer={() => navigation.openDrawer()}
           filterCount={filters.selectedFilters}
           lastSearch={lastSearch}
-          searchInputRef={searchInputRef}
           filters={filters}
           searchJobs={searchJobs}
-          containerStyle={{ backgroundColor: 'transparent' }}
         />
       </View>
 
