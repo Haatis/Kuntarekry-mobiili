@@ -5,7 +5,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
 import BottomButton from '../../components/BottomButton';
-import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TagLarge from '../../components/Tags/TagLarge';
 import { useEffect } from 'react';
@@ -14,10 +13,8 @@ import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';
 
-export default function CompetenceInformation({ save, setSave, setIsChanged, isChanged }) {
+export default function CompetenceInformation({ save, setSave, isChanged }) {
   const { userData } = useContext(AuthContext);
-
-  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState('');
   const [modalDescription, setModalDescription] = useState('');
@@ -33,13 +30,31 @@ export default function CompetenceInformation({ save, setSave, setIsChanged, isC
   const [showDatePicker2, setShowDatePicker2] = useState(false);
 
   const saveUserData = async () => {
+    let updatedWorkExperience;
+
+    if (userData.workExperience) {
+      updatedWorkExperience = [
+        ...userData.workExperience,
+        { employer, title, start, end, description },
+      ];
+    } else {
+      updatedWorkExperience = [{ employer, title, start, end, description }];
+    }
+
     const updatedUserData = {
       ...userData,
+      workExperience: updatedWorkExperience,
     };
 
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
 
     fetchUserData();
+    setEmployer('');
+    setTitle('');
+    setStart('');
+    setEnd('');
+    setDescription('');
+    setModalVisible(false);
   };
 
   useEffect(() => {
@@ -48,6 +63,18 @@ export default function CompetenceInformation({ save, setSave, setIsChanged, isC
       setSave(false);
     }
   }, [save]);
+
+  const deleteWorkExperience = async (index) => {
+    const updatedWorkExperience = userData.workExperience.filter((_, i) => i !== index);
+
+    const updatedUserData = {
+      ...userData,
+      workExperience: updatedWorkExperience,
+    };
+
+    await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
+    fetchUserData();
+  };
 
   const openModal = (type) => {
     setType(type);
@@ -249,6 +276,37 @@ export default function CompetenceInformation({ save, setSave, setIsChanged, isC
               }}
             />
           </TouchableOpacity>
+          {userData?.workExperience?.map((item, index) => (
+            <View
+              key={index}
+              style={[
+                theme.outline,
+                theme.dropShadow,
+                styles.createButton2,
+                { flexDirection: 'row', justifyContent: 'space-between' },
+              ]}
+            >
+              <View>
+                <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                  {item.title}
+                </Text>
+                <Text style={[theme.textVariants.uiS, { color: theme.colors.textSecondary }]}>
+                  {moment(item.start).format('DD.MM.YYYY')} -{' '}
+                  {item.end ? moment(item.end).format('DD.MM.YYYY') : 'Nykyhetkeen'}
+                </Text>
+              </View>
+              <TouchableOpacity onPress={() => deleteWorkExperience(index)}>
+                <MaterialCommunityIcons
+                  name="delete"
+                  size={40}
+                  color={theme.colors.textPrimary}
+                  style={{
+                    marginHorizontal: -8,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          ))}
           <Text style={theme.textVariants.uiM}>Koulutus</Text>
           <TouchableOpacity
             onPress={() => openModal('koulutus')}
