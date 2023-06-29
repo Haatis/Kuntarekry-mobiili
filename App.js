@@ -33,7 +33,7 @@ import RegisterScreen from './Screens/OnboardingScreen/RegisterScreen';
 import { AuthProvider } from './hooks/useauth';
 import BasicInformation from './Screens/ProfileScreen/BasicInformation';
 import { DrawerStatusProvider } from './hooks/usedrawerstatus';
-import SubstitutionsScreen from './Screens/ProfileScreen/SubstitutionsScreen/SubstitutionsScreen';
+import SubstitutionsTabs from './Screens/ProfileScreen/SubstitutionsScreen/SubstitutionsTabs';
 import { BookmarkProvider, useJobBookmarks } from './hooks/usejobbookmarks';
 import PreviewProfileScreen from './Screens/ProfileScreen/PreviewProfileScreen';
 import WorkInformation from './Screens/ProfileScreen/WorkInformation';
@@ -295,8 +295,8 @@ function StackNavigator() {
         </Stack.Screen>
 
         <Stack.Screen
-          name="SubstitutionsScreen"
-          component={SubstitutionsScreen}
+          name="SubstitutionsTabs"
+          component={SubstitutionsTabs}
           options={{
             header: () => <AppBar back={true} title={'Keikat'} />,
           }}
