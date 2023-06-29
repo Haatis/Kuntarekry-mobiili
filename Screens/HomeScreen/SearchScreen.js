@@ -8,14 +8,20 @@ import { useFilteredJobs } from '../../hooks/usejobfilters';
 import SwipeableRow from '../../components/SwipeableRow';
 import useSearchJobs from '../../hooks/usejobsearch';
 import SearchBar from '../../components/SearchBar';
+import { useJobBookmarks } from '../../hooks/usejobbookmarks';
 
 function SearchContent({ navigation }) {
+  const { hiddenJobs } = useJobBookmarks();
   const filters = useFilteredJobs();
   const [lastSearch, setLastSearch] = useState('');
   const searchJobs = useSearchJobs(filters.filteredJobs, lastSearch);
   const [activeSortType, setActiveSortType] = useState('newest');
   const [showSortSelector, setShowSortSelector] = useState(false);
-  const jobs = lastSearch ? searchJobs : filters.filteredJobs;
+  const searchResults = lastSearch ? searchJobs : filters.filteredJobs;
+  // Remove only jobs that were hidden before launching the app
+  const filteredJobs = searchResults.filter((j) => !hiddenJobs.has(j.jobAdvertisement.id));
+  const [jobs] = useState(filteredJobs);
+
   const sortType = [
     { label: 'Uusin ensin', value: 'newest' },
     { label: 'Hakuaika päättyy', value: 'endTime' },
@@ -70,11 +76,17 @@ function SearchContent({ navigation }) {
           estimatedItemSize={200}
         />
       </View>
-      <View style={{ backgroundColor: 'transparent', position: 'absolute', width: '100%' }}>
+      <View
+        style={{
+          backgroundColor: 'transparent',
+          position: 'absolute',
+          width: '100%',
+          paddingHorizontal: 8,
+        }}
+      >
         <SearchBar
           setLastSearch={setLastSearch}
           handleOpenDrawer={() => navigation.openDrawer()}
-          filterCount={filters.selectedFilters}
           lastSearch={lastSearch}
           filters={filters}
           searchJobs={searchJobs}
