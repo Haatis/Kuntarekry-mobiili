@@ -19,8 +19,8 @@ function SearchContent({ navigation }) {
   const [showSortSelector, setShowSortSelector] = useState(false);
   const searchResults = lastSearch ? searchJobs : filters.filteredJobs;
   // Remove only jobs that were hidden before launching the app
-  const filteredJobs = searchResults.filter((j) => !hiddenJobs.has(j.jobAdvertisement.id));
-  const [jobs] = useState(filteredJobs);
+  const [removedJobs] = useState(hiddenJobs);
+  const jobs = searchResults.filter((j) => !removedJobs.has(j.jobAdvertisement.id));
 
   const sortType = [
     { label: 'Uusin ensin', value: 'newest' },
