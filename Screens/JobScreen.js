@@ -1,13 +1,17 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { useEffect, useState } from 'react';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import TagRow from '../components/TagRow';
-import { useEffect, useState } from 'react';
 import BottomButton from '../components/BottomButton';
 import FavoriteButton from '../components/FavoriteButton';
+import { useJobBookmarks } from '../hooks/usejobbookmarks';
 
 export default function JobScreen({ route }) {
   const { job } = route.params;
+  const { hideJob } = useJobBookmarks();
+  const navigation = useNavigation();
 
   const imgNumber = job.organization?.length;
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
@@ -48,6 +52,11 @@ export default function JobScreen({ route }) {
     return timeLeft;
   };
 
+  const handleHide = () => {
+    hideJob(job.id);
+    navigation.goBack();
+  };
+
   return (
     <>
       <ScrollView style={{ flex: 1 }}>
@@ -84,9 +93,12 @@ export default function JobScreen({ route }) {
             </View>
           </View>
           <View style={styles.buttonRow}>
-            <View style={{ ...styles.buttonRound, borderColor: theme.colors.danger }}>
+            <TouchableOpacity
+              onPress={handleHide}
+              style={{ ...styles.buttonRound, borderColor: theme.colors.danger }}
+            >
               <MaterialCommunityIcons name="close-thick" size={40} color={theme.colors.danger} />
-            </View>
+            </TouchableOpacity>
             <View style={{ ...styles.buttonRound, borderColor: theme.colors.secondary }}>
               <MaterialCommunityIcons
                 name="share-variant"
