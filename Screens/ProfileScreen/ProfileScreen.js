@@ -309,7 +309,10 @@ export default function ProfileScreen() {
               )}
 
               {isLoggedIn ? (
-                <TouchableOpacity style={[theme.outline, styles.square, theme.dropShadow]}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('CompetenceInformation')}
+                  style={[theme.outline, styles.square, theme.dropShadow]}
+                >
                   <MaterialCommunityIcons
                     name="school"
                     size={50}

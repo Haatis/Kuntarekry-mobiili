@@ -38,6 +38,7 @@ import { BookmarkProvider, useJobBookmarks } from './hooks/usejobbookmarks';
 import PreviewProfileScreen from './Screens/ProfileScreen/PreviewProfileScreen';
 import WorkInformation from './Screens/ProfileScreen/WorkInformation';
 import EmployerScreen from './Screens/EmployerScreen';
+import CompetenceInformation from './Screens/ProfileScreen/CompetenceInformation';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -262,6 +263,7 @@ function StackNavigator() {
             />
           )}
         </Stack.Screen>
+
         <Stack.Screen
           name="WorkInformation"
           options={{
@@ -272,6 +274,25 @@ function StackNavigator() {
         >
           {(props) => (
             <WorkInformation
+              {...props}
+              save={save}
+              setSave={setSave}
+              setIsChanged={setIsChanged}
+              isChanged={isChanged}
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen
+          name="CompetenceInformation"
+          options={{
+            header: () => (
+              <AppBar back={true} setSave={setSave} title={'Pätevyydet'} isChanged={isChanged} />
+            ),
+          }}
+        >
+          {(props) => (
+            <CompetenceInformation
               {...props}
               save={save}
               setSave={setSave}
