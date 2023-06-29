@@ -93,7 +93,7 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
       setModalDescription('Lisää sertifiointeja, joita sinulla on');
     } else if (type === 'työkokemus') {
       setModalText('Lisää työkokemus');
-      setModalDescription('Lisää työkokemuksia, joita sinulla on');
+      setModalDescription('enintään 150 merkkiä');
     } else if (type === 'koulutus') {
       setModalText('Lisää koulutus');
       setModalDescription('Lisää koulutuksia, joita sinulla on');
@@ -131,11 +131,10 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
                         { color: theme.colors.textPrimary, flex: 1 },
                       ]}
                       defaultValue={''}
-                      onChangeText={(text) => setEmployer(text)}
+                      onChangeText={(text) => setTitle(text)}
                     />
-                    <Text style={[theme.textVariants.uiS, styles.labelText]}>Työnantaja</Text>
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>Työnimike</Text>
                   </View>
-
                   <View
                     style={[
                       { borderWidth: 1, borderColor: theme.colors.outlineDark },
@@ -148,9 +147,9 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
                         { color: theme.colors.textPrimary, flex: 1 },
                       ]}
                       defaultValue={''}
-                      onChangeText={(text) => setTitle(text)}
+                      onChangeText={(text) => setEmployer(text)}
                     />
-                    <Text style={[theme.textVariants.uiS, styles.labelText]}>Työnimike</Text>
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>Työnantaja</Text>
                   </View>
                   <View
                     style={[
@@ -234,7 +233,10 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
                 style={{
                   ...theme.textVariants.uiM,
                   color: theme.colors.textSecondary,
-                  textAlign: 'center',
+                  flexDirection: 'row',
+                  textAlignVertical: 'top',
+                  alignSelf: 'flex-start',
+                  paddingHorizontal: 8,
                 }}
               >
                 {modalDescription}
@@ -282,29 +284,61 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
               style={[
                 theme.outline,
                 theme.dropShadow,
-                styles.createButton2,
-                { flexDirection: 'row', justifyContent: 'space-between' },
+                styles.createButton,
+                { flexDirection: 'column' },
               ]}
             >
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  zIndex: 1,
+                }}
+                onPress={() => deleteWorkExperience(index)}
+              >
+                <MaterialCommunityIcons
+                  name="close-thick"
+                  size={20}
+                  color={theme.colors.textPrimary}
+                />
+              </TouchableOpacity>
               <View>
-                <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                <Text
+                  style={[
+                    theme.textVariants.uiM,
+                    { color: theme.colors.textPrimary, textAlign: 'center', paddingBottom: 4 },
+                  ]}
+                >
                   {item.title}
                 </Text>
-                <Text style={[theme.textVariants.uiS, { color: theme.colors.textSecondary }]}>
+                <Text
+                  style={[
+                    theme.textVariants.uiAltM,
+                    { color: theme.colors.textSecondary, textAlign: 'center', paddingBottom: 4 },
+                  ]}
+                >
+                  {item.employer}
+                </Text>
+                <Text
+                  style={[
+                    theme.textVariants.uiAltM,
+                    { color: theme.colors.textSecondary, textAlign: 'center', paddingBottom: 8 },
+                  ]}
+                >
+                  {item.description}
+                </Text>
+
+                <Text
+                  style={[
+                    theme.textVariants.uiAltS,
+                    { color: theme.colors.button, textAlign: 'center', paddingBottom: 8 },
+                  ]}
+                >
                   {moment(item.start).format('DD.MM.YYYY')} -{' '}
                   {item.end ? moment(item.end).format('DD.MM.YYYY') : 'Nykyhetkeen'}
                 </Text>
               </View>
-              <TouchableOpacity onPress={() => deleteWorkExperience(index)}>
-                <MaterialCommunityIcons
-                  name="delete"
-                  size={40}
-                  color={theme.colors.textPrimary}
-                  style={{
-                    marginHorizontal: -8,
-                  }}
-                />
-              </TouchableOpacity>
             </View>
           ))}
           <Text style={theme.textVariants.uiM}>Koulutus</Text>
