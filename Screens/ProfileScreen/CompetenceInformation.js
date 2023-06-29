@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -9,13 +9,28 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TagLarge from '../../components/Tags/TagLarge';
 import { useEffect } from 'react';
+import { Modal, Pressable, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment/moment';
 
 export default function CompetenceInformation({ save, setSave, setIsChanged, isChanged }) {
   const { userData } = useContext(AuthContext);
 
   const navigation = useNavigation();
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalDescription, setModalDescription] = useState('');
   const { fetchUserData } = useContext(AuthContext);
+  const [type, setType] = useState('');
+  const [employer, setEmployer] = useState('');
+  const [title, setTitle] = useState('');
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const [description, setDescription] = useState('');
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showDatePicker2, setShowDatePicker2] = useState(false);
 
   const saveUserData = async () => {
     const updatedUserData = {
@@ -25,7 +40,6 @@ export default function CompetenceInformation({ save, setSave, setIsChanged, isC
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
 
     fetchUserData();
-    navigation.goBack();
   };
 
   useEffect(() => {
@@ -35,12 +49,194 @@ export default function CompetenceInformation({ save, setSave, setIsChanged, isC
     }
   }, [save]);
 
+  const openModal = (type) => {
+    setType(type);
+    setModalVisible(true);
+    if (type === 'taidot') {
+      setModalText('Lisää taito');
+      setModalDescription('Lisää taitoja, joita sinulla on');
+    } else if (type === 'lisenssit') {
+      setModalText('Lisää lisenssi');
+      setModalDescription('Lisää lisenssejä, joita sinulla on');
+    } else if (type === 'kielet') {
+      setModalText('Lisää kieli');
+      setModalDescription('Lisää kieliä, joita osaat');
+    } else if (type === 'sertifioinnit') {
+      setModalText('Lisää sertifiointi');
+      setModalDescription('Lisää sertifiointeja, joita sinulla on');
+    } else if (type === 'työkokemus') {
+      setModalText('Lisää työkokemus');
+      setModalDescription('Lisää työkokemuksia, joita sinulla on');
+    } else if (type === 'koulutus') {
+      setModalText('Lisää koulutus');
+      setModalDescription('Lisää koulutuksia, joita sinulla on');
+    }
+  };
+
   return (
     <>
       <ScrollView style={{ backgroundColor: 'white' }}>
+        <Modal
+          transparent={true}
+          visible={modalVisible}
+          style={{ width: '100%' }}
+          animationType="fade"
+          statusBarTranslucent
+        >
+          <Pressable
+            style={styles.modalContainer}
+            activeOpacity={1}
+            onPress={() => setModalVisible(false)}
+          >
+            <Pressable style={styles.modalButtonContainer}>
+              <Text style={{ ...theme.textVariants.uiM, color: 'black' }}>{modalText}</Text>
+              {type === 'työkokemus' && (
+                <>
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                      styles.createButton,
+                    ]}
+                  >
+                    <TextInput
+                      style={[
+                        theme.textVariants.textM,
+                        { color: theme.colors.textPrimary, flex: 1 },
+                      ]}
+                      defaultValue={''}
+                      onChangeText={(text) => setEmployer(text)}
+                    />
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>Työnantaja</Text>
+                  </View>
+
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                      styles.createButton,
+                    ]}
+                  >
+                    <TextInput
+                      style={[
+                        theme.textVariants.textM,
+                        { color: theme.colors.textPrimary, flex: 1 },
+                      ]}
+                      defaultValue={''}
+                      onChangeText={(text) => setTitle(text)}
+                    />
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>Työnimike</Text>
+                  </View>
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                      styles.createButton,
+                    ]}
+                  >
+                    <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                      <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
+                        {start === '' ? 'pp.kk.vvvv' : moment(start).format('DD.MM.YYYY')}
+                      </Text>
+                    </TouchableOpacity>
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>
+                      Aloituspäivämäärä
+                    </Text>
+                  </View>
+                  {showDatePicker && (
+                    <DateTimePicker
+                      value={start ? new Date(start) : new Date()}
+                      mode="date"
+                      display="spinner"
+                      onChange={(event, date) => {
+                        setShowDatePicker(false);
+                        if (date) {
+                          setStart(date.toISOString());
+                        }
+                      }}
+                    />
+                  )}
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                      styles.createButton,
+                    ]}
+                  >
+                    <TouchableOpacity onPress={() => setShowDatePicker2(true)}>
+                      <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
+                        {end === '' ? 'pp.kk.vvvv' : moment(end).format('DD.MM.YYYY')}
+                      </Text>
+                    </TouchableOpacity>
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>
+                      Lopetuspäivämäärä
+                    </Text>
+                  </View>
+                  {showDatePicker2 && (
+                    <DateTimePicker
+                      value={end ? new Date(end) : new Date()}
+                      mode="date"
+                      display="spinner"
+                      onChange={(event, date) => {
+                        setShowDatePicker2(false);
+                        if (date) {
+                          setEnd(date.toISOString());
+                        }
+                      }}
+                    />
+                  )}
+
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark, height: 57 },
+                      styles.createButton2,
+                    ]}
+                  >
+                    <TextInput
+                      style={[
+                        theme.textVariants.textL,
+                        { color: theme.colors.textPrimary, flex: 1 },
+                      ]}
+                      placeholder="Kirjoita lyhyt kuvaus työstä"
+                      defaultValue={''}
+                      onChangeText={(text) => setDescription(text)}
+                      multiline={true}
+                      numberOfLines={4}
+                      maxLength={300}
+                    />
+                  </View>
+                </>
+              )}
+              <Text
+                style={{
+                  ...theme.textVariants.uiM,
+                  color: theme.colors.textSecondary,
+                  textAlign: 'center',
+                }}
+              >
+                {modalDescription}
+              </Text>
+
+              <View style={{ flexDirection: 'row', gap: 16 }}>
+                <TouchableOpacity onPress={() => saveUserData()} style={styles.confirmButton}>
+                  <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                    Tallenna
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.confirmButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                    Peruuta
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Pressable>
+          </Pressable>
+        </Modal>
         <View style={theme.containerTop}>
           <Text style={theme.textVariants.uiM}>Työkokemus</Text>
-          <View style={[theme.outline, theme.dropShadow, styles.createButton2]}>
+          <TouchableOpacity
+            onPress={() => openModal('työkokemus')}
+            style={[theme.outline, theme.dropShadow, styles.createButton2]}
+          >
             <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
               Lisää työkokemus
             </Text>
@@ -52,9 +248,12 @@ export default function CompetenceInformation({ save, setSave, setIsChanged, isC
                 marginHorizontal: -8,
               }}
             />
-          </View>
+          </TouchableOpacity>
           <Text style={theme.textVariants.uiM}>Koulutus</Text>
-          <View style={[theme.outline, theme.dropShadow, styles.createButton2]}>
+          <TouchableOpacity
+            onPress={() => openModal('koulutus')}
+            style={[theme.outline, theme.dropShadow, styles.createButton2]}
+          >
             <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
               Lisää koulutus
             </Text>
@@ -66,15 +265,19 @@ export default function CompetenceInformation({ save, setSave, setIsChanged, isC
                 marginHorizontal: -8,
               }}
             />
-          </View>
+          </TouchableOpacity>
           <Text style={theme.textVariants.uiM}>Taidot</Text>
-          <TagLarge tagText={'Lisää'} tagPlus={true} />
+          <TagLarge onPressClose={() => openModal('taidot')} tagText={'Lisää'} tagPlus={true} />
           <Text style={theme.textVariants.uiM}>Lisenssit</Text>
-          <TagLarge tagText={'Lisää'} tagPlus={true} />
+          <TagLarge onPressClose={() => openModal('lisenssit')} tagText={'Lisää'} tagPlus={true} />
           <Text style={theme.textVariants.uiM}>Kielet</Text>
-          <TagLarge tagText={'Lisää'} tagPlus={true} />
+          <TagLarge onPressClose={() => openModal('kielet')} tagText={'Lisää'} tagPlus={true} />
           <Text style={theme.textVariants.uiM}>Sertifioinnit</Text>
-          <TagLarge tagText={'Lisää'} tagPlus={true} />
+          <TagLarge
+            onPressClose={() => openModal('sertifioinnit')}
+            tagText={'Lisää'}
+            tagPlus={true}
+          />
         </View>
       </ScrollView>
       {isChanged ? (
@@ -84,6 +287,22 @@ export default function CompetenceInformation({ save, setSave, setIsChanged, isC
   );
 }
 const styles = StyleSheet.create({
+  confirmButton: {
+    ...theme.outlineDark,
+    borderRadius: 99,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  createButton: {
+    alignItems: 'center',
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    width: '100%',
+  },
   createButton2: {
     alignItems: 'center',
     borderRadius: 30,
@@ -91,6 +310,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 4,
+    width: '100%',
+  },
+  labelText: {
+    backgroundColor: 'white',
+    color: theme.colors.textSecondary,
+    left: 12,
+    paddingHorizontal: 4,
+    position: 'absolute',
+    top: -8,
+  },
+  modalButtonContainer: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 8,
+    gap: 16,
+    marginBottom: 128,
+    paddingHorizontal: 8,
+    paddingVertical: 16,
+  },
+  modalContainer: {
+    backgroundColor: theme.colors.darkBackground,
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
     width: '100%',
   },
 });
