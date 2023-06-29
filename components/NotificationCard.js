@@ -1,11 +1,11 @@
-import { TouchableOpacity, Image, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet, Text, View, Pressable } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import TagRow from './TagRow';
 
-export default function Notification({ job, cardType }) {
+export default function NotificationCard({ job, cardType }) {
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
   const publicationStarts = new Date(job.publicationStarts)?.toLocaleDateString('fi-FI');
   const navigation = useNavigation();
@@ -15,11 +15,11 @@ export default function Notification({ job, cardType }) {
 
   const [rowWidth, setRowWidth] = useState(0);
   return (
-    <View style={[theme.outline, theme.dropShadow, styles.card]}>
+    <Pressable onPress={() => navigation.navigate('JobScreen', { job: job })} style={styles.card}>
       <View style={styles.cardTop}>
         <TouchableOpacity
           onPress={() => navigation.navigate('EmployerScreen', { employer: job.profitCenter })}
-          style={[theme.outline, theme.dropShadow, styles.avatar]}
+          style={styles.avatar}
         >
           <Image style={styles.avatarImage} source={{ uri: randomEmployerImage }} />
         </TouchableOpacity>
@@ -70,12 +70,14 @@ export default function Notification({ job, cardType }) {
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   avatar: {
+    ...theme.outline,
+    ...theme.dropShadow,
     borderRadius: 30,
     height: 40,
     width: 40,
@@ -93,6 +95,8 @@ const styles = StyleSheet.create({
     width: 40,
   },
   card: {
+    ...theme.outline,
+    ...theme.dropShadow,
     backgroundColor: 'white',
     borderRadius: 8,
     width: '100%',
