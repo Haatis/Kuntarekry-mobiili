@@ -15,7 +15,7 @@ export default function JobScreen({ route }) {
   const { hideJob } = useJobBookmarks();
   const navigation = useNavigation();
 
-  const imgNumber = job.organization?.length;
+  const imgNumber = job.profitCenter?.length;
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
   const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job`;
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
@@ -58,6 +58,9 @@ export default function JobScreen({ route }) {
     hideJob(job.id);
     navigation.goBack();
   };
+
+  const navigateToEmployer = () =>
+    navigation.navigate('EmployerScreen', { employer: job.profitCenter });
 
   return (
     <>
@@ -123,7 +126,10 @@ export default function JobScreen({ route }) {
             </View>
           </View>
           <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 16, gap: 16 }}>
-            <TouchableOpacity style={[theme.outline, theme.dropShadow, styles.avatar]}>
+            <TouchableOpacity
+              onPress={navigateToEmployer}
+              style={[theme.outline, theme.dropShadow, styles.avatar]}
+            >
               <Image style={styles.avatarImage} source={{ uri: randomEmployerImage }} />
             </TouchableOpacity>
             <View
@@ -159,7 +165,10 @@ export default function JobScreen({ route }) {
               {job.jobDesc}
             </Text>
           </View>
-          <TouchableOpacity style={{ ...styles.buttonBig, ...theme.outlineDark }}>
+          <TouchableOpacity
+            onPress={navigateToEmployer}
+            style={{ ...styles.buttonBig, ...theme.outlineDark }}
+          >
             <Text style={{ ...theme.textVariants.uiM, color: 'white' }}>Tutustu työnantajaan</Text>
             <MaterialCommunityIcons
               style={{ margin: -6 }}
