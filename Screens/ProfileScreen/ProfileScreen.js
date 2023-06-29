@@ -380,7 +380,7 @@ export default function ProfileScreen() {
               {isLoggedIn ? (
                 <TouchableOpacity
                   style={[theme.outline, styles.square, theme.dropShadow]}
-                  onPress={() => navigation.navigate('SubstitutionsScreen')}
+                  onPress={() => navigation.navigate('SubstitutionsTabs')}
                 >
                   <MaterialCommunityIcons
                     name="calendar-month"

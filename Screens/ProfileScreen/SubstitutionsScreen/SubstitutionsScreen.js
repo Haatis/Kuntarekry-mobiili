@@ -1,18 +1,12 @@
-import CardScreen from '../../HomeScreen/CardScreen';
-import TopTabNavigator from '../../../components/TopTabNav';
-import UsabilityScreen from './UsabilityScreen';
-
-const tabs = [
-  {
-    name: 'Kortit',
-    component: CardScreen,
-  },
-  {
-    name: 'Käytettävyys',
-    component: UsabilityScreen,
-  },
-];
+import { View, Text } from 'react-native';
+import { theme } from '../../../styles/theme';
 
 export default function SubstitutionsScreen() {
-  return <TopTabNavigator tabs={tabs} />;
+  return (
+    <View style={theme.containerTop}>
+      <Text style={{ ...theme.textVariants.textM, color: theme.colors.textPrimary }}>
+        Omat keikat -osiossa näet kaikki sijaisuudet, joihin sinut on valittu.
+      </Text>
+    </View>
+  );
 }
