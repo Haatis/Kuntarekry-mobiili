@@ -40,8 +40,12 @@ const SearchBar = ({
         <TextInput
           style={{ ...theme.textVariants.uiM, color: theme.colors.textPrimary }}
           placeholder={`${
-            filters.selectedFilters > 0 ? 'Suodatetut ilmoitukset' : 'Kaikki ilmoitukset'
-          } (${lastSearch ? searchJobs.length : filters.filteredJobs.length})  `}
+            lastSearch
+              ? 'Ilmoitukset hakusanalla'
+              : filters.selectedFilters > 0
+              ? 'Suodatetut ilmoitukset'
+              : 'Kaikki ilmoitukset'
+          } (${lastSearch ? searchJobs.length : filters.filteredJobs.length}) `}
           placeholderTextColor={theme.colors.textSecondary}
           onChangeText={setSearchText}
           value={searchText}

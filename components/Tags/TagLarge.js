@@ -1,7 +1,7 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { theme } from '../../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-export default function TagLarge({ tagColor, tagText, tagClose, onPressClose }) {
+export default function TagLarge({ tagColor, tagText, tagClose, onPressClose, tagPlus }) {
   if (tagClose) {
     return (
       <TouchableOpacity
@@ -28,6 +28,30 @@ export default function TagLarge({ tagColor, tagText, tagClose, onPressClose }) 
         />
       </TouchableOpacity>
     );
+  } else if (tagPlus) {
+    return (
+      <TouchableOpacity
+        onPress={onPressClose}
+        style={[
+          styles.tagPlus,
+          {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            borderColor: theme.colors.outlineDark,
+            borderWidth: 2,
+            backgroundColor: tagColor,
+          },
+        ]}
+      >
+        <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>{tagText}</Text>
+        <MaterialCommunityIcons
+          name="plus"
+          size={20}
+          color={theme.colors.textPrimary}
+          style={{ marginLeft: 8, marginTop: 0 }}
+        />
+      </TouchableOpacity>
+    );
   }
 
   return (
@@ -41,6 +65,11 @@ const styles = StyleSheet.create({
   tag: {
     borderRadius: 8,
     paddingHorizontal: 8,
+    paddingVertical: 8,
+  },
+  tagPlus: {
+    borderRadius: 30,
+    paddingHorizontal: 16,
     paddingVertical: 8,
   },
 });

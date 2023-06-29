@@ -5,10 +5,11 @@ import TagRow from '../components/TagRow';
 import { useEffect, useState } from 'react';
 import BottomButton from '../components/BottomButton';
 import FavoriteButton from '../components/FavoriteButton';
+import { Modal, Pressable } from 'react-native';
 
 export default function JobScreen({ route }) {
   const { job } = route.params;
-
+  const [modalVisible, setModalVisible] = useState(false);
   const imgNumber = job.organization?.length;
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
   const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job`;
@@ -51,6 +52,50 @@ export default function JobScreen({ route }) {
   return (
     <>
       <ScrollView style={{ flex: 1 }}>
+        <Modal
+          transparent={true}
+          visible={modalVisible}
+          style={{ width: '100%' }}
+          animationType="fade"
+          statusBarTranslucent
+        >
+          <Pressable
+            style={styles.modalContainer}
+            activeOpacity={1}
+            onPress={() => setModalVisible(false)}
+          >
+            <Pressable style={styles.modalButtonContainer}>
+              <Text style={{ ...theme.textVariants.uiM, color: 'black' }}>Hae työpaikkaa</Text>
+              <Text
+                style={{
+                  ...theme.textVariants.uiM,
+                  color: theme.colors.textSecondary,
+                  textAlign: 'center',
+                }}
+              >
+                Omalla profiililla hakeminen edellyttää kirjautumista, voit myös hakea omalla CV:llä
+                kirjautumatta
+              </Text>
+              <View style={{ flexDirection: 'row', gap: 16 }}>
+                <TouchableOpacity style={styles.confirmButton}>
+                  <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                    Omalla Profiililla
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.confirmButton}>
+                  <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                    Omalla CV:llä
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={styles.confirmButton} onPress={() => setModalVisible(false)}>
+                <Text style={[theme.textVariants.uiM, { color: theme.colors.textPrimary }]}>
+                  Peruuta
+                </Text>
+              </TouchableOpacity>
+            </Pressable>
+          </Pressable>
+        </Modal>
         <View style={{ ...theme.containerTop }}>
           <View style={styles.imageContainer}>
             <Image
@@ -184,7 +229,10 @@ export default function JobScreen({ route }) {
           </View>
         </View>
       </ScrollView>
-      <BottomButton buttonText={`Hae työpaikkaa ${CountdownTimer()}`} />
+      <BottomButton
+        buttonAction={() => setModalVisible(true)}
+        buttonText={`Hae työpaikkaa ${CountdownTimer()}`}
+      />
     </>
   );
 }
@@ -222,6 +270,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
   },
+  confirmButton: {
+    ...theme.outlineDark,
+    borderRadius: 99,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
   dateTextContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -241,6 +295,22 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   imageContainer: {
+    width: '100%',
+  },
+  modalButtonContainer: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 8,
+    gap: 16,
+    marginBottom: 128,
+    paddingHorizontal: 8,
+    paddingVertical: 16,
+  },
+  modalContainer: {
+    backgroundColor: theme.colors.darkBackground,
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
     width: '100%',
   },
   tagRow: {
