@@ -4,16 +4,10 @@ import { theme } from '../styles/theme';
 import { useState, useRef } from 'react';
 import Tag from './Tags/Tag';
 
-const SearchBar = ({
-  setLastSearch,
-  handleOpenDrawer,
-  filterCount,
-  lastSearch,
-  filters,
-  searchJobs,
-}) => {
+const SearchBar = ({ setLastSearch, handleOpenDrawer, lastSearch, filters, searchJobs }) => {
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
+  const filterCount = filters.selectedFilters;
   const handleSearch = () => {
     if (searchText === '') {
       if (searchInputRef.current && !searchInputRef.current.isFocused()) {
