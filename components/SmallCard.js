@@ -59,7 +59,10 @@ function SmallCard({ job, cardType = 'default' }) {
           style={styles.card}
         >
           <View style={styles.cardTop}>
-            <TouchableOpacity style={[theme.outline, theme.dropShadow, styles.avatar]}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('EmployerScreen', { employer: job.profitCenter })}
+              style={styles.avatar}
+            >
               <Image style={styles.avatarImage} source={{ uri: imageURL }} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
@@ -116,12 +119,14 @@ function SmallCard({ job, cardType = 'default' }) {
 
 const styles = StyleSheet.create({
   avatar: {
-    borderRadius: 30,
+    ...theme.outline,
+    ...theme.dropShadow,
+    borderRadius: 99,
     height: 40,
     width: 40,
   },
   avatarImage: {
-    borderRadius: 30,
+    borderRadius: 99,
     flex: 1,
   },
   card: {

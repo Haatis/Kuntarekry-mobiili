@@ -10,7 +10,7 @@ export default function SwipeableCard({ job }) {
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
   const navigation = useNavigation();
 
-  const imgNumber = job.organization?.length;
+  const imgNumber = job.profitCenter?.length;
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
   const randomJobImage = `https://source.unsplash.com/random/&sig=${imgNumber}?job`;
 
@@ -40,7 +40,12 @@ export default function SwipeableCard({ job }) {
               onPress={() => navigation.navigate('JobScreen', { job: job })}
               style={styles.cardTop}
             >
-              <TouchableOpacity style={[theme.outline, theme.dropShadow, styles.avatar]}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('EmployerScreen', { employer: job.profitCenter })
+                }
+                style={[theme.outline, theme.dropShadow, styles.avatar]}
+              >
                 <Image style={styles.avatarImage} source={{ uri: randomEmployerImage }} />
               </TouchableOpacity>
               <View style={styles.textContainer}>

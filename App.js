@@ -37,6 +37,7 @@ import SubstitutionsTabs from './Screens/ProfileScreen/SubstitutionsScreen/Subst
 import { BookmarkProvider, useJobBookmarks } from './hooks/usejobbookmarks';
 import PreviewProfileScreen from './Screens/ProfileScreen/PreviewProfileScreen';
 import WorkInformation from './Screens/ProfileScreen/WorkInformation';
+import EmployerScreen from './Screens/EmployerScreen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -205,6 +206,13 @@ function StackNavigator() {
                 underTitle={route.params.job.profitCenter}
               />
             ),
+          })}
+        />
+        <Stack.Screen
+          name="EmployerScreen"
+          component={EmployerScreen}
+          options={({ route }) => ({
+            header: () => <AppBar back={true} title={route.params.employer} />,
           })}
         />
         <Stack.Screen

@@ -1,23 +1,28 @@
-import { Pressable, Image, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import TagRow from './TagRow';
 
 export default function Notification({ job, cardType }) {
   const publicationEnds = new Date(job.publicationEnds)?.toLocaleDateString('fi-FI');
   const publicationStarts = new Date(job.publicationStarts)?.toLocaleDateString('fi-FI');
+  const navigation = useNavigation();
 
-  const imgNumber = job.organization.length;
+  const imgNumber = job.profitCenter.length;
   const randomEmployerImage = `https://source.unsplash.com/random/&sig=${imgNumber}?finland`;
 
   const [rowWidth, setRowWidth] = useState(0);
   return (
     <View style={[theme.outline, theme.dropShadow, styles.card]}>
       <View style={styles.cardTop}>
-        <Pressable style={[theme.outline, theme.dropShadow, styles.avatar]}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('EmployerScreen', { employer: job.profitCenter })}
+          style={[theme.outline, theme.dropShadow, styles.avatar]}
+        >
           <Image style={styles.avatarImage} source={{ uri: randomEmployerImage }} />
-        </Pressable>
+        </TouchableOpacity>
         <View style={styles.textContainer}>
           {cardType === 'danger' ? (
             <Text style={[theme.textVariants.textL, { color: theme.colors.danger }]}>
