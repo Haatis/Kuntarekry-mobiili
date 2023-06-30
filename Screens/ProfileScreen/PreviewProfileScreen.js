@@ -7,6 +7,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { manipulateAsync } from 'expo-image-manipulator';
+import moment from 'moment/moment';
 
 export default function PreviewProfileScreen() {
   const { userData } = useContext(AuthContext);
@@ -63,6 +64,27 @@ export default function PreviewProfileScreen() {
           font-weight: bold;
           margin-bottom: 0px;
         }
+        .cardHeading {
+          font-size: 18px;
+          color: ${theme.colors.textPrimary};
+          text-align: center;
+          margin-top: 8px;
+          margin-bottom: 0px;
+        }
+        .cardOrg {
+          font-size: 15px;
+          color: ${theme.colors.textSecondary};
+          text-align: center;
+          margin-top: 4px;
+          margin-bottom: 8px;
+        }
+        .cardDate {
+          font-size: 13px;
+          color: ${theme.colors.button};
+          text-align: center;
+          margin-top: 4px;
+          margin-bottom: 8px;
+        }
         
         .row {
           display: flex;
@@ -85,10 +107,23 @@ export default function PreviewProfileScreen() {
           margin-left: auto;
           margin-right: auto;
         }
+        .card {
+          align-items: center;
+          width: 100%;
+          text-align: center;
+          border: 1px solid ${theme.colors.outlineDark};
+          margin-top: 8px;
+          border-radius: 8px;
+        }
       </style>
     </head>
     <body>
-      <img src="data:image/jpeg;base64,${image.base64}" alt="profilepic">
+  ${
+    image.base64 && image.base64.length > 0
+      ? `<img src="data:image/jpeg;base64,${image.base64}" alt="profilepic">`
+      : ''
+  }
+     
       <h1 style="color: ${theme.colors.textPrimary};">${userData.firstName} ${
       userData.lastName
     }</h1>
@@ -118,7 +153,25 @@ export default function PreviewProfileScreen() {
       </div>
       <div class="row">
         <p class="label">Sijainti:</p>
-        <p class="value">${userData.locationNames}</p>
+        <p class="value">${userData.locationNames[0].name}</p>
+      </div>
+      <p class="heading">Työkokemus</p>
+      <div class="card">
+      <p class="cardHeading">${userData.workExperience[0].title}</p>
+      <p class="cardOrg">${userData.workExperience[0].employer}</p>
+      <p class="cardOrg">${userData.workExperience[0].description}</p> 
+      <p class="cardDate">${formatDate(userData.workExperience[0].start)} - ${formatDate(
+      userData.workExperience[0].end
+    )}</p>
+      </div>
+      <p class="heading">Koulutus</p>
+      <div class="card">
+      <p class="cardHeading">${userData.education[0].title}</p>
+      <p class="cardOrg">${userData.education[0].school}</p>
+      <p class="cardOrg">${userData.education[0].description}</p> 
+      <p class="cardDate">${formatDate(userData.education[0].start)} - ${formatDate(
+      userData.education[0].end
+    )}</p>
       </div>
       </div>
     </body>
@@ -212,6 +265,104 @@ export default function PreviewProfileScreen() {
             <Text style={[styles.label, theme.textVariants.uiM]}>Sijainti:</Text>
             <Text style={[styles.value, theme.textVariants.uiM]}>{formattedLocations}</Text>
           </View>
+          <Text style={theme.textVariants.uiL}>Työkokemus</Text>
+          {userData?.workExperience?.map((item, index) => (
+            <View
+              key={index}
+              style={[
+                theme.outline,
+                theme.dropShadow,
+                styles.createButton,
+                { flexDirection: 'column' },
+              ]}
+            >
+              <View>
+                <Text
+                  style={[
+                    theme.textVariants.uiM,
+                    { color: theme.colors.textPrimary, textAlign: 'center', paddingBottom: 4 },
+                  ]}
+                >
+                  {item.title}
+                </Text>
+                <Text
+                  style={[
+                    theme.textVariants.uiAltM,
+                    { color: theme.colors.textSecondary, textAlign: 'center', paddingBottom: 4 },
+                  ]}
+                >
+                  {item.employer}
+                </Text>
+                <Text
+                  style={[
+                    theme.textVariants.uiAltM,
+                    { color: theme.colors.textSecondary, textAlign: 'center', paddingBottom: 8 },
+                  ]}
+                >
+                  {item.description}
+                </Text>
+
+                <Text
+                  style={[
+                    theme.textVariants.uiAltS,
+                    { color: theme.colors.button, textAlign: 'center', paddingBottom: 8 },
+                  ]}
+                >
+                  {moment(item.start).format('DD.MM.YYYY')} -{' '}
+                  {item.end ? moment(item.end).format('DD.MM.YYYY') : 'Nykyhetkeen'}
+                </Text>
+              </View>
+            </View>
+          ))}
+          <Text style={theme.textVariants.uiL}>Koulutus</Text>
+          {userData?.education?.map((item, index) => (
+            <View
+              key={index}
+              style={[
+                theme.outline,
+                theme.dropShadow,
+                styles.createButton,
+                { flexDirection: 'column' },
+              ]}
+            >
+              <View>
+                <Text
+                  style={[
+                    theme.textVariants.uiM,
+                    { color: theme.colors.textPrimary, textAlign: 'center', paddingBottom: 4 },
+                  ]}
+                >
+                  {item.title}
+                </Text>
+                <Text
+                  style={[
+                    theme.textVariants.uiAltM,
+                    { color: theme.colors.textSecondary, textAlign: 'center', paddingBottom: 4 },
+                  ]}
+                >
+                  {item.school}
+                </Text>
+                <Text
+                  style={[
+                    theme.textVariants.uiAltM,
+                    { color: theme.colors.textSecondary, textAlign: 'center', paddingBottom: 8 },
+                  ]}
+                >
+                  {item.description}
+                </Text>
+
+                <Text
+                  style={[
+                    theme.textVariants.uiAltS,
+                    { color: theme.colors.button, textAlign: 'center', paddingBottom: 8 },
+                  ]}
+                >
+                  {moment(item.start).format('DD.MM.YYYY')} -{' '}
+                  {item.end ? moment(item.end).format('DD.MM.YYYY') : 'Nykyhetkeen'}
+                </Text>
+              </View>
+            </View>
+          ))}
         </View>
       </ScrollView>
       <BottomButton buttonText="Luo profiilista CV" buttonAction={generatePdf} />
@@ -220,6 +371,16 @@ export default function PreviewProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  createButton: {
+    alignItems: 'center',
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    width: '100%',
+  },
   imageStyle: {
     borderRadius: 99,
     height: 100,

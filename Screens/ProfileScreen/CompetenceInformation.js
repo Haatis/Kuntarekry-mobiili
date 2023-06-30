@@ -4,16 +4,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import AuthContext from '../../hooks/useauth';
 import { useContext } from 'react';
-import BottomButton from '../../components/BottomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TagLarge from '../../components/Tags/TagLarge';
-import { useEffect } from 'react';
 import { Modal, Pressable, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment/moment';
 
-export default function CompetenceInformation({ save, setSave, isChanged }) {
+export default function CompetenceInformation() {
   const { userData } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState('');
@@ -29,7 +27,7 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDatePicker2, setShowDatePicker2] = useState(false);
-  console.log(userData);
+
   const saveUserData = async () => {
     let updatedWorkExperience = userData.workExperience;
     let updatedEducation = userData.education;
@@ -70,13 +68,6 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
     setDescription('');
     setModalVisible(false);
   };
-
-  useEffect(() => {
-    if (save) {
-      saveUserData();
-      setSave(false);
-    }
-  }, [save]);
 
   const deleteWorkExperience = async (index) => {
     const updatedWorkExperience = userData.workExperience.filter((_, i) => i !== index);
@@ -571,9 +562,6 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
           />
         </View>
       </ScrollView>
-      {isChanged ? (
-        <BottomButton buttonText="Tallenna ja jatka" buttonAction={() => saveUserData()} />
-      ) : null}
     </>
   );
 }
