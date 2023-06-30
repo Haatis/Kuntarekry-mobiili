@@ -54,64 +54,68 @@ function SmallCard({ job, cardType = 'default' }) {
           </TouchableOpacity>
         </View>
       ) : (
-        <TouchableOpacity
-          onPress={() => navigation.navigate('JobScreen', { job: job })}
-          style={styles.card}
-        >
-          <View style={styles.cardTop}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('EmployerScreen', { employer: job.profitCenter })}
-              style={styles.avatar}
-            >
-              <Image style={styles.avatarImage} source={{ uri: imageURL }} />
-            </TouchableOpacity>
-            <View style={styles.textContainer}>
-              <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
-              <Text
-                numberOfLines={2}
-                style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}
-              >
-                {job.profitCenter}
-              </Text>
-            </View>
-            {
-              {
-                default: <FavoriteButton job={job} />,
-                hidden: (
-                  <TouchableOpacity onPress={changeHiddenStatus}>
-                    <MaterialCommunityIcons name="close-thick" size={16} color="black" />
-                  </TouchableOpacity>
-                ),
-                applied: null,
-              }[cardType]
-            }
-          </View>
-          <View
-            style={styles.cardBottom}
-            onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
+        <View style={{ backgroundColor: 'white', borderRadius: 8, width: '100%' }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('JobScreen', { job: job })}
+            style={styles.card}
           >
-            <View style={styles.tagRow}>
-              <TagRow rowWidth={rowWidth} job={job} />
+            <View style={styles.cardTop}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('EmployerScreen', { employer: job.profitCenter })
+                }
+                style={styles.avatar}
+              >
+                <Image style={styles.avatarImage} source={{ uri: imageURL }} />
+              </TouchableOpacity>
+              <View style={styles.textContainer}>
+                <Text style={[theme.textVariants.textL, { color: 'black' }]}>{job.title}</Text>
+                <Text
+                  numberOfLines={2}
+                  style={[theme.textVariants.textM, { color: theme.colors.textSecondary }]}
+                >
+                  {job.profitCenter}
+                </Text>
+              </View>
+              {
+                {
+                  default: <FavoriteButton job={job} />,
+                  hidden: (
+                    <TouchableOpacity onPress={changeHiddenStatus}>
+                      <MaterialCommunityIcons name="close-thick" size={16} color="black" />
+                    </TouchableOpacity>
+                  ),
+                  applied: null,
+                }[cardType]
+              }
             </View>
-            <Text numberOfLines={4} style={[theme.textVariants.textM, styles.description]}>
-              {trimmedDesc}
-            </Text>
-            {cardType === 'applied' ? (
-              <View style={styles.dateTextContainer}>
+            <View
+              style={styles.cardBottom}
+              onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}
+            >
+              <View style={styles.tagRow}>
+                <TagRow rowWidth={rowWidth} job={job} />
+              </View>
+              <Text numberOfLines={4} style={[theme.textVariants.textM, styles.description]}>
+                {trimmedDesc}
+              </Text>
+              {cardType === 'applied' ? (
+                <View style={styles.dateTextContainer}>
+                  <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
+                    Haku päättyy: {publicationEnds}
+                  </Text>
+                  <Text style={[theme.textVariants.textS, { color: 'black' }]}>
+                    Haettu: 12.1.2020
+                  </Text>
+                </View>
+              ) : (
                 <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
                   Haku päättyy: {publicationEnds}
                 </Text>
-                <Text style={[theme.textVariants.textS, { color: 'black' }]}>
-                  Haettu: 12.1.2020
-                </Text>
-              </View>
-            ) : (
-              <Text style={[theme.textVariants.textS, { color: theme.colors.button }]}>
-                Haku päättyy: {publicationEnds}
-              </Text>
-            )}
-          </View>
-        </TouchableOpacity>
+              )}
+            </View>
+          </TouchableOpacity>
+        </View>
       )}
     </>
   );
@@ -136,7 +140,6 @@ const styles = StyleSheet.create({
     ...theme.dropShadow,
     backgroundColor: 'white',
     borderRadius: 8,
-    width: '100%',
   },
   cardBottom: {
     alignItems: 'center',
