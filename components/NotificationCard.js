@@ -1,4 +1,4 @@
-import { TouchableOpacity, Image, StyleSheet, Text, View, Pressable } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
@@ -15,7 +15,10 @@ export default function NotificationCard({ job, cardType }) {
 
   const [rowWidth, setRowWidth] = useState(0);
   return (
-    <Pressable onPress={() => navigation.navigate('JobScreen', { job: job })} style={styles.card}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('JobScreen', { job: job })}
+      style={styles.card}
+    >
       <View style={styles.cardTop}>
         <TouchableOpacity
           onPress={() => navigation.navigate('EmployerScreen', { employer: job.profitCenter })}
@@ -70,7 +73,7 @@ export default function NotificationCard({ job, cardType }) {
           </Text>
         </View>
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
@@ -80,6 +83,8 @@ const styles = StyleSheet.create({
     ...theme.dropShadow,
     borderRadius: 30,
     height: 40,
+    // opacity 0.99 so that the dropShadow is not visible when pressing TouchableOpacity
+    opacity: 0.99,
     width: 40,
   },
   avatarImage: {
@@ -88,7 +93,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    borderRadius: 100,
+    borderRadius: 99,
     borderWidth: 2,
     height: 40,
     justifyContent: 'center',

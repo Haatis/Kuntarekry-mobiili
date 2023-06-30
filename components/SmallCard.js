@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { theme } from '../styles/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -54,7 +54,7 @@ function SmallCard({ job, cardType = 'default' }) {
           </TouchableOpacity>
         </View>
       ) : (
-        <Pressable
+        <TouchableOpacity
           onPress={() => navigation.navigate('JobScreen', { job: job })}
           style={styles.card}
         >
@@ -111,7 +111,7 @@ function SmallCard({ job, cardType = 'default' }) {
               </Text>
             )}
           </View>
-        </Pressable>
+        </TouchableOpacity>
       )}
     </>
   );
@@ -123,6 +123,8 @@ const styles = StyleSheet.create({
     ...theme.dropShadow,
     borderRadius: 99,
     height: 40,
+    // opacity 0.99 so that dropShadow is not visible during animation when swiping
+    opacity: 0.99,
     width: 40,
   },
   avatarImage: {

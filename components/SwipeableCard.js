@@ -17,7 +17,7 @@ export default function SwipeableCard({ job }) {
   const [rowWidth, setRowWidth] = useState(0);
 
   return (
-    <View style={[theme.outline, theme.dropShadow, styles.card]}>
+    <View style={styles.card}>
       <ImageBackground
         imageStyle={styles.image}
         style={styles.imageContainer}
@@ -110,9 +110,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
+    ...theme.outline,
+    ...theme.dropShadow,
     backgroundColor: 'white',
     borderRadius: 8,
     flex: 1,
+    // opacity 0.99 so that the dropShadow is not visible during swipe animation
+    opacity: 0.99,
   },
   cardBottom: {
     alignItems: 'center',
@@ -136,7 +140,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     height: '50%',
   },
-
   image: {
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
