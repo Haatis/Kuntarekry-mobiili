@@ -14,7 +14,11 @@ export default function PreviewProfileScreen() {
   const image = userData ? userData.image : '';
 
   const generatePdf = async () => {
-    const image = await manipulateAsync(userData.image, [], { base64: true });
+    let manipulatedImage = null;
+
+    if (userData.image && userData.image !== '') {
+      manipulatedImage = await manipulateAsync(userData.image, [], { base64: true });
+    }
 
     const html = `
     <html>
@@ -118,12 +122,11 @@ export default function PreviewProfileScreen() {
       </style>
     </head>
     <body>
-  ${
-    image.base64 && image.base64.length > 0
-      ? `<img src="data:image/jpeg;base64,${image.base64}" alt="profilepic">`
-      : ''
-  }
-     
+    ${
+      manipulatedImage !== null
+        ? `<img src="data:image/jpeg;base64,${manipulatedImage.base64}" alt="profilepic">`
+        : ''
+    }
       <h1 style="color: ${theme.colors.textPrimary};">${userData.firstName} ${
       userData.lastName
     }</h1>
