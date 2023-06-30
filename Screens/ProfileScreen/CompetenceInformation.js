@@ -20,6 +20,7 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
   const [modalDescription, setModalDescription] = useState('');
   const { fetchUserData } = useContext(AuthContext);
   const [type, setType] = useState('');
+  const [school, setSchool] = useState('');
   const [employer, setEmployer] = useState('');
   const [title, setTitle] = useState('');
   const [start, setStart] = useState('');
@@ -28,28 +29,41 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDatePicker2, setShowDatePicker2] = useState(false);
-
+  console.log(userData);
   const saveUserData = async () => {
-    let updatedWorkExperience;
+    let updatedWorkExperience = userData.workExperience;
+    let updatedEducation = userData.education;
 
-    if (userData.workExperience) {
-      updatedWorkExperience = [
-        ...userData.workExperience,
-        { employer, title, start, end, description },
-      ];
-    } else {
-      updatedWorkExperience = [{ employer, title, start, end, description }];
+    if (type === 'työkokemus') {
+      if (userData.workExperience) {
+        updatedWorkExperience = [
+          ...userData.workExperience,
+          { employer, title, start, end, description },
+        ];
+      } else {
+        updatedWorkExperience = [{ employer, title, start, end, description }];
+      }
+    }
+
+    if (type === 'koulutus') {
+      if (userData.education) {
+        updatedEducation = [...userData.education, { school, title, start, end, description }];
+      } else {
+        updatedEducation = [{ school, title, start, end, description }];
+      }
     }
 
     const updatedUserData = {
       ...userData,
-      workExperience: updatedWorkExperience,
+      workExperience: type === 'työkokemus' ? updatedWorkExperience : userData.workExperience,
+      education: type === 'koulutus' ? updatedEducation : userData.education,
     };
 
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
 
     fetchUserData();
     setEmployer('');
+    setSchool('');
     setTitle('');
     setStart('');
     setEnd('');
@@ -70,6 +84,17 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
     const updatedUserData = {
       ...userData,
       workExperience: updatedWorkExperience,
+    };
+
+    await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
+    fetchUserData();
+  };
+  const deleteEducation = async (index) => {
+    const updatedEducation = userData.education.filter((_, i) => i !== index);
+
+    const updatedUserData = {
+      ...userData,
+      education: updatedEducation,
     };
 
     await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
@@ -96,7 +121,7 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
       setModalDescription('enintään 150 merkkiä');
     } else if (type === 'koulutus') {
       setModalText('Lisää koulutus');
-      setModalDescription('Lisää koulutuksia, joita sinulla on');
+      setModalDescription('enintään 150 merkkiä');
     }
   };
 
@@ -220,6 +245,117 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
                         { color: theme.colors.textPrimary, flex: 1 },
                       ]}
                       placeholder="Kirjoita lyhyt kuvaus työstä"
+                      defaultValue={''}
+                      onChangeText={(text) => setDescription(text)}
+                      multiline={true}
+                      numberOfLines={4}
+                      maxLength={300}
+                    />
+                  </View>
+                </>
+              )}
+              {type === 'koulutus' && (
+                <>
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                      styles.createButton,
+                    ]}
+                  >
+                    <TextInput
+                      style={[
+                        theme.textVariants.textM,
+                        { color: theme.colors.textPrimary, flex: 1 },
+                      ]}
+                      defaultValue={''}
+                      onChangeText={(text) => setTitle(text)}
+                    />
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>Tutkinto</Text>
+                  </View>
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                      styles.createButton,
+                    ]}
+                  >
+                    <TextInput
+                      style={[
+                        theme.textVariants.textM,
+                        { color: theme.colors.textPrimary, flex: 1 },
+                      ]}
+                      defaultValue={''}
+                      onChangeText={(text) => setSchool(text)}
+                    />
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>Oppilaitos</Text>
+                  </View>
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                      styles.createButton,
+                    ]}
+                  >
+                    <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                      <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
+                        {start === '' ? 'pp.kk.vvvv' : moment(start).format('DD.MM.YYYY')}
+                      </Text>
+                    </TouchableOpacity>
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>
+                      Aloituspäivämäärä
+                    </Text>
+                  </View>
+                  {showDatePicker && (
+                    <DateTimePicker
+                      value={start ? new Date(start) : new Date()}
+                      mode="date"
+                      display="spinner"
+                      onChange={(event, date) => {
+                        setShowDatePicker(false);
+                        if (date) {
+                          setStart(date.toISOString());
+                        }
+                      }}
+                    />
+                  )}
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark },
+                      styles.createButton,
+                    ]}
+                  >
+                    <TouchableOpacity onPress={() => setShowDatePicker2(true)}>
+                      <Text style={[theme.textVariants.textM, { color: theme.colors.textPrimary }]}>
+                        {end === '' ? 'pp.kk.vvvv' : moment(end).format('DD.MM.YYYY')}
+                      </Text>
+                    </TouchableOpacity>
+                    <Text style={[theme.textVariants.uiS, styles.labelText]}>
+                      Lopetuspäivämäärä
+                    </Text>
+                  </View>
+                  {showDatePicker2 && (
+                    <DateTimePicker
+                      value={end ? new Date(end) : new Date()}
+                      mode="date"
+                      display="spinner"
+                      onChange={(event, date) => {
+                        setShowDatePicker2(false);
+                        if (date) {
+                          setEnd(date.toISOString());
+                        }
+                      }}
+                    />
+                  )}
+                  <View
+                    style={[
+                      { borderWidth: 1, borderColor: theme.colors.outlineDark, height: 57 },
+                      styles.createButton2,
+                    ]}
+                  >
+                    <TextInput
+                      style={[
+                        theme.textVariants.textL,
+                        { color: theme.colors.textPrimary, flex: 1 },
+                      ]}
+                      placeholder="Kirjoita lyhyt kuvaus koulutuksesta"
                       defaultValue={''}
                       onChangeText={(text) => setDescription(text)}
                       multiline={true}
@@ -358,6 +494,69 @@ export default function CompetenceInformation({ save, setSave, isChanged }) {
               }}
             />
           </TouchableOpacity>
+          {userData?.education?.map((item, index) => (
+            <View
+              key={index}
+              style={[
+                theme.outline,
+                theme.dropShadow,
+                styles.createButton,
+                { flexDirection: 'column' },
+              ]}
+            >
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  zIndex: 1,
+                }}
+                onPress={() => deleteEducation(index)}
+              >
+                <MaterialCommunityIcons
+                  name="close-thick"
+                  size={20}
+                  color={theme.colors.textPrimary}
+                />
+              </TouchableOpacity>
+              <View>
+                <Text
+                  style={[
+                    theme.textVariants.uiM,
+                    { color: theme.colors.textPrimary, textAlign: 'center', paddingBottom: 4 },
+                  ]}
+                >
+                  {item.title}
+                </Text>
+                <Text
+                  style={[
+                    theme.textVariants.uiAltM,
+                    { color: theme.colors.textSecondary, textAlign: 'center', paddingBottom: 4 },
+                  ]}
+                >
+                  {item.school}
+                </Text>
+                <Text
+                  style={[
+                    theme.textVariants.uiAltM,
+                    { color: theme.colors.textSecondary, textAlign: 'center', paddingBottom: 8 },
+                  ]}
+                >
+                  {item.description}
+                </Text>
+
+                <Text
+                  style={[
+                    theme.textVariants.uiAltS,
+                    { color: theme.colors.button, textAlign: 'center', paddingBottom: 8 },
+                  ]}
+                >
+                  {moment(item.start).format('DD.MM.YYYY')} -{' '}
+                  {item.end ? moment(item.end).format('DD.MM.YYYY') : 'Nykyhetkeen'}
+                </Text>
+              </View>
+            </View>
+          ))}
           <Text style={theme.textVariants.uiM}>Taidot</Text>
           <TagLarge onPressClose={() => openModal('taidot')} tagText={'Lisää'} tagPlus={true} />
           <Text style={theme.textVariants.uiM}>Lisenssit</Text>
